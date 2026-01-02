@@ -1,0 +1,1606 @@
+{
+    "Italy": [
+        {
+            "rank": "1",
+            "name": "I Masanielli – Francesco Martucci",
+            "city": "Caserta",
+            "region": "Campania",
+            "address": "Viale Giulio Douhet, 11, Caserta, 81100 CE, Italia",
+            "geoloc": {
+                "lat": 41.0722451,
+                "lng": 14.3188612
+            }
+        },
+        {
+            "rank": "2",
+            "name": "Pepe in Grani",
+            "city": "Caiazzo (CE)",
+            "region": "Campania",
+            "address": "Vicolo S. Giovanni Battista, 3, Caiazzo, 81013 CE, Italia",
+            "geoloc": {
+                "lat": 41.1772311,
+                "lng": 14.3659226
+            }
+        },
+        {
+            "rank": "3",
+            "name": "I Tigli",
+            "city": "San Bonifacio (VR)",
+            "region": "Veneto",
+            "address": "i Tigli s.r.l., Via Camporosolo, San Bonifacio, VR, Italia",
+            "geoloc": {
+                "lat": 45.3947519,
+                "lng": 11.2707335
+            }
+        },
+        {
+            "rank": "4",
+            "name": "50 Kalò di Ciro Salvo Pizzeria",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Piazza Sannazaro, 201/b, Napoli, 80122 NA, Italia",
+            "geoloc": {
+                "lat": 40.82837180000001,
+                "lng": 14.2202575
+            }
+        },
+        {
+            "rank": "5",
+            "name": "La Notizia 94",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Michelangelo da Caravaggio, 94, Napoli, 80126 NA, Italia",
+            "geoloc": {
+                "lat": 40.833725,
+                "lng": 14.2089681
+            }
+        },
+        {
+            "rank": "6",
+            "name": "Francesco &amp; Salvatore Salvo",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Riviera di Chiaia, 271, 80121 Napoli, NA, Italia",
+            "geoloc": {
+                "lat": 40.8333988,
+                "lng": 14.2386403
+            }
+        },
+        {
+            "rank": "7",
+            "name": "Seu Pizza Illuminati",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via Angelo Bargoni, 10-18, Roma, RM, Italia",
+            "geoloc": {
+                "lat": 41.87965579999999,
+                "lng": 12.4683423
+            }
+        },
+        {
+            "rank": "8",
+            "name": "Dry Milano",
+            "city": "Milano",
+            "region": "Lombardia",
+            "address": "Via Solferino, 33, Milano, MI, Italia",
+            "geoloc": {
+                "lat": 45.4790027,
+                "lng": 9.1883954
+            }
+        },
+        {
+            "rank": "9",
+            "name": "‘O Scugnizzo",
+            "city": "Arezzo",
+            "region": "Toscana",
+            "address": "Via de' Redi, 11, 52100 Arezzo, Arezzo AR, Italia",
+            "geoloc": {
+                "lat": 43.4638379,
+                "lng": 11.8809407
+            }
+        },
+        {
+            "rank": "10",
+            "name": "Le Grotticelle",
+            "city": "Caggiano (SA)",
+            "region": "Campania",
+            "address": "Le Grotticelle, Caggiano, SA, Italia",
+            "geoloc": {
+                "lat": 40.546215,
+                "lng": 15.5134887
+            }
+        },
+        {
+            "rank": "11",
+            "name": "Apogeo",
+            "city": "Pietrasanta (LU)",
+            "region": "Toscana",
+            "address": "Via Pisanica, 136, 55045 Pietrasanta, LU, Italia",
+            "geoloc": {
+                "lat": 43.9516103,
+                "lng": 10.2003791
+            }
+        },
+        {
+            "rank": "12",
+            "name": "La Gatta Mangiona",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via Federico Ozanam, 30-32, Roma, 00152 RM, Italia",
+            "geoloc": {
+                "lat": 41.875751,
+                "lng": 12.44774
+            }
+        },
+        {
+            "rank": "13",
+            "name": "Patrick Ricci – Terra, Grani, Esplorazioni",
+            "city": "San Mauro Torinese (TO)",
+            "region": "Piemonte",
+            "address": "Via Martiri della Libertà, 103, San Mauro Torinese, 10099 TO, Italia",
+            "geoloc": {
+                "lat": 45.1017546,
+                "lng": 7.7648452
+            }
+        },
+        {
+            "rank": "14",
+            "name": "Sbanco",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via Siria, 1, Roma, 00183 RM, Italia",
+            "geoloc": {
+                "lat": 41.87549490000001,
+                "lng": 12.5110492
+            }
+        },
+        {
+            "rank": "15",
+            "name": "Le Follie di Romualdo",
+            "city": "Firenze",
+            "region": "Toscana",
+            "address": "Via di San Niccolò, 39r, Firenze, FI, Italia",
+            "geoloc": {
+                "lat": 43.7640881,
+                "lng": 11.2621988
+            }
+        },
+        {
+            "rank": "16",
+            "name": "Fandango",
+            "city": "Potenza",
+            "region": "Basilicata",
+            "address": "Via dei Molinari, 37, Potenza, PZ, Italia",
+            "geoloc": {
+                "lat": 40.6433829,
+                "lng": 15.7802804
+            }
+        },
+        {
+            "rank": "17",
+            "name": "Crosta",
+            "city": "Milano",
+            "region": "Lombardia",
+            "address": "Via Felice Bellotti, 13, 20129 Milano, MI, Italia",
+            "geoloc": {
+                "lat": 45.4709023,
+                "lng": 9.2091665
+            }
+        },
+        {
+            "rank": "18",
+            "name": "IQuintili",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via S. Biagio Platani, 320, 00133 Roma, RM, Italia",
+            "geoloc": {
+                "lat": 41.87549689999999,
+                "lng": 12.6440794
+            }
+        },
+        {
+            "rank": "19",
+            "name": "Grigoris",
+            "city": "Mestre - Venezia",
+            "region": "Veneto",
+            "address": "Grigoris, Via Asseggiano, Mestre, VE, Italia",
+            "geoloc": {
+                "lat": 45.4967,
+                "lng": 12.184545
+            }
+        },
+        {
+            "rank": "20",
+            "name": "10 Diego Vitagliano Pizzeria",
+            "city": "Napoli (NA)",
+            "region": "Campania",
+            "address": "Via Nuova Agnano, 1, 80125 Napoli, Napoli, Italia",
+            "geoloc": {
+                "lat": 40.8173317,
+                "lng": 14.1757288
+            }
+        },
+        {
+            "rank": "21",
+            "name": "Pizzeria Da Lioniello",
+            "city": "Succivo (CE)",
+            "region": "Campania",
+            "address": "Via Murelle, 1, 81030 Succivo, CE, Italia",
+            "geoloc": {
+                "lat": 40.9732978,
+                "lng": 14.2592623
+            }
+        },
+        {
+            "rank": "22",
+            "name": "Sirani",
+            "city": "Bagnolo Mella (BS)",
+            "region": "Lombardia",
+            "address": "Via Antonio Gramsci, 5, Bagnolo Mella, BS, Italia",
+            "geoloc": {
+                "lat": 45.4333777,
+                "lng": 10.1883765
+            }
+        },
+        {
+            "rank": "23",
+            "name": "Carlo Sammarco Pizzeria 2.0",
+            "city": "Frattamaggiore (NA)",
+            "region": "Campania",
+            "address": "Via Vittorio Emanuele III', 80027, Frattamaggiore, NA, Italia",
+            "geoloc": {
+                "lat": 40.9428867,
+                "lng": 14.267691
+            }
+        },
+        {
+            "rank": "24",
+            "name": "Enosteria Lipen",
+            "city": "Triuggio (MB)",
+            "region": "Lombardia",
+            "address": "Via Conte Paolo Taverna, 114, Triuggio, MB, Italia",
+            "geoloc": {
+                "lat": 45.6595779,
+                "lng": 9.2902069
+            }
+        },
+        {
+            "rank": "25",
+            "name": "Pizzeria Da Ezio",
+            "city": "Alano di Piave (BL)",
+            "region": "Veneto",
+            "address": "Pizzeria Da Ezio, Piazza Licini, Alano di Piave, BL, Italia",
+            "geoloc": {
+                "lat": 45.9090655,
+                "lng": 11.9130677
+            }
+        },
+        {
+            "rank": "26",
+            "name": "Giangi Pizza e Ricerca",
+            "city": "Arielli (CH)",
+            "region": "Abruzzo",
+            "address": "Pizzeria Giangi, Arielli, CH, Italia",
+            "geoloc": {
+                "lat": 42.2639867,
+                "lng": 14.3227219
+            }
+        },
+        {
+            "rank": "27",
+            "name": "Cocciuto",
+            "city": "Milano",
+            "region": "Lombardia",
+            "address": "Via Bergognone, 24, 20144 Milano, MI, Italia",
+            "geoloc": {
+                "lat": 45.4537706,
+                "lng": 9.163520199999999
+            }
+        },
+        {
+            "rank": "28",
+            "name": "Pupillo Pura Pizza – Priverno",
+            "city": "Priverno (LT)",
+            "region": "Lazio",
+            "address": "Via Giacomo Matteotti, 29, 04015 Priverno, LT, Italia",
+            "geoloc": {
+                "lat": 41.4734906,
+                "lng": 13.1777592
+            }
+        },
+        {
+            "rank": "29",
+            "name": "Ristorante Pizzeria Ciarly",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Piazzale Vincenzo Tecchio, 35/36, Napoli, 80125 NA, Italia",
+            "geoloc": {
+                "lat": 40.823162,
+                "lng": 14.193061
+            }
+        },
+        {
+            "rank": "30",
+            "name": "Framento",
+            "city": "Cagliari",
+            "region": "Sardegna",
+            "address": "Corso Vittorio Emanuele II, 82, Cagliari, 09123 CA, Italia",
+            "geoloc": {
+                "lat": 39.218049,
+                "lng": 9.1111453
+            }
+        },
+        {
+            "rank": "31",
+            "name": "Frumento",
+            "city": "Acireale (CT)",
+            "region": "Sicilia",
+            "address": "Frumento, Piazza Giuseppe Mazzini, Acireale, CT, Italia",
+            "geoloc": {
+                "lat": 37.6118624,
+                "lng": 15.1646193
+            }
+        },
+        {
+            "rank": "32",
+            "name": "Officine del Cibo",
+            "city": "Sarzana (SP)",
+            "region": "Liguria",
+            "address": "Officine del Cibo, Via Brigata Partigiana Ugo Muccini, Sarzana, SP, Italia",
+            "geoloc": {
+                "lat": 44.1040192,
+                "lng": 9.942619299999999
+            }
+        },
+        {
+            "rank": "33",
+            "name": "I Masanielli – Sasà Martucci",
+            "city": "Caserta",
+            "region": "Campania",
+            "address": "Via Antonio Vivaldi, 23, Caserta, 81100 CE, Italia",
+            "geoloc": {
+                "lat": 41.0679351,
+                "lng": 14.3324603
+            }
+        },
+        {
+            "rank": "34",
+            "name": "La Braciera",
+            "city": "Palermo",
+            "region": "Sicilia",
+            "address": "La Braciera, Via San Lorenzo, Palermo, PA, Italia",
+            "geoloc": {
+                "lat": 38.1569146,
+                "lng": 13.331251
+            }
+        },
+        {
+            "rank": "35",
+            "name": "La Masardona",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Giulio Cesare Capaccio, 27, Napoli, 80142 NA, Italia",
+            "geoloc": {
+                "lat": 40.8485038,
+                "lng": 14.2735083
+            }
+        },
+        {
+            "rank": "36",
+            "name": "Le Parùle",
+            "city": "Ercolano (NA)",
+            "region": "Campania",
+            "address": "Via Sacerdote Cozzolino Benedetto, 71, Ercolano, NA, Italia",
+            "geoloc": {
+                "lat": 40.8111763,
+                "lng": 14.3679237
+            }
+        },
+        {
+            "rank": "37",
+            "name": "Pizzeria Panetteria Bosco",
+            "city": "Tempio Pausania (SS)",
+            "region": "Sardegna",
+            "address": "Via Vittorio Veneto, 4, Tempio Pausania, 07029 OT, Italia",
+            "geoloc": {
+                "lat": 40.9013566,
+                "lng": 9.104467999999999
+            }
+        },
+        {
+            "rank": "38",
+            "name": "400 Gradi",
+            "city": "Lecce",
+            "region": "Puglia",
+            "address": "400 Gradi Lecce, Viale Porta d'Europa, 65, Lecce, LE, Italia",
+            "geoloc": {
+                "lat": 40.3616269,
+                "lng": 18.1696855
+            }
+        },
+        {
+            "rank": "39",
+            "name": "Piccola Piedigrotta",
+            "city": "Reggio Emilia",
+            "region": "Emilia-Romagna",
+            "address": "Piccola Piedigrotta, Piazza XXV Aprile, Reggio Emilia, RE, Italia",
+            "geoloc": {
+                "lat": 44.70112229999999,
+                "lng": 10.6282855
+            }
+        },
+        {
+            "rank": "40",
+            "name": "Casa Vitiello",
+            "city": "Tuoro (CE)",
+            "region": "Campania",
+            "address": "Casa Vitiello, Piazza Monsignor Nicola Suppa, Caserta, CE, Italia",
+            "geoloc": {
+                "lat": 41.0854873,
+                "lng": 14.3635692
+            }
+        },
+        {
+            "rank": "41",
+            "name": "La Ventola",
+            "city": "Rosignano marittimo (LI)",
+            "region": "Toscana",
+            "address": "Via Nuova dei Cavalleggeri, 171, 57016 Rosignano marittimo, LI, Italia",
+            "geoloc": {
+                "lat": 43.3354564,
+                "lng": 10.4609509
+            }
+        },
+        {
+            "rank": "42",
+            "name": "Giotto Pizzeria-Bistrot",
+            "city": "Firenze",
+            "region": "Toscana",
+            "address": "Via Francesco Veracini, 22, 50144 Firenze, FI, Italia",
+            "geoloc": {
+                "lat": 43.7867994,
+                "lng": 11.2315822
+            }
+        },
+        {
+            "rank": "43",
+            "name": "Gusto Divino",
+            "city": "Saluzzo (CN)",
+            "region": "Piemonte",
+            "address": "Piazza Camillo Benso Conte di Cavour, 21, Saluzzo, CN, Italia",
+            "geoloc": {
+                "lat": 44.64593,
+                "lng": 7.493056999999999
+            }
+        },
+        {
+            "rank": "44",
+            "name": "Pizzeria 450° Pizza e Fritti di Gianfranco Iervolino",
+            "city": "Pomigliano d'Arco (NA)",
+            "region": "Campania",
+            "address": "Via Giotto, 2, 80038 Pomigliano d'Arco, NA, Italia",
+            "geoloc": {
+                "lat": 40.9069327,
+                "lng": 14.3974352
+            }
+        },
+        {
+            "rank": "45",
+            "name": "L’Osteria di Birra del Borgo",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via Silla, 26a, 00192 Roma, RM, Italia",
+            "geoloc": {
+                "lat": 41.9085836,
+                "lng": 12.4597075
+            }
+        },
+        {
+            "rank": "46",
+            "name": "Pizzeria Gigi Pipa",
+            "city": "Este (PD)",
+            "region": "Veneto",
+            "address": "Pizzeria Gigi Pipa, Via Antonio Corradini, Este, PD, Italia",
+            "geoloc": {
+                "lat": 45.2218235,
+                "lng": 11.6597824
+            }
+        },
+        {
+            "rank": "47",
+            "name": "Pizzeria Mamma Rosa",
+            "city": "Ortezzano (FM)",
+            "region": "Marche",
+            "address": "Mamma Rosa Ortezzano, Contrada Aso, Ortezzano, FM, Italia",
+            "geoloc": {
+                "lat": 43.02588370000001,
+                "lng": 13.6186152
+            }
+        },
+        {
+            "rank": "48",
+            "name": "La Cascina dei Sapori",
+            "city": "Rezzato (BS)",
+            "region": "Lombardia",
+            "address": "Via Evaristo Almici, 1, Rezzato, 25086 BS, Italia",
+            "geoloc": {
+                "lat": 45.5164541,
+                "lng": 10.3120001
+            }
+        },
+        {
+            "rank": "49",
+            "name": "Battil’oro",
+            "city": "Querceta (LU)",
+            "region": "Toscana",
+            "address": "Via Asilo, 54, 55047 Seravezza, LU, Italia",
+            "geoloc": {
+                "lat": 43.977945,
+                "lng": 10.2035317
+            }
+        },
+        {
+            "rank": "50",
+            "name": "Concettina ai Tre Santi",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Arena della Sanità, 7, Napoli, NA, Italia",
+            "geoloc": {
+                "lat": 40.857602,
+                "lng": 14.2518139
+            }
+        },
+        {
+            "rank": "51",
+            "name": "I Borboni Pizzeria",
+            "city": "Pontecagnano Faiano (SA)",
+            "region": "Campania",
+            "address": "I Borboni Pizzeria, Via Amerigo Vespucci, Pontecagnano Faiano, SA, Italia",
+            "geoloc": {
+                "lat": 40.6371717,
+                "lng": 14.8948012
+            }
+        },
+        {
+            "rank": "52",
+            "name": "In Fucina",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via Giuseppe Lunati, 25, Roma, 00149 RM, Italia",
+            "geoloc": {
+                "lat": 41.860641,
+                "lng": 12.4523968
+            }
+        },
+        {
+            "rank": "53",
+            "name": "‘O Fiore Mio",
+            "city": "Faenza (RA)",
+            "region": "Emilia-Romagna",
+            "address": "Via Mura San Marco, 4/6, 48018 Faenza, RA, Italia",
+            "geoloc": {
+                "lat": 44.2893508,
+                "lng": 11.8858527
+            }
+        },
+        {
+            "rank": "54",
+            "name": "Qvinto",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via delle Fornaci di Tor di Quinto, 10, Roma, RM, Italia",
+            "geoloc": {
+                "lat": 41.9365421,
+                "lng": 12.4822189
+            }
+        },
+        {
+            "rank": "55",
+            "name": "Umberto",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Alabardieri, 30, 80121 Napoli, NA, Italia",
+            "geoloc": {
+                "lat": 40.834835,
+                "lng": 14.241205
+            }
+        },
+        {
+            "rank": "56",
+            "name": "Da Attilio",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Pignasecca, 17, Napoli, 80134 NA, Italia",
+            "geoloc": {
+                "lat": 40.845196,
+                "lng": 14.248281
+            }
+        },
+        {
+            "rank": "57",
+            "name": "Ottocento Bio",
+            "city": "Bassano del Grappa (VI)",
+            "region": "Veneto",
+            "address": "Ottocento, Contrà San Giorgio, Bassano del Grappa, VI, Italia",
+            "geoloc": {
+                "lat": 45.7691116,
+                "lng": 11.7219181
+            }
+        },
+        {
+            "rank": "58",
+            "name": "La Pergola",
+            "city": "Radicondoli (SI)",
+            "region": "Toscana",
+            "address": "Via Giuseppe Garibaldi, 22, 53030 Radicondoli Siena, Italia",
+            "geoloc": {
+                "lat": 43.261622,
+                "lng": 11.043656
+            }
+        },
+        {
+            "rank": "59",
+            "name": "La Sorgente Pizzeria",
+            "city": "Guardiagrele (CH)",
+            "region": "Abruzzo",
+            "address": "Pizzeria \"La Sorgente\", Via Antonio Gramsci, Guardiagrele, CH, Italia",
+            "geoloc": {
+                "lat": 42.1960381,
+                "lng": 14.220082
+            }
+        },
+        {
+            "rank": "60",
+            "name": "Impastatori Pompetti",
+            "city": "Roseto degli Abruzzi (TE)",
+            "region": "Abruzzo",
+            "address": "Via Guglielmo Marconi, 21, Roseto degli Abruzzi, TE, Italia",
+            "geoloc": {
+                "lat": 42.6616401,
+                "lng": 14.0128464
+            }
+        },
+        {
+            "rank": "61",
+            "name": "La Piedigrotta",
+            "city": "Varese",
+            "region": "Lombardia",
+            "address": "Via Gian Domenico Romagnosi, 9, Varese, 21100 VA, Italia",
+            "geoloc": {
+                "lat": 45.8183735,
+                "lng": 8.8258611
+            }
+        },
+        {
+            "rank": "62",
+            "name": "180g Pizzeria Romana",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via Tor de' Schiavi, 53, 00172 Roma, RM, Italia",
+            "geoloc": {
+                "lat": 41.8779506,
+                "lng": 12.5639784
+            }
+        },
+        {
+            "rank": "63",
+            "name": "Osteria Pizzeria Per Bacco",
+            "city": "La Morra (CN)",
+            "region": "Piemonte",
+            "address": "Via Roma, 30, La Morra, 12064 CN, Italia",
+            "geoloc": {
+                "lat": 44.6384956,
+                "lng": 7.9329015
+            }
+        },
+        {
+            "rank": "64",
+            "name": "Montegrigna – Tric Trac",
+            "city": "Legnano (MI)",
+            "region": "Lombardia",
+            "address": "Via Grigna, 12, Legnano, 20025 MI, Italia",
+            "geoloc": {
+                "lat": 45.5940764,
+                "lng": 8.9278978
+            }
+        },
+        {
+            "rank": "65",
+            "name": "Starita a Materdei",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Materdei, 27/28, Napoli, 80136 NA, Italia",
+            "geoloc": {
+                "lat": 40.8557611,
+                "lng": 14.24643
+            }
+        },
+        {
+            "rank": "66",
+            "name": "Il Vecchio e il Mare",
+            "city": "Firenze",
+            "region": "Toscana",
+            "address": "Il Vecchio e il Mare, Via Vincenzo Gioberti, Firenze, FI, Italia",
+            "geoloc": {
+                "lat": 43.7697684,
+                "lng": 11.2761076
+            }
+        },
+        {
+            "rank": "67",
+            "name": "Angelo Pezzella – Pizzeria con Cucina",
+            "city": "Roma",
+            "region": "Lazio",
+            "address": "Via Appia Nuova, 1095, Roma, 00178 RM, Italia",
+            "geoloc": {
+                "lat": 41.8287448,
+                "lng": 12.558152
+            }
+        },
+        {
+            "rank": "68",
+            "name": "Il Vecchio Gazebo",
+            "city": "Molfetta (BA)",
+            "region": "Puglia",
+            "address": "Il Vecchio Gazebo ristorante pizzeria, Via Guglielmo Marconi, Molfetta, BA, Italia",
+            "geoloc": {
+                "lat": 41.198412,
+                "lng": 16.59715
+            }
+        },
+        {
+            "rank": "69",
+            "name": "Giovanni Santarpia",
+            "city": "Firenze",
+            "region": "Toscana",
+            "address": " Via Senese, 155/red, 50124 Firenze FI",
+            "geoloc": {
+                "lat": 43.7495738,
+                "lng": 11.2356699
+            }
+        },
+        {
+            "rank": "70",
+            "name": "Hofstätter Garten",
+            "city": "Termeno (BZ)",
+            "region": "Trentino-Alto Adige",
+            "address": "Piazza Municipio, 7, 39040 Termeno sulla Strada del Vino, BZ, Italia",
+            "geoloc": {
+                "lat": 46.34191329999999,
+                "lng": 11.2398363
+            }
+        },
+        {
+            "rank": "71",
+            "name": "Meunier Champagne &amp; Pizza",
+            "city": "Corciano (PG)",
+            "region": "Umbria",
+            "address": "Via Aldo Capitini SNC, 06073 Corciano PG",
+            "geoloc": {
+                "lat": 43.0993341,
+                "lng": 12.3094876
+            }
+        },
+        {
+            "rank": "72",
+            "name": "Piano B",
+            "city": "Siracusa",
+            "region": "Sicilia",
+            "address": "Piano B, Via Cairoli, Siracusa, SR, Italia",
+            "geoloc": {
+                "lat": 37.0646973,
+                "lng": 15.287921
+            }
+        },
+        {
+            "rank": "73",
+            "name": "Guglielmo Vuolo – Verona",
+            "city": "Verona",
+            "region": "Veneto",
+            "address": "Assaporito, Viale del Lavoro, Verona, VR, Italia",
+            "geoloc": {
+                "lat": 45.4139001,
+                "lng": 10.9788405
+            }
+        },
+        {
+            "rank": "74",
+            "name": "La Divina Pizza",
+            "city": "Firenze",
+            "region": "Toscana",
+            "address": "Borgo Allegri, 50, Firenze, FI, Italia",
+            "geoloc": {
+                "lat": 43.77043080000001,
+                "lng": 11.2649001
+            }
+        },
+        {
+            "rank": "75",
+            "name": "Sestogusto",
+            "city": "Torino",
+            "region": "Piemonte",
+            "address": "Sestogusto Torino, Via Giuseppe Mazzini, 31, A, 10123 Torino, TO, Italia",
+            "geoloc": {
+                "lat": 45.06149380000001,
+                "lng": 7.6882298
+            }
+        },
+        {
+            "rank": "76",
+            "name": "Capuano’s Pizzeria 7.0",
+            "city": "Milano",
+            "region": "Lombardia",
+            "address": "Via Francesco Londonio, 22, Milano, 20154 MI, Italia",
+            "geoloc": {
+                "lat": 45.4807379,
+                "lng": 9.1687525
+            }
+        },
+        {
+            "rank": "77",
+            "name": "Pizzeria La Bufala",
+            "city": "Maranello (MO)",
+            "region": "Emilia-Romagna",
+            "address": "Piazza Giovanni Amendola, 1/2, 41053 Maranello MO, Italia",
+            "geoloc": {
+                "lat": 44.52564719999999,
+                "lng": 10.8720956
+            }
+        },
+        {
+            "rank": "78",
+            "name": "Pizzeria Elite Rossi",
+            "city": "Alvignano (CE)",
+            "region": "Campania",
+            "address": "Corso Umberto I°, 168, Alvignano, CE, Italia",
+            "geoloc": {
+                "lat": 41.2449397,
+                "lng": 14.3373143
+            }
+        },
+        {
+            "rank": "79",
+            "name": "Libery Pizza &amp; Artigianal Beer",
+            "city": "Torino",
+            "region": "Piemonte",
+            "address": "Via Legnano, 14, Torino, TO, Italia",
+            "geoloc": {
+                "lat": 45.060776,
+                "lng": 7.670611
+            }
+        },
+        {
+            "rank": "80",
+            "name": "Pizzeria Luigi Cippitelli",
+            "city": "San Giuseppe Vesuviano (NA)",
+            "region": "Campania",
+            "address": "Via Astalonga, 36, 80047 San Giuseppe Vesuviano, NA, Italia",
+            "geoloc": {
+                "lat": 40.8367017,
+                "lng": 14.4953588
+            }
+        },
+        {
+            "rank": "81",
+            "name": "Pizzeria La Scaletta",
+            "city": "Ascoli Piceno",
+            "region": "Marche",
+            "address": "Via Napoli, 137, 63100 Ascoli Piceno AP, Italia",
+            "geoloc": {
+                "lat": 42.8499484,
+                "lng": 13.5980012
+            }
+        },
+        {
+            "rank": "82",
+            "name": "Carmine Donzetti – Pizza &amp; Fritti",
+            "city": "Casandrino (NA)",
+            "region": "Campania",
+            "address": "Via Mons Pasquale di Pasquale, Casandrino, NA, Italia",
+            "geoloc": {
+                "lat": 40.9332247,
+                "lng": 14.2436915
+            }
+        },
+        {
+            "rank": "83",
+            "name": "Lievito 72",
+            "city": "Trani (BT)",
+            "region": "Puglia",
+            "address": "Lievito 72, Via Aldo Moro, Trani, BT, Italia",
+            "geoloc": {
+                "lat": 41.2752028,
+                "lng": 16.421975
+            }
+        },
+        {
+            "rank": "84",
+            "name": "Pizzeria Errico Porzio",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Cornelia dei Gracchi, 27, 80126 Napoli, Napoli, Italia",
+            "geoloc": {
+                "lat": 40.840878,
+                "lng": 14.198451
+            }
+        },
+        {
+            "rank": "85",
+            "name": "Gusto Madre",
+            "city": "Alba (CN)",
+            "region": "Piemonte",
+            "address": "Via Armando Diaz, 2, Alba, 12051 CN, Italia",
+            "geoloc": {
+                "lat": 44.6980642,
+                "lng": 8.0326829
+            }
+        },
+        {
+            "rank": "86",
+            "name": "Sa Scolla",
+            "city": "Cagliari",
+            "region": "Sardegna",
+            "address": "Sa Scolla, Via Luigi Galvani, Cagliari, CA, Italia",
+            "geoloc": {
+                "lat": 39.2302547,
+                "lng": 9.1336286
+            }
+        },
+        {
+            "rank": "87",
+            "name": "Carmnella",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Marino Cristoforo, 22, Napoli, 80142 NA, Italia",
+            "geoloc": {
+                "lat": 40.8493573,
+                "lng": 14.2785457
+            }
+        },
+        {
+            "rank": "88",
+            "name": "Uagliò",
+            "city": "Torino",
+            "region": "Piemonte",
+            "address": "Via Claudio Luigi Berthollet, 20, 10125 Torino, TO, Italia",
+            "geoloc": {
+                "lat": 45.0583819,
+                "lng": 7.6822145
+            }
+        },
+        {
+            "rank": "89",
+            "name": "Archestrato di Gela",
+            "city": "Palermo",
+            "region": "Sicilia",
+            "address": "ARCHESTRATO DI GELA, Via Emanuele Notarbartolo, Palermo, PA, Italia",
+            "geoloc": {
+                "lat": 38.1333286,
+                "lng": 13.3489862
+            }
+        },
+        {
+            "rank": "90",
+            "name": "Ristorante Canneto Beach 2",
+            "city": "Margherita di Savoia (BT)",
+            "region": "Puglia",
+            "address": "Canneto Beach2, Via Garibaldi, Margherita di Savoia, BT, Italia",
+            "geoloc": {
+                "lat": 41.3815078,
+                "lng": 16.1414928
+            }
+        },
+        {
+            "rank": "91",
+            "name": "Marghe",
+            "city": "Milano",
+            "region": "Lombardia",
+            "address": "MARGHE - Via Plinio, Via Plinio, Milano, MI, Italia",
+            "geoloc": {
+                "lat": 45.4794467,
+                "lng": 9.211877699999999
+            }
+        },
+        {
+            "rank": "92",
+            "name": "La Figlia del Presidente",
+            "city": "Napoli",
+            "region": "Campania",
+            "address": "Via Grande Archivio, 24, Napoli, 80138 NA, Italia",
+            "geoloc": {
+                "lat": 40.84877540000001,
+                "lng": 14.2595163
+            }
+        },
+        {
+            "rank": "93",
+            "name": "Ristorante Pizzeria Centro",
+            "city": "Novara",
+            "region": "Piemonte",
+            "address": "Corso Felice Cavallotti, 9, 28100 Novara, NO, Italia",
+            "geoloc": {
+                "lat": 45.4469556,
+                "lng": 8.6232927
+            }
+        },
+        {
+            "rank": "94",
+            "name": "Bioesserì Milano Brera",
+            "city": "Milano",
+            "region": "Lombardia",
+            "address": "Via Fatebenefratelli, 2, 20121 Milano, MI, Italia",
+            "geoloc": {
+                "lat": 45.4728719,
+                "lng": 9.188505
+            }
+        },
+        {
+            "rank": "95",
+            "name": "La Piazzetta Del Pisacane",
+            "city": "Genova",
+            "region": "Liguria",
+            "address": "la Piazzetta del Pisacane, Via Calatafimi, Genova, GE, Italia",
+            "geoloc": {
+                "lat": 44.4108126,
+                "lng": 8.9390982
+            }
+        },
+        {
+            "rank": "96",
+            "name": "Korallo Pizza &amp; Drink",
+            "city": "Trento",
+            "region": "Trentino-Alto Adige",
+            "address": "Via Venezia, 123, Trento, 38122 TN, Italia",
+            "geoloc": {
+                "lat": 46.0697609,
+                "lng": 11.1362417
+            }
+        },
+        {
+            "rank": "97",
+            "name": "I Fontana",
+            "city": "Somma Vesuviana (NA)",
+            "region": "Campania",
+            "address": "Via Annunziata, 58, 80049 Somma Vesuviana, NA, Italia",
+            "geoloc": {
+                "lat": 40.8754059,
+                "lng": 14.4434501
+            }
+        },
+        {
+            "rank": "98",
+            "name": "Vola Bontà per Tutti",
+            "city": "Castino (CN)",
+            "region": "Piemonte",
+            "address": "Piazza del Mercato, 4, 12050 Castino CN, Italia",
+            "geoloc": {
+                "lat": 44.61993160000001,
+                "lng": 8.1822179
+            }
+        },
+        {
+            "rank": "99",
+            "name": "ZenZero",
+            "city": "Pisa",
+            "region": "Toscana",
+            "address": "via lucchese n 6, 56123 Pisa",
+            "geoloc": {
+                "lat": 43.7262723,
+                "lng": 10.4157265
+            }
+        },
+        {
+            "rank": "100",
+            "name": "Mama",
+            "city": "Lendinara (RO)",
+            "region": "Veneto",
+            "address": "Via Santa Maria Nuova, 59, 45026 Lendinara Rovigo, Italia",
+            "geoloc": {
+                "lat": 45.0879251,
+                "lng": 11.6035689
+            }
+        }
+    ],
+    "Europe": [
+        {
+            "rank": "1",
+            "name": "50 Kalò di Ciro Salvo Pizzeria London",
+            "city": "Londra",
+            "country": "Inghilterra",
+            "geoloc": {
+                "lat": 51.5071129,
+                "lng": -0.1265196
+            }
+        },
+        {
+            "rank": "2",
+            "name": "Via Toledo Enopizzeria",
+            "city": "Vienna",
+            "country": "Austria",
+            "geoloc": {
+                "lat": 48.2132332,
+                "lng": 16.3513343
+            }
+        },
+        {
+            "rank": "3",
+            "name": "Bijou",
+            "city": "Parigi",
+            "country": "Francia",
+            "geoloc": {
+                "lat": 48.8831097,
+                "lng": 2.341917
+            }
+        },
+        {
+            "rank": "4",
+            "name": "Bæst",
+            "city": "Copenhagen",
+            "country": "Danimarca",
+            "geoloc": {
+                "lat": 55.6924331,
+                "lng": 12.5562454
+            }
+        },
+        {
+            "rank": "5",
+            "name": "La Pizza è Bella",
+            "city": "Bruxelles",
+            "country": "Belgio",
+            "geoloc": {
+                "lat": 50.8417875,
+                "lng": 4.3538256
+            }
+        },
+        {
+            "rank": "6",
+            "name": "Malafemmena",
+            "city": "Berlino",
+            "country": "Germania",
+            "geoloc": {
+                "lat": 52.47376629999999,
+                "lng": 13.3383341
+            }
+        },
+        {
+            "rank": "7",
+            "name": "Lilla Napoli",
+            "city": "Falkenberg",
+            "country": "Svezia",
+            "geoloc": {
+                "lat": 56.9022167,
+                "lng": 12.5015967
+            }
+        },
+        {
+            "rank": "8",
+            "name": "nNea",
+            "city": "Amsterdam",
+            "country": "Olanda",
+            "geoloc": {
+                "lat": 52.36942020000001,
+                "lng": 4.8703501
+            }
+        },
+        {
+            "rank": "9",
+            "name": "Pizzeria Luca",
+            "city": "Copenaghen ",
+            "country": "Danimarca",
+            "geoloc": {
+                "lat": 55.6777171,
+                "lng": 12.5782449
+            }
+        },
+        {
+            "rank": "10",
+            "name": "Fratelli Figurato",
+            "city": "Madrid",
+            "country": "Spagna",
+            "geoloc": {
+                "lat": 40.438905,
+                "lng": -3.697842
+            }
+        },
+        {
+            "rank": "11",
+            "name": "Kytaly",
+            "city": "Ginevra",
+            "country": "Svizzera",
+            "geoloc": {
+                "lat": 46.2031371,
+                "lng": 6.139835
+            }
+        },
+        {
+            "rank": "12",
+            "name": "La Bottega Siciliana",
+            "city": "Mosca",
+            "country": "Russia",
+            "geoloc": {
+                "lat": 55.7576139,
+                "lng": 37.6185364
+            }
+        },
+        {
+            "rank": "13",
+            "name": "L’Antica Pizzeria",
+            "city": "Londra",
+            "country": "Inghilterra",
+            "geoloc": {
+                "lat": 51.5573883,
+                "lng": -0.1781531
+            }
+        },
+        {
+            "rank": "14",
+            "name": "Daroco Bourse",
+            "city": "Parigi",
+            "country": "Francia",
+            "geoloc": {
+                "lat": 48.8671391,
+                "lng": 2.3392712
+            }
+        },
+        {
+            "rank": "15",
+            "name": "Pizzeria Luca",
+            "city": "Helsinki",
+            "country": "Finlandia",
+            "geoloc": {
+                "lat": 60.16017799999999,
+                "lng": 24.8803566
+            }
+        },
+        {
+            "rank": "16",
+            "name": "Cirillo’s",
+            "city": "Dublino",
+            "country": "Irlanda",
+            "geoloc": {
+                "lat": 53.337785,
+                "lng": -6.252651999999999
+            }
+        },
+        {
+            "rank": "17",
+            "name": "60 Secondi Pizza Napoletana",
+            "city": "Monaco di Baviera",
+            "country": "Germania",
+            "geoloc": {
+                "lat": 48.1621895,
+                "lng": 11.5896205
+            }
+        },
+        {
+            "rank": "18",
+            "name": "Oi Vita Pizzeria",
+            "city": "Londra",
+            "country": "Inghilterra",
+            "geoloc": {
+                "lat": 51.5486167,
+                "lng": -0.08766109999999999
+            }
+        },
+        {
+            "rank": "19",
+            "name": "Faggio Pizzeria",
+            "city": "Parigi",
+            "country": "Francia",
+            "geoloc": {
+                "lat": 48.8816332,
+                "lng": 2.346651
+            }
+        },
+        {
+            "rank": "20",
+            "name": "Vinoteket",
+            "city": "Oslo",
+            "country": "Norvegia",
+            "geoloc": {
+                "lat": 59.9150581,
+                "lng": 10.7220098
+            }
+        },
+        {
+            "rank": "21",
+            "name": "The Dough Bros",
+            "city": "Galway",
+            "country": "Irlanda",
+            "geoloc": {
+                "lat": 53.2724503,
+                "lng": -9.051806299999999
+            }
+        },
+        {
+            "rank": "22",
+            "name": "Forno d’Oro",
+            "city": "Lisbona",
+            "country": "Portogallo",
+            "geoloc": {
+                "lat": 38.723474,
+                "lng": -9.154334
+            }
+        },
+        {
+            "rank": "23",
+            "name": "‘O Ver St. James’s",
+            "city": "Londra",
+            "country": "Inghilterra",
+            "geoloc": {
+                "lat": 51.50913329999999,
+                "lng": -0.132822
+            }
+        },
+        {
+            "rank": "24",
+            "name": "Araldo Arte del Gusto",
+            "city": "Madrid",
+            "country": "Spagna",
+            "geoloc": {
+                "lat": 40.4176126,
+                "lng": -3.6981038
+            }
+        },
+        {
+            "rank": "25",
+            "name": "Vicoli di Napoli",
+            "city": "Londra",
+            "country": "Inghilterra",
+            "geoloc": {
+                "lat": 51.5619558,
+                "lng": -0.0805029
+            }
+        },
+        {
+            "rank": "26",
+            "name": "Guillaume Grasso La vera Pizza Napoletana",
+            "city": "Parigi",
+            "country": "Francia",
+            "geoloc": {
+                "lat": 48.8335793,
+                "lng": 2.3044634
+            }
+        },
+        {
+            "rank": "27",
+            "name": "Dalmata",
+            "city": "Parigi",
+            "country": "Francia",
+            "geoloc": {
+                "lat": 48.8645246,
+                "lng": 2.3494238
+            }
+        },
+        {
+            "rank": "28",
+            "name": "MadreLievito Llacuna",
+            "city": "Barcellona",
+            "country": "Spagna",
+            "geoloc": {
+                "lat": 41.3977071,
+                "lng": 2.2033133
+            }
+        },
+        {
+            "rank": "29",
+            "name": "Peppe Pizzeria",
+            "city": "Parigi",
+            "country": "Francia",
+            "geoloc": {
+                "lat": 48.8600808,
+                "lng": 2.4042034
+            }
+        },
+        {
+            "rank": "30",
+            "name": "La Piola Pizza",
+            "city": "Bruxelles",
+            "country": "Belgio",
+            "geoloc": {
+                "lat": 50.8494167,
+                "lng": 4.3741071
+            }
+        },
+        {
+            "rank": "31",
+            "name": "Acqua &amp; Farina",
+            "city": "Lugano",
+            "country": "Svizzera",
+            "geoloc": {
+                "lat": 46.0044859,
+                "lng": 8.9526028
+            }
+        },
+        {
+            "rank": "32",
+            "name": "La Balmesina",
+            "city": "Barcellona",
+            "country": "Spagna",
+            "geoloc": {
+                "lat": 41.3970536,
+                "lng": 2.1522454
+            }
+        },
+        {
+            "rank": "33",
+            "name": "Double Zero Neapolitan Pizza",
+            "city": "Manchester",
+            "country": "Inghilterra",
+            "geoloc": {
+                "lat": 53.4381924,
+                "lng": -2.2742771
+            }
+        },
+        {
+            "rank": "34",
+            "name": "Positano",
+            "city": "Kiev ",
+            "country": "Ucraina",
+            "geoloc": {
+                "lat": 50.427999,
+                "lng": 30.5929235
+            }
+        },
+        {
+            "rank": "35",
+            "name": "Sodo Pizza",
+            "city": "Londra",
+            "country": "Inghilterra",
+            "geoloc": {
+                "lat": 51.586187,
+                "lng": -0.0204936
+            }
+        },
+        {
+            "rank": "36",
+            "name": "Oro di Napoli",
+            "city": "Santa Cruz de Tenerife ",
+            "country": "Spagna ",
+            "geoloc": {
+                "lat": 28.4345267,
+                "lng": -16.319767
+            }
+        },
+        {
+            "rank": "37",
+            "name": "Paesano Pizza",
+            "city": "Glasgow",
+            "country": "Scozia",
+            "geoloc": {
+                "lat": 55.8596611,
+                "lng": -4.2505751
+            }
+        },
+        {
+            "rank": "38",
+            "name": "450°C",
+            "city": "Turku",
+            "country": "Finlandia",
+            "geoloc": {
+                "lat": 60.4496096,
+                "lng": 22.2664687
+            }
+        },
+        {
+            "rank": "39",
+            "name": "NAPLES Authentic Neapolitan Pizza",
+            "city": "Fürth",
+            "country": "Germania",
+            "geoloc": {
+                "lat": 49.479388,
+                "lng": 10.9860388
+            }
+        },
+        {
+            "rank": "40",
+            "name": "Pizza Nuova",
+            "city": "Praga",
+            "country": "Repubblica Ceca",
+            "geoloc": {
+                "lat": 50.0894583,
+                "lng": 14.4278694
+            }
+        },
+        {
+            "rank": "41",
+            "name": "450 Gradi",
+            "city": "Lidingö",
+            "country": "Svezia",
+            "geoloc": {
+                "lat": 59.3430161,
+                "lng": 18.1565917
+            }
+        },
+        {
+            "rank": "42",
+            "name": "De Superette Pizza",
+            "city": "Gent",
+            "country": "Belgio",
+            "geoloc": {
+                "lat": 51.04546879999999,
+                "lng": 3.7300553
+            }
+        },
+        {
+            "rank": "43",
+            "name": "Scrocchiarella",
+            "city": "Mosca",
+            "country": "Russia",
+            "geoloc": {
+                "lat": 55.7586849,
+                "lng": 37.6396037
+            }
+        },
+        {
+            "rank": "44",
+            "name": "Belli di Mamma",
+            "city": "Budapest",
+            "country": "Ungheria",
+            "geoloc": {
+                "lat": 47.50010590000001,
+                "lng": 19.0658132
+            }
+        },
+        {
+            "rank": "45",
+            "name": "Majstor l Margarita",
+            "city": "Belgrado",
+            "country": "Serbia",
+            "geoloc": {
+                "lat": 44.817569,
+                "lng": 20.4555509
+            }
+        },
+        {
+            "rank": "46",
+            "name": "Pizza 22 cm",
+            "city": "Mosca",
+            "country": "Russia",
+            "geoloc": {
+                "lat": 55.7545318,
+                "lng": 37.6380833
+            }
+        },
+        {
+            "rank": "47",
+            "name": "Animaletto Pizza Bar",
+            "city": "Bucarest",
+            "country": "Romania",
+            "geoloc": {
+                "lat": 44.4481708,
+                "lng": 26.0953201
+            }
+        },
+        {
+            "rank": "48",
+            "name": "Nonna Pizzeria",
+            "city": "Varsavia ",
+            "country": "Polonia",
+            "geoloc": {
+                "lat": 52.23856929999999,
+                "lng": 21.0191818
+            }
+        },
+        {
+            "rank": "49",
+            "name": "Ave Pizza",
+            "city": "Varsavia",
+            "country": "Polonia",
+            "geoloc": {
+                "lat": 52.2386182,
+                "lng": 21.0252841
+            }
+        },
+        {
+            "rank": "50",
+            "name": "Kaja Pizza Köök",
+            "city": "Tallinn",
+            "country": "Estonia",
+            "geoloc": {
+                "lat": 59.4395799,
+                "lng": 24.7172368
+            }
+        }
+    ]
+}
