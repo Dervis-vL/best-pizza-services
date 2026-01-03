@@ -41,7 +41,6 @@ if __name__ == "__main__":
     scraped_data = get_scraped_data(location, year)
     print(scraped_data)
 
-
 # def pizza50(location: enums.Location, year: enums.Year) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
 #     """Function for scraping data from the best pizza's website.
 
