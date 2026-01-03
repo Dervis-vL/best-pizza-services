@@ -3,14 +3,14 @@
 from enum import StrEnum
 
 
-class Location(StrEnum):
-    """Enum for pizza locations."""
+class Categories(StrEnum):
+    """Enum for best pizza categories."""
 
     WORLD = "world"
-    LATIN_AMERICA = "latin-america"
+    LATIN_AMERICA = "latin_america"
     EUROPE = "europe"
-    ASIA_PACIFIC = "asia-pacific"
-    ITALY = "italia"
+    ASIA_PACIFIC = "asia_pacific"
+    ITALY = "italy"
     USA = "usa"
 
 
