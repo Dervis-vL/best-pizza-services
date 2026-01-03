@@ -11,10 +11,10 @@ import urllib.request as url_request
 
 from bs4 import BeautifulSoup as bs
 
-from scraper import enums, settings
+from scraper import enums, constants, utils
 
 
-def get_scraped_data(location: enums.Location, year: enums.Year) -> bs:
+def get_scraped_data(location: enums.Categories, year: enums.Year) -> bs:
     """Function for scraping data from the best pizza's website.
 
     :param location: The location to scrape.
@@ -25,18 +25,20 @@ def get_scraped_data(location: enums.Location, year: enums.Year) -> bs:
     :return: The parsed HTML content.
     :rtype: BeautifulSoup
     """
+    # get endpoint
+    endpoint = utils.create_endpoint(location, year)
     # url for best pizza's in Italy
-    data_url = settings.source_page.url_home / f"{settings.source_page.selection_type}-{location.value}-{year.value}/"
+    data_url = constants.URL_HOME / endpoint
 
     # Load page
-    page = url_request.urlopen(data_url)
+    page = url_request.urlopen(str(data_url))
     # Parse and return HTML
     return bs(page, features="html.parser")
 
 
 if __name__ == "__main__":
     # Example usage
-    location = enums.Location.ITALY
+    location = enums.Categories.ITALY
     year = enums.Year.Y2025
     scraped_data = get_scraped_data(location, year)
     print(scraped_data)
