@@ -10,4 +10,4 @@ wheels/
 .venv
 
 # local
-local/
+dev/

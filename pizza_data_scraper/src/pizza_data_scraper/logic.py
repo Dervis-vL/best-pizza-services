@@ -11,7 +11,7 @@ import urllib.request as url_request
 
 from bs4 import BeautifulSoup as bs
 
-from scraper import enums, constants, utils
+from pizza_data_scraper import enums, constants, utils
 
 
 def get_scraped_data(location: enums.Categories, year: enums.Year) -> bs:
@@ -23,7 +23,7 @@ def get_scraped_data(location: enums.Categories, year: enums.Year) -> bs:
     :type year: enums.Year
 
     :return: The parsed HTML content.
-    :rtype: BeautifulSoup
+    :rtype: BeautifulSoup§
     """
     # get endpoint
     endpoint = utils.create_endpoint(location, year)
@@ -35,13 +35,6 @@ def get_scraped_data(location: enums.Categories, year: enums.Year) -> bs:
     # Parse and return HTML
     return bs(page, features="html.parser")
 
-
-if __name__ == "__main__":
-    # Example usage
-    location = enums.Categories.ITALY
-    year = enums.Year.Y2025
-    scraped_data = get_scraped_data(location, year)
-    print(scraped_data)
 
 # def pizza50(location: enums.Location, year: enums.Year) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
 #     """Function for scraping data from the best pizza's website.

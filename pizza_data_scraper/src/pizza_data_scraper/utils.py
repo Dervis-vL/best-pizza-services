@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup as bs
 import pathlib
 
-from scraper import enums, constants
+from pizza_data_scraper import enums, constants
 
 
 def create_endpoint(category: enums.Categories, year: enums.Year) -> str:
