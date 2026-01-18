@@ -9,12 +9,13 @@ The information is linked to an object.
 
 import urllib.request as url_request
 
-from bs4 import BeautifulSoup as bs
+import bs4 as bs
+from bs4 import element as bs_element
 
 from pizza_data_scraper import enums, constants, utils
 
 
-def get_scraped_data(location: enums.Categories, year: enums.Year) -> bs:
+def get_scraped_ranked_data(location: enums.Categories, year: enums.Year) -> bs.BeautifulSoup:
     """Function for scraping data from the best pizza's website.
 
     :param location: The location to scrape.
@@ -32,12 +33,25 @@ def get_scraped_data(location: enums.Categories, year: enums.Year) -> bs:
 
     # Load page
     page = url_request.urlopen(str(data_url))
-    # Create HTML soup
-    soup =  bs(page, features="html.parser")
-    # Get url from pizzeria cards
-    cards = soup.select("a#scheda")
-    pizzeria_url = utils.get_pizzeria_url_from_card(cards[0], "href")
+    # Return HTML soup
+    return bs.BeautifulSoup(page, features="html.parser")
 
+
+def get_scraped_pizzeria_data(card: bs_element.Tag) -> bs.BeautifulSoup:
+    """Function for scraping pizzeria data from a pizzeria page.
+
+    :param card: The pizzeria card element.
+    :type card: bs4.element.Tag
+    :return: The parsed HTML content of the pizzeria page.
+    :rtype: BeautifulSoup
+    """
+    # Get url from pizzeria card
+    pizzeria_url = utils.get_pizzeria_url_from_card(card, "href")
+
+    # Load page
+    page = url_request.urlopen(str(pizzeria_url))
+    # Return HTML soup
+    return bs.BeautifulSoup(page, features="html.parser")
 
 
 
