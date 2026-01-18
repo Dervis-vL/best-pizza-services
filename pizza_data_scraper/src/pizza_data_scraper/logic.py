@@ -32,8 +32,13 @@ def get_scraped_data(location: enums.Categories, year: enums.Year) -> bs:
 
     # Load page
     page = url_request.urlopen(str(data_url))
-    # Parse and return HTML
-    return bs(page, features="html.parser")
+    # Create HTML soup
+    soup =  bs(page, features="html.parser")
+    # Get url from pizzeria cards
+    cards = soup.select("a#scheda")
+    pizzeria_url = utils.get_pizzeria_url_from_card(cards[0], "href")
+
+
 
 
 # def pizza50(location: enums.Location, year: enums.Year) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
