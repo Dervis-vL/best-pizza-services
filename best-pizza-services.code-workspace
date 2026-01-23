@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+		"name": "root",
+		"path": "."
+    },
+    {
+		"name": "pizza_data_scraper",
+		"path": "pizza_data_scraper"
+    },
+    {
+		"name": "pizza_data_parser",
+		"path": "pizza_data_parser"
+    },
+    {
+		"name": "pizza_data_models",
+		"path": "pizza_data_models"
+    }
+	],
+	"settings": {}
+}
