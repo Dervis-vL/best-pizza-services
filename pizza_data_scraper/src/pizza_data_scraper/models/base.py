@@ -8,7 +8,17 @@ from sqlalchemy import orm
 
 
 class BaseModel(orm.DeclarativeBase):
-    """Base model for pizza data scraper models."""
+    """Base model with common fields for all tables.
+
+    Columns:
+        id (int): Auto-incrementing primary key.
+        created_at (datetime): Timestamp of record creation.
+        updated_at (datetime): Timestamp of last record update.
+
+    Provides:
+        - Auto-incrementing ID (BigInt for Postgres, Int for SQLite)
+        - created_at timestamp with timezone
+        - updated_at timestamp with timezone (auto-updates)"""
 
     __abstract__ = True
 
@@ -26,7 +36,19 @@ class BaseModel(orm.DeclarativeBase):
         primary_key=True,
     )
     created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(
-        postgresql.TIMESTAMP(precision=0, timezone=True),
+        postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
+            sa.DateTime(timezone=True),
+            "sqlite",
+        ),
         nullable=False,
         server_default=sa.func.now(),  # pylint: disable=not-callable
+    )
+    updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(
+        postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
+            sa.DateTime(timezone=True),
+            "sqlite",
+        ),
+        nullable=False,
+        server_default=sa.func.now(),  # pylint: disable=not-callable
+        onupdate=sa.func.now(),  # pylint: disable=not-callable
     )
