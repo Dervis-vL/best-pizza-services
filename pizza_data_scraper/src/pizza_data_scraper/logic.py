@@ -54,7 +54,6 @@ def get_scraped_pizzeria_data(card: bs_element.Tag) -> bs.BeautifulSoup:
     return bs.BeautifulSoup(page, features="html.parser")
 
 
-
 # def pizza50(location: enums.Location, year: enums.Year) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
 #     """Function for scraping data from the best pizza's website.
 

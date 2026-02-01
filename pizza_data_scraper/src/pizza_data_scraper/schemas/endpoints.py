@@ -1,21 +1,27 @@
 """Endpoints schemas for pizza data scraper."""
 
-import pandera.pandas as pa
-from pandera import typing as pa_typing
+import pydantic as pyd
+
+from pizza_data_scraper.schemas import CategorySchema, RankedEditionSchema
 
 
-class Endpoints(pa.DataFrameModel):
-    """Schema for the endpoints."""
+class RankingEndpointsSchema(pyd.BaseModel):
+    """Schema for the endpoints to rankings."""
 
-    class Config:  # pylint: disable=too-few-public-methods
-        """Configure schema to coerce types, and filter extra fields.
+    categories: list[CategorySchema] = pyd.Field(
+        ...,
+        description="List of pizza categories with their details",
+    )
+    editions: list[RankedEditionSchema] = pyd.Field(
+        ...,
+        description="List of ranking editions with their details",
+    )
 
-        Set coerce equal to true to enforce correct data types.
-        """
-
-        coerce = True
-        strict = "filter"
-
-    year: pa_typing.Series[str] = pa.Field(description="Year of the ranked data endpoint")
-    category: pa_typing.Series[str] = pa.Field(description="Category of the ranked data endpoint")
-    endpoint: pa_typing.Series[str] = pa.Field(description="Endpoint URL to the ranked data")
+    @pyd.model_validator(mode="after")
+    def validate(self) -> "RankingEndpointsSchema":
+        """Validates that each edition's category_slug exists in the categories list."""
+        valid_slugs = {category.slug for category in self.categories}
+        for edition in self.editions:
+            if edition.category_slug not in valid_slugs:
+                raise ValueError(f"Edition has invalid category_slug: {edition.category_slug}")
+        return self

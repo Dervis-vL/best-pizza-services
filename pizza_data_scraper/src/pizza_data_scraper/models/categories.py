@@ -1,9 +1,14 @@
 """Model for pizza categories and their associated data."""
 
+from typing import TYPE_CHECKING
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
 from pizza_data_scraper.models import base
+
+if TYPE_CHECKING:
+    from pizza_data_scraper.models.ranking_editions import RankingEditions
 
 
 class Categories(base.BaseModel):
@@ -11,12 +16,14 @@ class Categories(base.BaseModel):
 
     __tablename__ = "categories"
 
-    name: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=False, unique=True, comment="Name of the pizza category")
-    description: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=True, comment="Description of the pizza category")
+    name: orm.Mapped[str] = orm.mapped_column(sa.String(100), nullable=False, comment="Name of the pizza category")
+    description: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=True, comment="Description of the pizza category")
+    slug: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=False, comment="URL-friendly slug for the pizza category")
+
+    # relationships
+    ranked_editions: orm.Mapped[list["RankingEditions"]] = orm.relationship(back_populates="category")
 
     __table_args__ = (
-        sa.UniqueConstraint(
-            "name", name="uq_category_name"
-        ), 
+        sa.UniqueConstraint("slug", name="uq_category_slug"),
         {"schema": "pizza"}
     )
