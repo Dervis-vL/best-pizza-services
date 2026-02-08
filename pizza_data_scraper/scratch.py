@@ -8,14 +8,19 @@ from pizza_data_scraper import enums, logic, utils
 from pizza_data_scraper.models.base import BaseModel
 
 if __name__ == "__main__":
-    # CONFIG
+    # FLAGS
     SCRAPE_RANKING_DATA = False
     WRITE_TO_FILE = True
+
+    # CONSTANTS
+    CARDS_SELECTOR = "a#scheda"
+
+    # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
     HTML_OUTPUT_PATH = ROOT_PATH / "dev" / "HTML" / "EUROPE_2025.html"
-    CARDS_SELECTOR = "a#scheda"
     RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories.json"
-    DEFAULT_DB_URL = "sqlite:///./test_pizza.db"
+    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza.db"
+
 
     if SCRAPE_RANKING_DATA:
         location = enums.Categories.EUROPE
@@ -42,15 +47,11 @@ if __name__ == "__main__":
                 if not pizzeria_output_path.exists():
                     utils.soup_to_file(pizzeria_soup, pizzeria_output_path)
 
-    rankings_schema = utils.load_ranking_config(config_path=RANKINGS_JSON_PATH)
-
-    engine = utils.get_engine(DEFAULT_DB_URL)
-
-    # Handle SQLite schema issue - create tables without schema for SQLite
-    if "sqlite" in DEFAULT_DB_URL:
-        # Temporarily remove schema for SQLite
-        for table in BaseModel.metadata.tables.values():
-            table.schema = None
+    # Setup database
+    engine = utils.get_sqlite_engine(
+        db_path=DEFAULT_DB_PATH,
+        model=BaseModel,
+        )
 
     # Load config
     config = utils.load_ranking_config(config_path=RANKINGS_JSON_PATH)
@@ -58,4 +59,7 @@ if __name__ == "__main__":
     # Seed database
     SessionLocal = orm.sessionmaker(bind=engine)
     with SessionLocal() as db:
-        stats = utils.seed_database(db, config)
+        stats = utils.seed_database(
+            db=db,
+            config=config
+        )
