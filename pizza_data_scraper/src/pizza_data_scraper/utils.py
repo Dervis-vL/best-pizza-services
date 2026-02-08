@@ -6,7 +6,8 @@ from venv import logger
 
 import bs4 as bs
 import yarl
-from sqlalchemy import select, event, create_engine
+import sqlalchemy as sa
+from sqlalchemy import select, event
 from sqlalchemy import orm
 from bs4 import element as bs_element
 
@@ -176,17 +177,52 @@ def seed_database(db: orm.Session, config: schemas.RankingEndpointsSchema) -> di
     return stats
 
 
-def get_engine(db_url: str):
+def get_sqlite_engine(db_path: pathlib.Path | None, model: orm.DeclarativeBase) -> sa.engine.Engine:
     """Create engine with SQLite schema handling."""
-    engine = create_engine(db_url, echo=False)
-    
-    if "sqlite" in db_url:
-        # SQLite doesn't support schemas - use schema translation
-        # This maps 'pizza.table_name' to just 'table_name'
-        @event.listens_for(engine, "connect")
-        def set_sqlite_pragma(dbapi_connection, connection_record):
-            cursor = dbapi_connection.cursor()
-            cursor.execute("PRAGMA foreign_keys=ON")
-            cursor.close()
-    
-    return engine
+    if db_path:
+        url = f"sqlite:///{db_path}"
+        poolclass = sa.pool.StaticPool
+    else:
+        url = "sqlite:///:memory:"
+        poolclass = sa.pool.NullPool
+
+    # Create engine with appropriate pool class for SQLite
+    sqlite_engine = sa.create_engine(
+        url,
+        connect_args={"check_same_thread": False},
+        poolclass=poolclass,
+    )
+
+    # Enable foreign key enforcement for SQLite
+    @event.listens_for(sqlite_engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
+    # Remove schema for SQLite
+    for table in model.metadata.tables.values():
+        table.schema = None
+
+    # Create tables
+    model.metadata.create_all(bind=sqlite_engine)
+
+    return sqlite_engine
+
+
+def get_postgres_engine(db_url: str, model: orm.DeclarativeBase) -> sa.engine.Engine:
+    """Create engine with PostgreSQL schema handling."""
+    postgres_engine = sa.create_engine(db_url)
+
+    # raise an error if schema does not exist
+    with postgres_engine.connect() as connection:
+        result = connection.execute(
+            sa.text("SELECT schema_name FROM information_schema.schemata WHERE schema_name = 'pizza_data'")
+        )
+        if result.first() is None:
+            raise ValueError("Schema 'pizza_data' does not exist in the PostgreSQL database.")
+
+    # Create tables within the specified schema
+    model.metadata.create_all(bind=postgres_engine, schema="pizza_data")
+
+    return postgres_engine
