@@ -226,3 +226,38 @@ def get_postgres_engine(db_url: str, model: orm.DeclarativeBase) -> sa.engine.En
     model.metadata.create_all(bind=postgres_engine, schema="pizza_data")
 
     return postgres_engine
+
+
+def read_from_db(engine: sa.engine.Engine, model: orm.DeclarativeBase, table_name: str) -> schemas.RankingEndpointsSchema:
+    """Read data from the database and return it as a schema."""
+    with orm.Session(engine) as session:
+        categories = session.execute(select(models.Categories)).scalars().all()
+        editions = session.execute(select(models.RankingEditions)).scalars().all()
+
+    category_schemas = [
+        schemas.CategorySchema(
+            slug=cat.slug,
+            name=cat.name,
+            description=cat.description,
+        )
+        for cat in categories
+    ]
+
+    edition_schemas = [
+        schemas.RankedEditionSchema(
+            category_slug=next((c.slug for c in categories if c.id == ed.category_id), None),
+            year=ed.year,
+            endpoint_url=ed.endpoint_url,
+        )
+        for ed in editions
+    ]
+
+    return schemas.RankingEndpointsSchema(categories=category_schemas, editions=edition_schemas)
+
+
+def query_not_scraped_ranking_editions(engine: sa.engine.Engine) -> list[models.RankingEditions]:
+    """Query the database for ranking editions pages that have not been scraped yet."""
+    with orm.Session(engine) as session:
+        return session.execute(
+            select(models.RankingEditions).where(models.RankingEditions.scraped_at.is_(None))
+        ).scalars().all()
