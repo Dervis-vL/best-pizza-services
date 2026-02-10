@@ -3,6 +3,7 @@
 import pathlib
 
 from sqlalchemy import orm
+import yarl
 
 from pizza_data_scraper import enums, logic, utils
 from pizza_data_scraper.models.base import BaseModel
@@ -43,28 +44,26 @@ if SCRAPE_RANKING_DATA:
     # Get all urls from db which have 'scraped_at' as null
     not_scraped_rankings = utils.query_not_scraped_ranking_editions(engine=engine)
 
-    print(len(not_scraped_rankings))
+    # Scrape html ranked categories data
+    for edition in not_scraped_rankings:
+        url = yarl.URL(edition.endpoint_url)
+        scraped_ranked_data = logic.scrape_ranked_categories_data(url=str(url))
 
-    # location = enums.Categories.EUROPE
-    # year = enums.Year.Y2025
+        if WRITE_TO_FILE:
+            # Write to file
+            output_path = ROOT_PATH / "dev" / "HTML" / f"{edition.category.slug}_{edition.year}.html"
+            if not output_path.exists():
+                utils.soup_to_file(scraped_ranked_data, output_path)
 
-    # # Scrape html ranked categories data
-    # scraped_ranked_data = logic.get_scraped_ranked_data(location, year)
+        # # Scrape pizzeria data from cards
+        # cards = scraped_ranked_data.select(CARDS_SELECTOR)
+        # for i, card in enumerate(cards):
+        #     name = card.select_one("h3").get_text(strip=True).lower().replace(" ", "_")
+        #     pizzeria_soup = logic.get_scraped_pizzeria_data(card)
 
-    # if WRITE_TO_FILE:
-    #     # Write to file
-    #     if not HTML_OUTPUT_PATH.exists():
-    #         utils.soup_to_file(scraped_ranked_data, HTML_OUTPUT_PATH)
-
-    # # Scrape pizzeria data from cards
-    # cards = scraped_ranked_data.select(CARDS_SELECTOR)
-    # for i, card in enumerate(cards):
-    #     name = card.select_one("h3").get_text(strip=True).lower().replace(" ", "_")
-    #     pizzeria_soup = logic.get_scraped_pizzeria_data(card)
-
-    #     if WRITE_TO_FILE:
-    #         # Write to file
-    #         pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"pizzeria_{name}.html"
-    #         # Check if file exists
-    #         if not pizzeria_output_path.exists():
-    #             utils.soup_to_file(pizzeria_soup, pizzeria_output_path)
+        #     if WRITE_TO_FILE:
+        #         # Write to file
+        #         pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"pizzeria_{name}.html"
+        #         # Check if file exists
+        #         if not pizzeria_output_path.exists():
+        #             utils.soup_to_file(pizzeria_soup, pizzeria_output_path)

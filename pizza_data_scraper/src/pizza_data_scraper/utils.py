@@ -256,8 +256,11 @@ def read_from_db(engine: sa.engine.Engine, model: orm.DeclarativeBase, table_nam
 
 
 def query_not_scraped_ranking_editions(engine: sa.engine.Engine) -> list[models.RankingEditions]:
-    """Query the database for ranking editions pages that have not been scraped yet."""
+    """Eager query the database for ranking editions pages that have not been scraped yet."""
+    # Eager load ranking editions and category data
     with orm.Session(engine) as session:
         return session.execute(
-            select(models.RankingEditions).where(models.RankingEditions.scraped_at.is_(None))
+            select(models.RankingEditions).where(models.RankingEditions.scraped_at.is_(None)).options(
+                orm.joinedload(models.RankingEditions.category)
+            )
         ).scalars().all()

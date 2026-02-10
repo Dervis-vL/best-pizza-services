@@ -11,11 +11,12 @@ import urllib.request as url_request
 
 import bs4 as bs
 from bs4 import element as bs_element
+import yarl
 
-from pizza_data_scraper import enums, constants, utils
+from pizza_data_scraper import constants, utils
 
 
-def get_scraped_ranked_data(location: enums.Categories, year: enums.Year) -> bs.BeautifulSoup:
+def scrape_ranked_categories_data(url: str) -> bs.BeautifulSoup:
     """Function for scraping data from the best pizza's website.
 
     :param location: The location to scrape.
@@ -26,13 +27,9 @@ def get_scraped_ranked_data(location: enums.Categories, year: enums.Year) -> bs.
     :return: The parsed HTML content.
     :rtype: BeautifulSoup§
     """
-    # get endpoint
-    endpoint = utils.create_endpoint(location, year)
-    # url for best pizza's in Italy
-    data_url = constants.URL_HOME / endpoint
 
     # Load page
-    page = url_request.urlopen(str(data_url))
+    page = url_request.urlopen(url)
     # Return HTML soup
     return bs.BeautifulSoup(page, features="html.parser")
 
