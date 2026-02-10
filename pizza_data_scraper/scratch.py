@@ -47,6 +47,7 @@ if SCRAPE_RANKING_DATA:
     # Scrape html ranked categories data
     for edition in not_scraped_rankings:
         url = yarl.URL(edition.endpoint_url)
+        print(url)
         scraped_ranked_data = logic.scrape_ranked_categories_data(url=str(url))
 
         if WRITE_TO_FILE:
