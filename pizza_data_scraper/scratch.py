@@ -5,7 +5,7 @@ import pathlib
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_scraper import enums, logic, utils
+from pizza_data_scraper import logic, utils
 from pizza_data_scraper.models.base import BaseModel
 
 if __name__ == "__main__":
@@ -49,6 +49,7 @@ if SCRAPE_RANKING_DATA:
         url = yarl.URL(edition.endpoint_url)
         print(url)
         scraped_ranked_data = logic.scrape_ranked_categories_data(url=str(url))
+        utils.update_scraped_at(engine=engine, edition_id=edition.id)
 
         if WRITE_TO_FILE:
             # Write to file

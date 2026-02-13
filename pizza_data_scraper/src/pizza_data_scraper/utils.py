@@ -264,3 +264,19 @@ def query_not_scraped_ranking_editions(engine: sa.engine.Engine) -> list[models.
                 orm.joinedload(models.RankingEditions.category)
             )
         ).scalars().all()
+
+
+def update_scraped_at(engine: sa.engine.Engine, edition_id: int) -> None:
+    """Update the 'scraped_at' timestamp for a given ranking edition."""
+    try:
+        with orm.Session(engine) as session:
+            edition = session.get(models.RankingEditions, edition_id)
+            if edition:
+                now = sa.func.now()
+                edition.scraped_at = now
+                session.commit()
+            else:
+                raise ValueError(f"RankingEdition with id {edition_id} not found.")
+    except Exception as e:
+        logger.error(f"Error updating scraped_at for edition_id {edition_id}: {e}")
+        raise
