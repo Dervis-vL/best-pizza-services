@@ -16,7 +16,7 @@ import yarl
 from pizza_data_scraper import constants, utils
 
 
-def scrape_ranked_categories_data(url: str) -> bs.BeautifulSoup:
+def scrape_data_from_url(url: str) -> bs.BeautifulSoup:
     """Function for scraping data from the best pizza's website.
 
     :param location: The location to scrape.
@@ -25,7 +25,7 @@ def scrape_ranked_categories_data(url: str) -> bs.BeautifulSoup:
     :type year: enums.Year
 
     :return: The parsed HTML content.
-    :rtype: BeautifulSoup§
+    :rtype: BeautifulSoup
     """
 
     # Load page

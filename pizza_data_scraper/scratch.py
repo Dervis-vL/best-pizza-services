@@ -1,6 +1,7 @@
 """Scratch file to test changes before committing."""
 
 import pathlib
+import re
 
 from sqlalchemy import orm
 import yarl
@@ -14,7 +15,7 @@ if __name__ == "__main__":
     WRITE_TO_FILE = True
 
     # CONSTANTS
-    CARDS_SELECTOR = "a#scheda"
+    URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
 
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
@@ -40,32 +41,38 @@ if __name__ == "__main__":
             config=config
         )
 
-if SCRAPE_RANKING_DATA:
-    # Get all urls from db which have 'scraped_at' as null
-    not_scraped_rankings = utils.query_not_scraped_ranking_editions(engine=engine)
+    if SCRAPE_RANKING_DATA:
+        # Get all urls from db which have 'scraped_at' as null
+        not_scraped_rankings = utils.query_not_scraped_ranking_editions(engine=engine)
 
-    # Scrape html ranked categories data
-    for edition in not_scraped_rankings:
-        url = yarl.URL(edition.endpoint_url)
-        print(url)
-        scraped_ranked_data = logic.scrape_ranked_categories_data(url=str(url))
-        utils.update_scraped_at(engine=engine, edition_id=edition.id)
+        # Scrape html ranked categories data
+        for edition in not_scraped_rankings:
+            url = yarl.URL(edition.url)
+            print(url)
+            scraped_ranked_data = logic.scrape_data_from_url(url=url.human_repr())
+            utils.update_scraped_at(engine=engine, edition_id=edition.id)
 
-        if WRITE_TO_FILE:
-            # Write to file
-            output_path = ROOT_PATH / "dev" / "HTML" / f"{edition.category.slug}_{edition.year}.html"
-            if not output_path.exists():
-                utils.soup_to_file(scraped_ranked_data, output_path)
+            if WRITE_TO_FILE:
+                # Write to file
+                output_path = ROOT_PATH / "dev" / "HTML" / f"{edition.category.slug}_{edition.year}.html"
+                if not output_path.exists():
+                    utils.soup_to_file(scraped_ranked_data, output_path)
 
-        # # Scrape pizzeria data from cards
-        # cards = scraped_ranked_data.select(CARDS_SELECTOR)
-        # for i, card in enumerate(cards):
-        #     name = card.select_one("h3").get_text(strip=True).lower().replace(" ", "_")
-        #     pizzeria_soup = logic.get_scraped_pizzeria_data(card)
+            # Scrape pizzeria data from cards
+            pizzerria_urls = list(set(URL_PATTERN.findall(scraped_ranked_data.prettify())))
+            yarl_pizzeria_urls = [yarl.URL(url) for url in pizzerria_urls]
+            for i, url in enumerate(yarl_pizzeria_urls):
+                name = url.path.split("/")[-2]
 
-        #     if WRITE_TO_FILE:
-        #         # Write to file
-        #         pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"pizzeria_{name}.html"
-        #         # Check if file exists
-        #         if not pizzeria_output_path.exists():
-        #             utils.soup_to_file(pizzeria_soup, pizzeria_output_path)
+                # seed pizzeria db
+                
+
+                pizzeria_soup = logic.scrape_data_from_url(url=url.human_repr())
+
+                if WRITE_TO_FILE:
+                    # Write to file
+                    pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{name}.html"
+                    print(f"Scraped {i+1}/{len(yarl_pizzeria_urls)}: {name}")
+                    # Check if file exists
+                    if not pizzeria_output_path.exists():
+                        utils.soup_to_file(pizzeria_soup, pizzeria_output_path)

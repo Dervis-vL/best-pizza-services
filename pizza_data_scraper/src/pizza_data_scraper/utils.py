@@ -96,9 +96,9 @@ def upsert_edition(
     category_map: dict[str, models.Categories],
 ) -> models.RankingEditions:
     """Insert or update a ranking edition."""
-    category = category_map.get(edition_config.category_slug)
+    category = category_map.get(edition_config.slug)
     if not category:
-        raise ValueError(f"Category '{edition_config.category_slug}' not found")
+        raise ValueError(f"Category '{edition_config.slug}' not found")
 
     existing = db.scalar(
         select(models.RankingEditions).where(
@@ -108,13 +108,13 @@ def upsert_edition(
     )
 
     if existing:
-        existing.endpoint_url = edition_config.endpoint_url
+        existing.url = edition_config.url
         return existing
     else:
         edition = models.RankingEditions(
             category_id=category.id,
             year=edition_config.year,
-            endpoint_url=edition_config.endpoint_url,
+            url=edition_config.url,
         )
         db.add(edition)
         return edition
@@ -151,10 +151,10 @@ def seed_database(db: orm.Session, config: schemas.RankingEndpointsSchema) -> di
 
     # Second pass: upsert all editions
     for edition_config in config.editions:
-        category = category_map.get(edition_config.category_slug)
+        category = category_map.get(edition_config.slug)
         if not category:
             logger.warning(
-                f"Skipping edition - category '{edition_config.category_slug}' not found"
+                f"Skipping edition - category '{edition_config.slug}' not found"
             )
             continue
 
@@ -175,6 +175,24 @@ def seed_database(db: orm.Session, config: schemas.RankingEndpointsSchema) -> di
 
     db.commit()
     return stats
+
+
+def seed_pizzeria_database(db: orm.Session, pizzeria_config: schemas.PizzeriaSchema) -> models.Pizzerias:
+    """Seed the database with pizzeria data."""
+    existing = db.scalar(select(models.Pizzerias).where(models.Pizzerias.slug == pizzeria_config.slug))
+    if existing:
+        logger.info(f"Pizzeria '{pizzeria_config.slug}' already exists. Skipping.")
+        return existing
+
+    pizzeria = models.Pizzerias(
+        slug=pizzeria_config.slug,
+        name=pizzeria_config.name,
+        description=pizzeria_config.description,
+        url=pizzeria_config.url,
+    )
+    db.add(pizzeria)
+    db.commit()
+    return pizzeria
 
 
 def get_sqlite_engine(db_path: pathlib.Path | None, model: orm.DeclarativeBase) -> sa.engine.Engine:
@@ -245,9 +263,9 @@ def read_from_db(engine: sa.engine.Engine, model: orm.DeclarativeBase, table_nam
 
     edition_schemas = [
         schemas.RankedEditionSchema(
-            category_slug=next((c.slug for c in categories if c.id == ed.category_id), None),
+            slug=next((c.slug for c in categories if c.id == ed.category_id), None),
             year=ed.year,
-            endpoint_url=ed.endpoint_url,
+            url=ed.url,
         )
         for ed in editions
     ]

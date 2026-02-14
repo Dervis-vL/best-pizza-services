@@ -25,7 +25,7 @@ class RankingEditions(base.BaseModel):
         comment="Foreign key to the categories table",
     )
     year: orm.Mapped[int] = orm.mapped_column(sa.SmallInteger, nullable=False, comment="Year of the ranking edition")
-    endpoint_url: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=False, comment="Endpoint URL for the ranking edition data")
+    url: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=False, comment="Endpoint URL for the ranking edition data")
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
             sa.DateTime(timezone=True),
@@ -43,7 +43,7 @@ class RankingEditions(base.BaseModel):
             "category_id", "year", name="uq_ranking_edition_category_year"
         ),
         sa.UniqueConstraint(
-            "endpoint_url", name="uq_ranking_edition_endpoint_url"
+            "url", name="uq_ranking_edition_url"
         ), 
         {"schema": "pizza"}
     )

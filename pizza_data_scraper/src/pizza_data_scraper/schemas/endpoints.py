@@ -22,6 +22,6 @@ class RankingEndpointsSchema(pyd.BaseModel):
         """Validates that each edition's category_slug exists in the categories list."""
         valid_slugs = {category.slug for category in self.categories}
         for edition in self.editions:
-            if edition.category_slug not in valid_slugs:
-                raise ValueError(f"Edition has invalid category_slug: {edition.category_slug}")
+            if edition.slug not in valid_slugs:
+                raise ValueError(f"Edition has invalid category_slug: {edition.slug}")
         return self
