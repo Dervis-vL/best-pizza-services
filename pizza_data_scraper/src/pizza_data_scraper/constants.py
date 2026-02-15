@@ -9,10 +9,19 @@ URL_HOME: Final = yarl.URL("https://www.50toppizza.it/")
 class CategoryEndpoints:
     """Constants for category endpoints."""
 
-    WORLD: Final = "world"
-    LATIN_AMERICA: Final = "pizza-latin-america"
-    EUROPE: Final = "europe"
-    ASIA_PACIFIC: Final = "pizza-asia-pacific"
-    ITALY: Final = "pizza-italia"
-    USA: Final = "usa"
-    SELECTION_TYPE: Final = "50-top"
+    WORLD: Final[str] = "world"
+    LATIN_AMERICA: Final[str] = "pizza-latin-america"
+    EUROPE: Final[str] = "europe"
+    ASIA_PACIFIC: Final[str] = "pizza-asia-pacific"
+    ITALY: Final[str] = "pizza-italia"
+    USA: Final[str] = "usa"
+    SELECTION_TYPE: Final[str] = "50-top"
+
+
+class ColumnLengths:
+    """Constants for column lengths."""
+
+    NAME: Final[int] = 100
+    DESCRIPTION: Final[int] = 500
+    URL: Final[int] = 500
+    SLUG: Final[int] = 200
