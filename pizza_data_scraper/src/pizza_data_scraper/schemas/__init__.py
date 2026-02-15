@@ -3,6 +3,17 @@
 from pizza_data_scraper.schemas.category import CategorySchema
 from pizza_data_scraper.schemas.pizzeria import PizzeriaSchema
 from pizza_data_scraper.schemas.ranked_edition import RankedEditionSchema
-from pizza_data_scraper.schemas.endpoints import RankingEndpointsSchema
+from pizza_data_scraper.schemas.endpoints import (
+    RankingEndpointsSchema,
+    PizzeriaEndpointsSchema
+)
+from pizza_data_scraper.schemas.webpages import WebpagesSchema
 
-__all__ = ["CategorySchema", "PizzeriaSchema", "RankedEditionSchema", "RankingEndpointsSchema"]
+__all__ = [
+    "CategorySchema",
+    "PizzeriaSchema",
+    "RankedEditionSchema",
+    "RankingEndpointsSchema",
+    "PizzeriaEndpointsSchema",
+    "WebpagesSchema",
+]

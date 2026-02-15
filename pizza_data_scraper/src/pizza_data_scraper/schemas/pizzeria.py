@@ -2,10 +2,8 @@
 
 import pydantic as pyd
 
-from pizza_data_scraper.schemas.base import BaseSchema
 
-
-class PizzeriaSchema(BaseSchema):
+class PizzeriaSchema(pyd.BaseModel):
     """Schema for validating pizzeria data."""
 
     name: str = pyd.Field(..., max_length=100, description="Name of the pizzeria")

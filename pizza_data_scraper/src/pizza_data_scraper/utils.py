@@ -11,7 +11,7 @@ from sqlalchemy import select, event
 from sqlalchemy import orm
 from bs4 import element as bs_element
 
-from pizza_data_scraper import enums, constants, schemas, models
+from pizza_data_scraper import enums, constants, schemas, models, utils
 
 
 def create_endpoint(category: enums.Categories, year: enums.Year) -> str:
@@ -120,6 +120,56 @@ def upsert_edition(
         return edition
 
 
+def upsert_pizzeria(
+    db: orm.Session,
+    pizzeria_config: schemas.PizzeriaSchema
+) -> models.Pizzerias:
+    """Insert or update a pizzeria."""
+    existing = db.scalar(select(models.Pizzerias).where(models.Pizzerias.name == pizzeria_config.name))
+
+    if existing:
+        existing.description = pizzeria_config.description
+        return existing
+    else:
+        pizzeria = models.Pizzerias(
+            name=pizzeria_config.name,
+            description=pizzeria_config.description,
+        )
+        db.add(pizzeria)
+        return pizzeria
+
+
+def upsert_webpage(
+    db: orm.Session,
+    webpage_config: schemas.WebpagesSchema,
+    pizzeria_map: dict[str, models.Pizzerias]
+) -> models.Webpages:
+    """Insert or update a webpage."""
+    slug_to_name = utils.extract_pizzeria_name(endpoint_path=webpage_config.slug)
+    pizzeria = pizzeria_map.get(slug_to_name)
+    if not pizzeria:
+        raise ValueError(f"Pizzeria for slug '{webpage_config.slug}' not found")
+
+    existing = db.scalar(
+        select(models.Webpages).where(
+            models.Webpages.slug == webpage_config.slug,
+            models.Webpages.pizzeria_id == pizzeria.id,
+        )
+    )
+
+    if existing:
+        existing.url = webpage_config.url
+        return existing
+    else:
+        webpage = models.Webpages(
+            slug=webpage_config.slug,
+            url=webpage_config.url,
+            pizzeria_id=pizzeria.id,
+        )
+        db.add(webpage)
+        return webpage
+
+
 def seed_database(db: orm.Session, config: schemas.RankingEndpointsSchema) -> dict[str, int]:
     """Seed the database with categories and editions from config.
 
@@ -177,22 +227,59 @@ def seed_database(db: orm.Session, config: schemas.RankingEndpointsSchema) -> di
     return stats
 
 
-def seed_pizzeria_database(db: orm.Session, pizzeria_config: schemas.PizzeriaSchema) -> models.Pizzerias:
+def seed_pizzeria_database(db: orm.Session, config: schemas.PizzeriaEndpointsSchema) -> dict[str, int]:
     """Seed the database with pizzeria data."""
-    existing = db.scalar(select(models.Pizzerias).where(models.Pizzerias.slug == pizzeria_config.slug))
-    if existing:
-        logger.info(f"Pizzeria '{pizzeria_config.slug}' already exists. Skipping.")
-        return existing
+    stats = {
+        "pizzerias_created": 0,
+        "pizzerias_updated": 0,
+        "webpages_created": 0,
+        "webpages_updated": 0,
+    }
 
-    pizzeria = models.Pizzerias(
-        slug=pizzeria_config.slug,
-        name=pizzeria_config.name,
-        description=pizzeria_config.description,
-        url=pizzeria_config.url,
-    )
-    db.add(pizzeria)
+    # First pass: upsert all pizzerias
+    pizzeria_map: dict[str, models.Pizzerias] = {}
+
+    for pizzeria_config in config.pizzerias:
+        existing = db.scalar(select(models.Pizzerias).where(models.Pizzerias.name == pizzeria_config.name))
+        is_new = existing is None
+
+        pizzeria = upsert_pizzeria(db, pizzeria_config)
+        db.flush()  # Get ID for new pizzerias
+
+        pizzeria_map[pizzeria_config.name] = pizzeria
+
+        if is_new:
+            stats["pizzerias_created"] += 1
+        else:
+            stats["pizzerias_updated"] += 1
+
+    # Second pass: upsert all webpages
+    for webpage_config in config.webpages:
+        slug_to_name = utils.extract_pizzeria_name(endpoint_path=webpage_config.slug)
+        pizzeria = pizzeria_map.get(slug_to_name)
+        if not pizzeria:
+            logger.warning(
+                f"Skipping webpage - pizzeria for slug '{webpage_config.slug}' not found"
+            )
+            continue
+
+        existing = db.scalar(
+            select(models.Webpages).where(
+                models.Webpages.slug == webpage_config.slug,
+                models.Webpages.pizzeria_id == pizzeria.id,
+            )
+        )
+        is_new = existing is None
+
+        upsert_webpage(db, webpage_config, pizzeria_map)
+
+        if is_new:
+            stats["webpages_created"] += 1
+        else:
+            stats["webpages_updated"] += 1
+
     db.commit()
-    return pizzeria
+    return stats
 
 
 def get_sqlite_engine(db_path: pathlib.Path | None, model: orm.DeclarativeBase) -> sa.engine.Engine:
@@ -284,7 +371,15 @@ def query_not_scraped_ranking_editions(engine: sa.engine.Engine) -> list[models.
         ).scalars().all()
 
 
-def update_scraped_at(engine: sa.engine.Engine, edition_id: int) -> None:
+def query_not_scraped_pizzerias(engine: sa.engine.Engine) -> list[models.Webpages]:
+    """Lazy query the database for pizzerias that have not been scraped yet."""
+    with orm.Session(engine) as session:
+        return session.execute(
+            select(models.Webpages).where(models.Webpages.scraped_at.is_(None))
+        ).scalars().all()
+
+
+def update_rankings_scraped_at(engine: sa.engine.Engine, edition_id: int) -> None:
     """Update the 'scraped_at' timestamp for a given ranking edition."""
     try:
         with orm.Session(engine) as session:
@@ -298,3 +393,32 @@ def update_scraped_at(engine: sa.engine.Engine, edition_id: int) -> None:
     except Exception as e:
         logger.error(f"Error updating scraped_at for edition_id {edition_id}: {e}")
         raise
+
+
+def update_pizzerias_scraped_at(engine: sa.engine.Engine, pizzeria_id: int) -> None:
+    """Update the 'scraped_at' timestamp for a given pizzeria."""
+    try:
+        with orm.Session(engine) as session:
+            pizzeria = session.get(models.Webpages, pizzeria_id)
+            if pizzeria:
+                now = sa.func.now()
+                pizzeria.scraped_at = now
+                session.commit()
+            else:
+                raise ValueError(f"Pizzerias with id {pizzeria_id} not found.")
+    except Exception as e:
+        logger.error(f"Error updating scraped_at for pizzeria_id {pizzeria_id}: {e}")
+        raise
+
+
+def extract_pizzeria_name(endpoint_path: str) -> str:
+    """Extract pizzeria slug from URL path, stripping version suffixes like '-4'."""
+    slug = endpoint_path.rstrip("/").split("/")[-1]
+    if not slug:
+        raise ValueError(f"Invalid pizzeria endpoint path: {endpoint_path}")
+
+    # Strip numeric suffix (e.g., "napoli-on-the-road-4" -> "napoli-on-the-road")
+    parts = slug.rsplit("-", 1)
+    if len(parts) == 2 and parts[-1].isdigit():
+        return parts[0]
+    return slug

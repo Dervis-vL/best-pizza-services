@@ -6,12 +6,13 @@ import re
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_scraper import logic, utils
+from pizza_data_scraper import logic, utils, schemas
 from pizza_data_scraper.models.base import BaseModel
 
 if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
+    SCRAPE_PIZZERIA_DATA = True
     WRITE_TO_FILE = True
 
     # CONSTANTS
@@ -50,7 +51,7 @@ if __name__ == "__main__":
             url = yarl.URL(edition.url)
             print(url)
             scraped_ranked_data = logic.scrape_data_from_url(url=url.human_repr())
-            utils.update_scraped_at(engine=engine, edition_id=edition.id)
+            utils.update_rankings_scraped_at(engine=engine, edition_id=edition.id)
 
             if WRITE_TO_FILE:
                 # Write to file
@@ -58,21 +59,51 @@ if __name__ == "__main__":
                 if not output_path.exists():
                     utils.soup_to_file(scraped_ranked_data, output_path)
 
-            # Scrape pizzeria data from cards
+            # Scrape pizzeria data
             pizzerria_urls = list(set(URL_PATTERN.findall(scraped_ranked_data.prettify())))
             yarl_pizzeria_urls = [yarl.URL(url) for url in pizzerria_urls]
-            for i, url in enumerate(yarl_pizzeria_urls):
-                name = url.path.split("/")[-2]
 
-                # seed pizzeria db
-                
+            pizzerias_schemas = [
+                schemas.PizzeriaSchema(
+                    name=utils.extract_pizzeria_name(endpoint_path=url.path),
+                    slug=url.path.rstrip("/").split("/")[-1],
+                    description=None
+                )
+                for url in yarl_pizzeria_urls
+            ]
 
-                pizzeria_soup = logic.scrape_data_from_url(url=url.human_repr())
+            webpages_schemas = [
+                schemas.WebpagesSchema(
+                    slug=url.path.rstrip("/").split("/")[-1],
+                    url=url.human_repr()
+                )
+                for url in yarl_pizzeria_urls
+            ]
 
-                if WRITE_TO_FILE:
-                    # Write to file
-                    pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{name}.html"
-                    print(f"Scraped {i+1}/{len(yarl_pizzeria_urls)}: {name}")
-                    # Check if file exists
-                    if not pizzeria_output_path.exists():
-                        utils.soup_to_file(pizzeria_soup, pizzeria_output_path)
+            pizzeria_endpoints_schema = schemas.PizzeriaEndpointsSchema(
+                pizzerias=pizzerias_schemas,
+                webpages=webpages_schemas
+            )
+
+            # seed pizzeria db
+            with SessionLocal() as db:
+                utils.seed_pizzeria_database(db=db, config=pizzeria_endpoints_schema)
+
+    if SCRAPE_PIZZERIA_DATA:
+        # Get all pizzerias from db which have 'scraped_at' as null
+        not_scraped_pizzerias = utils.query_not_scraped_pizzerias(engine=engine)
+        
+        # Scrape html data for each pizzeria page
+        for i, pizzeria_webpage in enumerate(not_scraped_pizzerias):
+            url = yarl.URL(pizzeria_webpage.url)
+            print(url)
+            pizzeria_soup = logic.scrape_data_from_url(url=url.human_repr())
+            utils.update_pizzerias_scraped_at(engine=engine, pizzeria_id=pizzeria_webpage.id)
+
+            if WRITE_TO_FILE:
+                # Write to file
+                pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{pizzeria_webpage.slug}.html"
+                print(f"Scraped {i+1}/{len(not_scraped_pizzerias)}: {pizzeria_webpage.slug}")
+                # Check if file exists
+                if not pizzeria_output_path.exists():
+                    utils.soup_to_file(pizzeria_soup, pizzeria_output_path)

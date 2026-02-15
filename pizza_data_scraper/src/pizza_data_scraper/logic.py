@@ -11,9 +11,8 @@ import urllib.request as url_request
 
 import bs4 as bs
 from bs4 import element as bs_element
-import yarl
 
-from pizza_data_scraper import constants, utils
+from pizza_data_scraper import utils
 
 
 def scrape_data_from_url(url: str) -> bs.BeautifulSoup:

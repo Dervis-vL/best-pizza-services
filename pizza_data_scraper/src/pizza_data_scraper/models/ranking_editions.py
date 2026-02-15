@@ -16,14 +16,27 @@ if TYPE_CHECKING:
 class RankingEditions(base.BaseModel):
     """Model for storing ranking edition information."""
 
+    # table configuration
     __tablename__ = "ranking_editions"
+    __table_args__ = (
+        sa.UniqueConstraint(
+            "category_id", "year", name="uq_ranking_edition_category_year"
+        ),
+        sa.UniqueConstraint(
+            "url", name="uq_ranking_edition_url"
+        ), 
+        {"schema": "pizza"}
+    )
 
+    # foreign key(s)
     category_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
         sa.ForeignKey("pizza.categories.id", ondelete="CASCADE"),
         nullable=False,
         comment="Foreign key to the categories table",
     )
+
+    # columns
     year: orm.Mapped[int] = orm.mapped_column(sa.SmallInteger, nullable=False, comment="Year of the ranking edition")
     url: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=False, comment="Endpoint URL for the ranking edition data")
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
@@ -37,13 +50,3 @@ class RankingEditions(base.BaseModel):
 
     # relationships
     category: orm.Mapped["Categories"] = orm.relationship(back_populates="ranked_editions")
-
-    __table_args__ = (
-        sa.UniqueConstraint(
-            "category_id", "year", name="uq_ranking_edition_category_year"
-        ),
-        sa.UniqueConstraint(
-            "url", name="uq_ranking_edition_url"
-        ), 
-        {"schema": "pizza"}
-    )
