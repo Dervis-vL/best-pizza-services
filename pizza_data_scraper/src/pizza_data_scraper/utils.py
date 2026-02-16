@@ -11,7 +11,7 @@ from sqlalchemy import select, event
 from sqlalchemy import orm
 from bs4 import element as bs_element
 
-from pizza_data_scraper import enums, constants, schemas, models, utils
+from pizza_data_scraper import enums, constants, schemas, models, utils, settings
 
 
 def create_endpoint(category: enums.Categories, year: enums.Year) -> str:

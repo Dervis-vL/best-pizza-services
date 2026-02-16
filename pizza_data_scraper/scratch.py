@@ -6,17 +6,18 @@ import re
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_scraper import logic, utils, schemas
+from pizza_data_scraper import logic, utils, schemas, settings
 from pizza_data_scraper.models.base import BaseModel
 
 if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
     SCRAPE_PIZZERIA_DATA = True
-    WRITE_TO_FILE = True
+    WRITE_TO_FILE = False
 
     # CONSTANTS
     URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
+    DATABASE = "POSTGRESQL"
 
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
@@ -29,9 +30,15 @@ if __name__ == "__main__":
     config = utils.load_ranking_config(config_path=RANKINGS_JSON_PATH)
 
     # Setup database
-    engine = utils.get_sqlite_engine(
-        db_path=DEFAULT_DB_PATH,
-        model=BaseModel,
+    if DATABASE == "SQLITE":
+        engine = utils.get_sqlite_engine(
+            db_path=DEFAULT_DB_PATH,
+            model=BaseModel,
+            )
+    elif DATABASE == "POSTGRESQL":
+        engine = utils.get_postgres_engine(
+            db_url=settings.pizza_db.connection_string,
+            model=BaseModel,
         )
 
     # Seed database
