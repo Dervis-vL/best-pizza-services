@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
+from pizza_data_scraper import settings
 from pizza_data_scraper.models import base
 
 if TYPE_CHECKING:
@@ -15,10 +16,10 @@ class Pizzerias(base.BaseModel):
     """Model for storing pizza category information."""
 
     # table configuration
-    __tablename__ = "pizzerias"
+    __tablename__ = settings.pizza_db.tables.pizzerias
     __table_args__ = (
         sa.UniqueConstraint("name", name="uq_pizzeria_name"),
-        {"schema": "pizza"}
+        {"schema": settings.pizza_db.schema_name}
     )
 
     # columns

@@ -7,6 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
+from pizza_data_scraper import settings
 from pizza_data_scraper.models import base
 
 if TYPE_CHECKING:
@@ -17,7 +18,7 @@ class RankingEditions(base.BaseModel):
     """Model for storing ranking edition information."""
 
     # table configuration
-    __tablename__ = "ranking_editions"
+    __tablename__ = settings.pizza_db.tables.ranking_editions
     __table_args__ = (
         sa.UniqueConstraint(
             "category_id", "year", name="uq_ranking_edition_category_year"
@@ -25,7 +26,7 @@ class RankingEditions(base.BaseModel):
         sa.UniqueConstraint(
             "url", name="uq_ranking_edition_url"
         ), 
-        {"schema": "pizza"}
+        {"schema": settings.pizza_db.schema_name}
     )
 
     # foreign key(s)

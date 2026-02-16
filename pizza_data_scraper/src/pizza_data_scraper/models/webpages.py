@@ -7,6 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
+from pizza_data_scraper import settings
 from pizza_data_scraper.models import base
 from pizza_data_scraper.models.pizzerias import Pizzerias
 
@@ -18,10 +19,10 @@ class Webpages(base.BaseModel):
     """Model for storing webpages linked to the pizzerias information."""
 
     # table configuration
-    __tablename__ = "webpages"
+    __tablename__ = settings.pizza_db.tables.webpages
     __table_args__ = (
         sa.UniqueConstraint("slug", name="uq_webpage_slug"),
-        {"schema": "pizza"}
+        {"schema": settings.pizza_db.schema_name}
     )
 
     # foreign key(s)
@@ -45,4 +46,6 @@ class Webpages(base.BaseModel):
     )
 
     # relationships
-    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(back_populates="webpages")
+    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(
+        back_populates=settings.pizza_db.tables.webpages
+    )

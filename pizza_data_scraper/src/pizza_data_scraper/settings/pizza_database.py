@@ -14,4 +14,4 @@ class PizzaDatabaseSettings(settings.DatabaseSettings):
         env_prefix="PIZZA_DB_",
     )
 
-    tables: ClassVar[types.TableNames] = constants.PizzaTableNames()
+    tables: ClassVar[constants.PizzaTableNames] = constants.PizzaTableNames()
