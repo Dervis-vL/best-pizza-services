@@ -1,10 +1,22 @@
+"""Alembic environment configuration for pizza_platform."""
+
+import logging
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+import psycopg2.errors as pg_errors
+from sqlalchemy import (
+    create_engine,
+    pool,
+    text,
+    Connection,
+    engine_from_config
+)
+from sqlalchemy import exc as sa_exc
 from alembic import context
 
 from pizza_data_scraper import models, settings
+
+logger = logging.getLogger(__name__)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -25,6 +37,47 @@ target_metadata = models.BaseModel.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+# Database and schema bootstrap
+
+def ensure_database_exists() -> None:
+    """Create the target database if it doesn't exist.
+
+    Connects to the default 'postgres' database to execute CREATE DATABASE.
+    Uses EAFP pattern - attempts creation and catches duplicate error.
+    """
+    target_db_name = settings.pizza_db.database_name
+
+    # Connect to default postgres database
+    engine = create_engine(
+        url=settings.maintenance_db.connection_string,
+        isolation_level="AUTOCOMMIT",
+    )
+
+    try:
+        with engine.connect() as conn:
+            conn.execute(text(f'CREATE DATABASE "{target_db_name}"'))
+            logger.info("Database '%s' created successfully.", target_db_name)
+    except sa_exc.ProgrammingError as err:
+        if not isinstance(err.orig, pg_errors.DuplicateDatabase):
+            raise
+        logger.debug("Database '%s' already exists.", target_db_name)
+    finally:
+        engine.dispose()
+
+
+def ensure_schema_exists(connection: Connection) -> None:
+    """Create the target schema if it doesn't exist."""
+    schema_name = settings.pizza_db.schema_name
+    if schema_name is None:
+        return
+    try:
+        connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
+        connection.commit()
+        logger.info("Schema '%s' ready.", schema_name)
+    except sa_exc.ProgrammingError as err:
+        logger.error("Error ensuring schema '%s': %s", schema_name, err)
+        raise
 
 
 def run_migrations_offline() -> None:
@@ -67,6 +120,8 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
+        ensure_schema_exists(connection=connection)
+
         context.configure(
             connection=connection,
             include_schemas=True,
@@ -77,6 +132,8 @@ def run_migrations_online() -> None:
         with context.begin_transaction():
             context.run_migrations()
 
+# Database must exist before running migrations:
+ensure_database_exists()
 
 if context.is_offline_mode():
     run_migrations_offline()
