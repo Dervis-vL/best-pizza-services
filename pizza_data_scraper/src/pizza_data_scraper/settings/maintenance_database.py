@@ -12,5 +12,6 @@ class MaintenanceDatabaseSettings(settings.DatabaseSettings):
 
     model_config = config.DatabaseSettingsConfigDict(
         requires_tables=False,
+        env_file=".env",
         env_prefix="MAINTENANCE_DB_",
     )

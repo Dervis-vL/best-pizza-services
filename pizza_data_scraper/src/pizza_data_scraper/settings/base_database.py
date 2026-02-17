@@ -30,6 +30,7 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
     """
 
     model_config = pydantic_settings.SettingsConfigDict(
+        extra="ignore",
         hide_input_in_errors=True,
     )
 
