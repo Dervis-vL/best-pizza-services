@@ -11,7 +11,30 @@ from sqlalchemy import select, event
 from sqlalchemy import orm
 from bs4 import element as bs_element
 
-from pizza_data_scraper import enums, constants, schemas, models, settings
+from pizza_data_scraper import (
+    enums,
+    constants,
+    schemas,
+    models,
+    settings,
+    patterns,
+)
+
+
+def extract_coords(soup: bs.BeautifulSoup) -> dict | None:
+    """
+    Try each pattern in priority order and return the FIRST match.
+    Returns {'lat': float, 'lng': float} or None if nothing found.
+    """
+    for pat in (patterns.PAT_JS, patterns.PAT_JSON, patterns.PAT_FALLBACK):
+        m = pat.search(str(soup))
+        if m:
+            return {
+                'lat': float(m.group('lat')),
+                'lng': float(m.group('lng'))
+            }
+    return None
+
 
 
 def create_endpoint(category: enums.Categories, year: enums.Year) -> str:

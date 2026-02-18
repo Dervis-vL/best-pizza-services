@@ -6,18 +6,19 @@ import re
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_scraper import logic, utils, schemas, settings, models
+from pizza_data_scraper import logic, utils, schemas, settings
 from pizza_data_scraper.models.base import BaseModel
 
 if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
     SCRAPE_PIZZERIA_DATA = True
-    WRITE_TO_FILE = False
+    WRITE_TO_FILE = True
 
     # CONSTANTS
     URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
-    DATABASE = "POSTGRESQL"
+    # DATABASE = "POSTGRESQL"
+    DATABASE = "SQLITE"
 
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
@@ -106,6 +107,10 @@ if __name__ == "__main__":
             print(url)
             pizzeria_soup = logic.scrape_data_from_url(url=url.human_repr())
             utils.update_pizzerias_scraped_at(engine=engine, pizzeria_id=pizzeria_webpage.id)
+
+            # Get lat/lon
+            coordinates_dict = utils.extract_coords(soup=pizzeria_soup)
+            print(coordinates_dict)
 
             if WRITE_TO_FILE:
                 # Write to file
