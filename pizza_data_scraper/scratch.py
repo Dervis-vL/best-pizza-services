@@ -6,7 +6,7 @@ import re
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_scraper import logic, utils, schemas, settings
+from pizza_data_scraper import logic, utils, schemas, settings, models
 from pizza_data_scraper.models.base import BaseModel
 
 if __name__ == "__main__":

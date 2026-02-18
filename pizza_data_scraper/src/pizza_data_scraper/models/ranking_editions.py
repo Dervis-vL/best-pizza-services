@@ -1,5 +1,7 @@
 """Model for ranking editions and their associated data."""
 
+from __future__ import annotations
+
 import datetime
 from typing import TYPE_CHECKING
 
@@ -7,7 +9,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
-from pizza_data_scraper import settings
+from pizza_data_scraper import settings, models
 from pizza_data_scraper.models import base
 
 if TYPE_CHECKING:
@@ -32,7 +34,11 @@ class RankingEditions(base.BaseModel):
     # foreign key(s)
     category_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
-        sa.ForeignKey("pizza.categories.id", ondelete="CASCADE"),
+        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
+            schema_name=settings.pizza_db.schema_name,
+            table=settings.pizza_db.tables.categories,
+            identifier=models.Categories.id.key,
+        ), ondelete="CASCADE"),
         nullable=False,
         comment="Foreign key to the categories table",
     )

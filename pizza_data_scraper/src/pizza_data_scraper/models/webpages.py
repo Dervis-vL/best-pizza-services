@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
-from pizza_data_scraper import settings
+from pizza_data_scraper import settings, models
 from pizza_data_scraper.models import base
 from pizza_data_scraper.models.pizzerias import Pizzerias
 
@@ -28,7 +28,11 @@ class Webpages(base.BaseModel):
     # foreign key(s)
     pizzeria_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
-        sa.ForeignKey("pizza.pizzerias.id", ondelete="CASCADE"),
+        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
+            schema_name=settings.pizza_db.schema_name,
+            table=settings.pizza_db.tables.pizzerias,
+            identifier=models.Pizzerias.id.key,
+        ), ondelete="CASCADE"),
         nullable=False,
         comment="Foreign key to the pizzerias table",
     )

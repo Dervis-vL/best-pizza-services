@@ -11,7 +11,7 @@ from sqlalchemy import select, event
 from sqlalchemy import orm
 from bs4 import element as bs_element
 
-from pizza_data_scraper import enums, constants, schemas, models, utils, settings
+from pizza_data_scraper import enums, constants, schemas, models, settings
 
 
 def create_endpoint(category: enums.Categories, year: enums.Year) -> str:
@@ -145,7 +145,7 @@ def upsert_webpage(
     pizzeria_map: dict[str, models.Pizzerias]
 ) -> models.Webpages:
     """Insert or update a webpage."""
-    slug_to_name = utils.extract_pizzeria_name(endpoint_path=webpage_config.slug)
+    slug_to_name = extract_pizzeria_name(endpoint_path=webpage_config.slug)
     pizzeria = pizzeria_map.get(slug_to_name)
     if not pizzeria:
         raise ValueError(f"Pizzeria for slug '{webpage_config.slug}' not found")
@@ -255,7 +255,7 @@ def seed_pizzeria_database(db: orm.Session, config: schemas.PizzeriaEndpointsSch
 
     # Second pass: upsert all webpages
     for webpage_config in config.webpages:
-        slug_to_name = utils.extract_pizzeria_name(endpoint_path=webpage_config.slug)
+        slug_to_name = extract_pizzeria_name(endpoint_path=webpage_config.slug)
         pizzeria = pizzeria_map.get(slug_to_name)
         if not pizzeria:
             logger.warning(
@@ -318,17 +318,18 @@ def get_sqlite_engine(db_path: pathlib.Path | None, model: orm.DeclarativeBase) 
 def get_postgres_engine(db_url: str, model: orm.DeclarativeBase) -> sa.engine.Engine:
     """Create engine with PostgreSQL schema handling."""
     postgres_engine = sa.create_engine(db_url)
+    schema_name = settings.pizza_db.schema_name
 
     # raise an error if schema does not exist
     with postgres_engine.connect() as connection:
         result = connection.execute(
-            sa.text("SELECT schema_name FROM information_schema.schemata WHERE schema_name = 'pizza_data'")
+            sa.text(f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'")
         )
         if result.first() is None:
-            raise ValueError("Schema 'pizza_data' does not exist in the PostgreSQL database.")
+            raise ValueError(f"Schema '{schema_name}' does not exist in the PostgreSQL database.")
 
     # Create tables within the specified schema
-    model.metadata.create_all(bind=postgres_engine, schema="pizza_data")
+    model.metadata.create_all(bind=postgres_engine)
 
     return postgres_engine
 

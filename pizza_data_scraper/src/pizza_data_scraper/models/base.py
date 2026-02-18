@@ -52,3 +52,8 @@ class BaseModel(orm.DeclarativeBase):
         server_default=sa.func.now(),  # pylint: disable=not-callable
         onupdate=sa.func.now(),  # pylint: disable=not-callable
     )
+
+    @staticmethod
+    def create_foreign_key_str(schema_name: str, table: str, identifier: str) -> str:
+        """Returns the str of the foreign key name with dot separation."""
+        return ".".join((schema_name, table, identifier))
