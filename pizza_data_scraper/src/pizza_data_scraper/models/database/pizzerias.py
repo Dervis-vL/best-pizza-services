@@ -10,6 +10,7 @@ from pizza_data_scraper.models.database import base
 
 if TYPE_CHECKING:
     from pizza_data_scraper.models.database.webpages import Webpages
+    from pizza_data_scraper.models.database.locations import Locations
 
 
 class Pizzerias(base.BaseModel):
@@ -28,3 +29,4 @@ class Pizzerias(base.BaseModel):
 
     # relationships
     webpages: orm.Mapped[list["Webpages"]] = orm.relationship(back_populates="pizzeria")
+    locations: orm.Mapped[list["Locations"]] = orm.relationship(back_populates="pizzeria")
