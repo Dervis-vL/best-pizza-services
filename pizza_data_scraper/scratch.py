@@ -111,11 +111,22 @@ if __name__ == "__main__":
                 utils.update_pizzerias_scraped_at(engine=engine, pizzeria_id=pizzeria_webpage.id)
                 # Get lat/lon
                 coordinates = models.CoordResult.from_tuple(
-                    coordinates=models.coordinate_patterns.extract_coords(
+                    coordinates=models.coordinate_patterns.extract(
                         html=str(pizzeria_soup),
                     )
                 )
-                print(coordinates.as_tuple())
+                # Get phone
+                phone_number = models.phone_patterns.extract(
+                    html=str(pizzeria_soup),
+                )
+                # Get adress
+                adress = models.adress_patterns.extract(
+                    html=str(pizzeria_soup),
+                )
+                print(f"Phone number: {phone_number}")
+                print(f"Adress: {adress}")
+                print(f"Coordinates: {coordinates.as_tuple()}")
+                print("/n")
 
                 if WRITE_TO_FILE:
                     # Write to file
