@@ -6,10 +6,10 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from pizza_data_scraper import settings
-from pizza_data_scraper.models import base
+from pizza_data_scraper.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_scraper.models.webpages import Webpages
+    from pizza_data_scraper.models.database.webpages import Webpages
 
 
 class Pizzerias(base.BaseModel):

@@ -6,8 +6,8 @@ import re
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_scraper import logic, utils, schemas, settings
-from pizza_data_scraper.models.base import BaseModel
+from pizza_data_scraper import logic, utils, schemas, settings, models
+from pizza_data_scraper.models.database.base import BaseModel
 
 if __name__ == "__main__":
     # FLAGS
@@ -23,8 +23,8 @@ if __name__ == "__main__":
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
     HTML_OUTPUT_PATH = ROOT_PATH / "dev" / "HTML" / "EUROPE_2025.html"
-    RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories.json"
-    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza.db"
+    RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories_test_set.json"
+    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza_divers_data_set.db"
 
 
     # Load config
@@ -59,9 +59,9 @@ if __name__ == "__main__":
             url = yarl.URL(edition.url)
             print(url)
             scraped_ranked_data = logic.scrape_data_from_url(url=url.human_repr())
-            utils.update_rankings_scraped_at(engine=engine, edition_id=edition.id)
 
-            if WRITE_TO_FILE:
+            if WRITE_TO_FILE and scraped_ranked_data:
+                utils.update_rankings_scraped_at(engine=engine, edition_id=edition.id)
                 # Write to file
                 output_path = ROOT_PATH / "dev" / "HTML" / f"{edition.category.slug}_{edition.year}.html"
                 if not output_path.exists():
@@ -104,18 +104,23 @@ if __name__ == "__main__":
         # Scrape html data for each pizzeria page
         for i, pizzeria_webpage in enumerate(not_scraped_pizzerias):
             url = yarl.URL(pizzeria_webpage.url)
-            print(url)
+            print(url.human_repr())
             pizzeria_soup = logic.scrape_data_from_url(url=url.human_repr())
-            utils.update_pizzerias_scraped_at(engine=engine, pizzeria_id=pizzeria_webpage.id)
 
-            # Get lat/lon
-            coordinates_dict = utils.extract_coords(soup=pizzeria_soup)
-            print(coordinates_dict)
+            if pizzeria_soup:
+                utils.update_pizzerias_scraped_at(engine=engine, pizzeria_id=pizzeria_webpage.id)
+                # Get lat/lon
+                coordinates = models.CoordResult.from_tuple(
+                    coordinates=models.coordinate_patterns.extract_coords(
+                        html=str(pizzeria_soup),
+                    )
+                )
+                print(coordinates.as_tuple())
 
-            if WRITE_TO_FILE:
-                # Write to file
-                pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{pizzeria_webpage.slug}.html"
-                print(f"Scraped {i+1}/{len(not_scraped_pizzerias)}: {pizzeria_webpage.slug}")
-                # Check if file exists
-                if not pizzeria_output_path.exists():
-                    utils.soup_to_file(pizzeria_soup, pizzeria_output_path)
+                if WRITE_TO_FILE:
+                    # Write to file
+                    pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{pizzeria_webpage.slug}.html"
+                    print(f"Scraped {i+1}/{len(not_scraped_pizzerias)}: {pizzeria_webpage.slug}")
+                    # Check if file exists
+                    if not pizzeria_output_path.exists():
+                        utils.soup_to_file(pizzeria_soup, pizzeria_output_path)

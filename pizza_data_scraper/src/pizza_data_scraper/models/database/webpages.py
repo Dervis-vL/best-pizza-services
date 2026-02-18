@@ -7,12 +7,11 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
-from pizza_data_scraper import settings, models
-from pizza_data_scraper.models import base
-from pizza_data_scraper.models.pizzerias import Pizzerias
+from pizza_data_scraper import settings
+from pizza_data_scraper.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_scraper.models.pizzerias import Pizzerias
+    from pizza_data_scraper.models.database.pizzerias import Pizzerias
 
 
 class Webpages(base.BaseModel):
@@ -30,8 +29,7 @@ class Webpages(base.BaseModel):
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
         sa.ForeignKey(base.BaseModel.create_foreign_key_str(
             schema_name=settings.pizza_db.schema_name,
-            table=settings.pizza_db.tables.pizzerias,
-            identifier=models.Pizzerias.id.key,
+            table_name=settings.pizza_db.tables.pizzerias,
         ), ondelete="CASCADE"),
         nullable=False,
         comment="Foreign key to the pizzerias table",

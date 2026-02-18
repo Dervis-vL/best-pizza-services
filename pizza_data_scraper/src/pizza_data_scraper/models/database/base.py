@@ -1,5 +1,7 @@
 """Base model definitions for pizza_data_scraper models."""
 
+from __future__ import annotations
+
 import datetime
 
 import sqlalchemy as sa
@@ -54,6 +56,6 @@ class BaseModel(orm.DeclarativeBase):
     )
 
     @staticmethod
-    def create_foreign_key_str(schema_name: str, table: str, identifier: str) -> str:
+    def create_foreign_key_str(schema_name: str, table_name: str) -> str:
         """Returns the str of the foreign key name with dot separation."""
-        return ".".join((schema_name, table, identifier))
+        return ".".join((schema_name, table_name, "id"))

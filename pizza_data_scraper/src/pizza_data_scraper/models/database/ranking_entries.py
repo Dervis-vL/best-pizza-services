@@ -4,7 +4,7 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from pizza_data_scraper import settings
-from pizza_data_scraper.models import base
+from pizza_data_scraper.models.database import base
 
 
 class RankingEntries(base.BaseModel):

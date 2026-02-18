@@ -7,12 +7,16 @@ Rank, name, country, region, place, address.
 The information is linked to an object.
 """
 
-import urllib.request as url_request
+import logging
+from urllib import request as url_request
+from urllib.error import HTTPError, URLError
 
 import bs4 as bs
 from bs4 import element as bs_element
 
 from pizza_data_scraper import utils
+
+logger = logging.getLogger(__name__)
 
 
 def scrape_data_from_url(url: str) -> bs.BeautifulSoup:
@@ -26,11 +30,23 @@ def scrape_data_from_url(url: str) -> bs.BeautifulSoup:
     :return: The parsed HTML content.
     :rtype: BeautifulSoup
     """
+    req = url_request.Request(
+        url,
+        headers={"User-Agent": "Mozilla/5.0 (compatible; pizza-scraper/1.0)"},
+    )
 
-    # Load page
-    page = url_request.urlopen(url)
-    # Return HTML soup
-    return bs.BeautifulSoup(page, features="html.parser")
+    try:
+        page = url_request.urlopen(req, timeout=10)
+        return bs.BeautifulSoup(page, features="html.parser")
+
+    except HTTPError as e:
+        logging.warning(f"HTTP {e.code} fetching {url}: {e.reason} — skipping")
+    except URLError as e:
+        logging.warning(f"Failed to reach {url}: {e.reason} — skipping")
+    except TimeoutError:
+        logging.warning(f"Timeout fetching {url} — skipping")
+
+    return None
 
 
 def get_scraped_pizzeria_data(card: bs_element.Tag) -> bs.BeautifulSoup:
