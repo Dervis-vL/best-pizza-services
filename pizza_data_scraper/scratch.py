@@ -126,7 +126,7 @@ if __name__ == "__main__":
                 print(f"Phone number: {phone_number}")
                 print(f"Adress: {adress}")
                 print(f"Coordinates: {coordinates.as_tuple()}")
-                print("/n")
+                print("\n")
 
                 location_schema = schemas.LocationSchema(
                     pizzaria_id=pizzeria_webpage.pizzeria_id,
