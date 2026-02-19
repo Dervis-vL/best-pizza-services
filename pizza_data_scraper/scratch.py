@@ -128,6 +128,20 @@ if __name__ == "__main__":
                 print(f"Coordinates: {coordinates.as_tuple()}")
                 print("/n")
 
+                location_schema = schemas.LocationSchema(
+                    pizzaria_id=pizzeria_webpage.pizzeria_id,
+                    latitude=coordinates.lat,
+                    longitude=coordinates.lng,
+                    adress=adress,
+                    phone=phone_number,
+                )
+
+                # populate locations table
+                utils.seed_location_database(
+                    db=db,
+                    config=location_schema,
+                )
+
                 if WRITE_TO_FILE:
                     # Write to file
                     pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{pizzeria_webpage.slug}.html"

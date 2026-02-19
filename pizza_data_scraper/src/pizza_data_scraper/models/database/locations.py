@@ -1,10 +1,8 @@
 """Model for pizzerias and their associated locations."""
 
-import datetime
 from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
 from pizza_data_scraper import settings
@@ -38,12 +36,12 @@ class Locations(base.BaseModel):
     )
 
     # columns
-    adress: orm.Mapped[str] = orm.mapped_column(sa.String(250), nullable=False, comment="")
-    city: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=False, comment="")
-    country: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=False, comment="")
+    adress: orm.Mapped[str] = orm.mapped_column(sa.String(250), nullable=True, comment="")
+    city: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=True, comment="")
+    country: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=True, comment="")
     latitude: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=False, comment="")
     longitude: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=False, comment="")
-    phone: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=False, comment="")
+    phone: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=True, comment="")
 
     # relationships
     pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(

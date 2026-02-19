@@ -3,6 +3,7 @@
 import pydantic as pyd
 
 from pizza_data_scraper.schemas.category import CategorySchema
+from pizza_data_scraper.schemas.locations import LocationSchema
 from pizza_data_scraper.schemas.pizzeria import PizzeriaSchema
 from pizza_data_scraper.schemas.ranked_edition import RankedEditionSchema
 from pizza_data_scraper.schemas.webpages import WebpagesSchema
