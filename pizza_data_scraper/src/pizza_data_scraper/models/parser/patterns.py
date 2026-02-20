@@ -39,6 +39,14 @@ class BasePattern(BaseModel, ABC):
         pass
 
 
+class URLPattern(BasePattern):
+    """
+    Pattern for extracting the raw url string.
+    """
+
+    pass
+
+
 class CoordPatterns(BasePattern):
     """
     Compiled regex patterns for coordinate extraction.
