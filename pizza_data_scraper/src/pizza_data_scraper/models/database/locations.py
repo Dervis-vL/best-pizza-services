@@ -27,6 +27,10 @@ class Locations(base.BaseModel):
     # foreign key(s)
     pizzeria_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
+        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
+            schema_name=settings.pizza_db.schema_name,
+            table_name=settings.pizza_db.tables.pizzerias,
+        ), ondelete="CASCADE"),
         nullable=False,
         comment="Foreign key to the pizzerias table",
     )

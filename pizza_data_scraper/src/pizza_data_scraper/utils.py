@@ -145,7 +145,7 @@ def upsert_pizzeria(
         return pizzeria
 
 
-def upsert_pizzeria(
+def upsert_location(
     db: orm.Session,
     location_config: schemas.LocationSchema
 ) -> models.Locations:
@@ -155,14 +155,17 @@ def upsert_pizzeria(
     if existing:
         return existing
     else:
-        pizzeria = models.Locations(
+        location = models.Locations(
             pizzeria_id=location_config.pizzaria_id,
             adress=location_config.adress,
             city=location_config.city,
             country=location_config.country,
+            latitude=location_config.latitude,
+            longitude=location_config.longitude,
+            phone=location_config.phone,
         )
-        db.add(pizzeria)
-        return pizzeria
+        db.add(location)
+        return location
 
 
 def upsert_webpage(
@@ -319,7 +322,7 @@ def seed_location_database(db: orm.Session, config: schemas.LocationSchema) -> N
     existing = db.scalar(select(models.Locations).where(models.Locations.pizzeria_id == config.pizzaria_id))
     is_new = existing is None
 
-    location = upsert_location(db, config)
+    upsert_location(db, config)
     db.flush()  # Get ID for new Location
 
     if is_new:
