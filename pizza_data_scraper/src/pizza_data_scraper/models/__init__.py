@@ -2,6 +2,7 @@
 
 from pizza_data_scraper.models.database.base import BaseModel
 from pizza_data_scraper.models.database.categories import Categories
+from pizza_data_scraper.models.database.locations import Locations
 from pizza_data_scraper.models.database.pizzerias import Pizzerias
 from pizza_data_scraper.models.database.ranking_editions import RankingEditions
 from pizza_data_scraper.models.database.webpages import Webpages
@@ -18,6 +19,7 @@ __all__ = [
     "Categories",
     "coordinate_patterns",
     "CoordResult",
+    "Locations",
     "phone_patterns",
     "Pizzerias",
     "RankingEditions",

@@ -145,6 +145,26 @@ def upsert_pizzeria(
         return pizzeria
 
 
+def upsert_pizzeria(
+    db: orm.Session,
+    location_config: schemas.LocationSchema
+) -> models.Locations:
+    """Insert or update a pizzeria location."""
+    existing = db.scalar(select(models.Locations).where(models.Locations.pizzeria_id == location_config.pizzaria_id))
+
+    if existing:
+        return existing
+    else:
+        pizzeria = models.Locations(
+            pizzeria_id=location_config.pizzaria_id,
+            adress=location_config.adress,
+            city=location_config.city,
+            country=location_config.country,
+        )
+        db.add(pizzeria)
+        return pizzeria
+
+
 def upsert_webpage(
     db: orm.Session,
     webpage_config: schemas.WebpagesSchema,
@@ -290,58 +310,25 @@ def seed_pizzeria_database(db: orm.Session, config: schemas.PizzeriaEndpointsSch
 
 def seed_location_database(db: orm.Session, config: schemas.LocationSchema) -> None:
     """Seed the database with pizzeria location data."""
-    pass
-    # stats = {
-    #     "pizzerias_created": 0,
-    #     "pizzerias_updated": 0,
-    #     "webpages_created": 0,
-    #     "webpages_updated": 0,
-    # }
+    stats = {
+        "locations_created": 0,
+        "locations_updated": 0,
+    }
 
-    # # First pass: upsert all pizzerias
-    # pizzeria_map: dict[str, models.Pizzerias] = {}
+    # upsert all pizzerias
+    existing = db.scalar(select(models.Locations).where(models.Locations.pizzeria_id == config.pizzaria_id))
+    is_new = existing is None
 
-    # for pizzeria_config in config.pizzerias:
-    #     existing = db.scalar(select(models.Pizzerias).where(models.Pizzerias.name == pizzeria_config.name))
-    #     is_new = existing is None
+    location = upsert_location(db, config)
+    db.flush()  # Get ID for new Location
 
-    #     pizzeria = upsert_pizzeria(db, pizzeria_config)
-    #     db.flush()  # Get ID for new pizzerias
+    if is_new:
+        stats["locations_created"] += 1
+    else:
+        stats["locations_updated"] += 1
 
-    #     pizzeria_map[pizzeria_config.name] = pizzeria
-
-    #     if is_new:
-    #         stats["pizzerias_created"] += 1
-    #     else:
-    #         stats["pizzerias_updated"] += 1
-
-    # # Second pass: upsert all webpages
-    # for webpage_config in config.webpages:
-    #     slug_to_name = extract_pizzeria_name(endpoint_path=webpage_config.slug)
-    #     pizzeria = pizzeria_map.get(slug_to_name)
-    #     if not pizzeria:
-    #         logger.warning(
-    #             f"Skipping webpage - pizzeria for slug '{webpage_config.slug}' not found"
-    #         )
-    #         continue
-
-    #     existing = db.scalar(
-    #         select(models.Webpages).where(
-    #             models.Webpages.slug == webpage_config.slug,
-    #             models.Webpages.pizzeria_id == pizzeria.id,
-    #         )
-    #     )
-    #     is_new = existing is None
-
-    #     upsert_webpage(db, webpage_config, pizzeria_map)
-
-    #     if is_new:
-    #         stats["webpages_created"] += 1
-    #     else:
-    #         stats["webpages_updated"] += 1
-
-    # db.commit()
-    # return stats
+    db.commit()
+    return stats
 
 
 def get_sqlite_engine(db_path: pathlib.Path | None, model: orm.DeclarativeBase) -> sa.engine.Engine:
