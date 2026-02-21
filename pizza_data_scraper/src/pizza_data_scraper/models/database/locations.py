@@ -39,8 +39,8 @@ class Locations(base.BaseModel):
     adress: orm.Mapped[str] = orm.mapped_column(sa.String(250), nullable=True, comment="")
     city: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=True, comment="")
     country: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=True, comment="")
-    latitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=False, comment="")
-    longitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=False, comment="")
+    latitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True, comment="")
+    longitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True, comment="")
     phone: orm.Mapped[str] = orm.mapped_column(sa.String(20), nullable=True, comment="")
 
     # relationships

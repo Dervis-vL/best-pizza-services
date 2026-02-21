@@ -5,7 +5,14 @@ import yarl
 
 from pizza_data_scraper import types
 
+
 URL_HOME: Final = yarl.URL("https://www.50toppizza.it/")
+
+
+class Coordinate:
+    """Coordinate constant values for models."""
+
+    LOC_DELTA: Final[float] = 0.0003
 
 
 class CategoryEndpoints:

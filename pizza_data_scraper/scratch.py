@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
     SCRAPE_PIZZERIA_DATA = True
-    WRITE_TO_FILE = True
+    WRITE_TO_FILE = False
 
     # CONSTANTS
     URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     ROOT_PATH = pathlib.Path(__file__).parent.parent
     HTML_OUTPUT_PATH = ROOT_PATH / "dev" / "HTML" / "EUROPE_2025.html"
     RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories_test_set.json"
-    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza_divers_data_set.db"
+    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza_divers_data_set_two.db"
 
 
     # Load config
@@ -59,9 +59,9 @@ if __name__ == "__main__":
             url = yarl.URL(edition.url)
             print(url)
             scraped_ranked_data = logic.scrape_data_from_url(url=url.human_repr())
+            utils.update_rankings_scraped_at(engine=engine, edition_id=edition.id)
 
             if WRITE_TO_FILE and scraped_ranked_data:
-                utils.update_rankings_scraped_at(engine=engine, edition_id=edition.id)
                 # Write to file
                 output_path = ROOT_PATH / "dev" / "HTML" / f"{edition.category.slug}_{edition.year}.html"
                 if not output_path.exists():
@@ -110,10 +110,8 @@ if __name__ == "__main__":
             if pizzeria_soup:
                 utils.update_pizzerias_scraped_at(engine=engine, pizzeria_id=pizzeria_webpage.id)
                 # Get lat/lon
-                coordinates = models.CoordResult.from_tuple(
-                    coordinates=models.coordinate_patterns.extract(
-                        html=str(pizzeria_soup),
-                    )
+                coordinates = models.coordinate_patterns.extract(
+                    html=str(pizzeria_soup),
                 )
                 # Get phone
                 phone_number = models.phone_patterns.extract(
@@ -125,13 +123,13 @@ if __name__ == "__main__":
                 )
                 print(f"Phone number: {phone_number}")
                 print(f"Adress: {adress}")
-                print(f"Coordinates: {coordinates.as_tuple()}")
+                print(f"Coordinates: {coordinates}")
                 print("\n")
 
                 location_schema = schemas.LocationSchema(
                     pizzaria_id=pizzeria_webpage.pizzeria_id,
-                    latitude=coordinates.lat,
-                    longitude=coordinates.lng,
+                    latitude=coordinates[0],
+                    longitude=coordinates[1],
                     adress=adress,
                     phone=phone_number,
                 )

@@ -150,26 +150,33 @@ def upsert_location(
     location_config: schemas.LocationSchema
 ) -> models.Locations:
     """Insert or update a pizzeria location."""
-    existing = db.scalar(
-        select(models.Locations)
-        .where(models.Locations.latitude == location_config.latitude)
-        .where(models.Locations.longitude == location_config.longitude)
-    )
-
-    if existing:
-        return existing
-    else:
-        location = models.Locations(
-            pizzeria_id=location_config.pizzaria_id,
-            adress=location_config.adress,
-            city=location_config.city,
-            country=location_config.country,
-            latitude=location_config.latitude,
-            longitude=location_config.longitude,
-            phone=location_config.phone,
+    if location_config.has_coordinates:
+        existing = db.scalar(
+            select(models.Locations)
+            .where(models.Locations.latitude.between(
+                location_config.latitude - constants.Coordinate.LOC_DELTA,
+                location_config.latitude + constants.Coordinate.LOC_DELTA,
+            ))
+            .where(models.Locations.longitude.between(
+                location_config.longitude - constants.Coordinate.LOC_DELTA,
+                location_config.longitude + constants.Coordinate.LOC_DELTA,
+            ))
         )
-        db.add(location)
-        return location
+
+        if existing:
+            return existing
+
+    location = models.Locations(
+        pizzeria_id=location_config.pizzaria_id,
+        adress=location_config.adress,
+        city=location_config.city,
+        country=location_config.country,
+        latitude=location_config.latitude,
+        longitude=location_config.longitude,
+        phone=location_config.phone,
+    )
+    db.add(location)
+    return location
 
 
 def upsert_webpage(

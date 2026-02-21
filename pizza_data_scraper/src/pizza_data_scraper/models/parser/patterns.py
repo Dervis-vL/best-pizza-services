@@ -44,7 +44,12 @@ class URLPattern(BasePattern):
     Pattern for extracting the raw url string.
     """
 
-    pass
+    pizzeria_url: re.Pattern[str] =re.compile(
+        r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"'
+    )
+
+    def extract(self, html: str):
+        pass
 
 
 class CoordPatterns(BasePattern):
@@ -73,12 +78,12 @@ class CoordPatterns(BasePattern):
         re.DOTALL | re.IGNORECASE,
     )
 
-    def extract(self, html: str) -> tuple[float, float] | None:
+    def extract(self, html: str) -> tuple[float, float] | tuple[None, None]:
         """Return (lat, lng) from the first matching pattern, or None."""
         match = self.search(html)
         if match:
             return float(match.group("lat")), float(match.group("lng"))
-        return None
+        return None, None
 
 
 class AddressPatterns(BasePattern):

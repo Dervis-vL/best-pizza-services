@@ -7,7 +7,6 @@ from pizza_data_scraper.models.database.pizzerias import Pizzerias
 from pizza_data_scraper.models.database.ranking_editions import RankingEditions
 from pizza_data_scraper.models.database.webpages import Webpages
 from pizza_data_scraper.models.parser.patterns import CoordPatterns, AddressPatterns, PhonePatterns
-from pizza_data_scraper.models.dataclass.coordinates import CoordResult
 
 adress_patterns = AddressPatterns()
 coordinate_patterns = CoordPatterns()
@@ -18,7 +17,6 @@ __all__ = [
     "BaseModel",
     "Categories",
     "coordinate_patterns",
-    "CoordResult",
     "Locations",
     "phone_patterns",
     "Pizzerias",
