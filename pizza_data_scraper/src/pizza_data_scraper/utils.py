@@ -150,7 +150,11 @@ def upsert_location(
     location_config: schemas.LocationSchema
 ) -> models.Locations:
     """Insert or update a pizzeria location."""
-    existing = db.scalar(select(models.Locations).where(models.Locations.pizzeria_id == location_config.pizzaria_id))
+    existing = db.scalar(
+        select(models.Locations)
+        .where(models.Locations.latitude == location_config.latitude)
+        .where(models.Locations.longitude == location_config.longitude)
+    )
 
     if existing:
         return existing
