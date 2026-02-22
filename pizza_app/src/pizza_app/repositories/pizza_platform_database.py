@@ -8,7 +8,7 @@ import pandas as pd
 import sqlalchemy as sa
 from pandera import typing as pa_typing
 
-from pizza_app import settings, schemas, models
+from pizza_app import settings, schemas, models, types
 
 
 class PizzaPlatformDatabase:
@@ -18,10 +18,10 @@ class PizzaPlatformDatabase:
         settings: Resolved database settings
     """
 
-    def __init__(self, settings: settings.DatabaseSettings) -> None:
+    def __init__(self, connection_string: str, schema_name: types.SchemaName | None = None) -> None:
         """Initialization of repo."""
-        self._engine = sa.create_engine(settings.connection_string, pool_pre_ping=True)
-        self._schema = settings.schema_name
+        self._engine: sa.Engine = sa.create_engine(connection_string, pool_pre_ping=True)
+        self._schema: types.SchemaName | None = schema_name
 
     def _get_query(self) -> sa.Select[Any]:
         return sa.select(
@@ -38,9 +38,14 @@ class PizzaPlatformDatabase:
 
     def read(self) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
         """Return every pizzeria that has lat lon pupulated."""
-        query = self.get_query()
+        query = self._get_query()
 
-        with self._engine.connect() as conn:
-            pizzerias_df = pd.read_sql(sql=query, con=conn)
+        try:
+            # must work for postgres and sqlite, so use pandas read_sql which can handle both via SQLAlchemy.
+            # When no schema (SQLite) it would still work:
+            with self._engine.connect() as conn:
+                pizzerias_df = pd.read_sql(query, conn)
+        except Exception as e:
+            raise RuntimeError(f"Error reading from database: {e}")
 
         return schemas.PizzeriaSchema.validate(pizzerias_df)
