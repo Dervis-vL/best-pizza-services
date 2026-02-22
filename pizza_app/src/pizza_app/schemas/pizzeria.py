@@ -14,8 +14,8 @@ class PizzeriaSchema(pa.DataFrameModel):
     """
 
     name: pa_typing.Series[str] = pa.Field(nullable=False, str_length={"min_value": 1})
-    latitude: pa_typing.Series[float] = pa.Field(nullable=False)
-    longitude: pa_typing.Series[float] = pa.Field(nullable=False)
+    latitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-90, le=90)
+    longitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-180, le=180)
 
     class Config:
         strict = True
