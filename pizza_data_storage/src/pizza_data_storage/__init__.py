@@ -1,0 +1,1 @@
+"""Pizza data storage module."""
