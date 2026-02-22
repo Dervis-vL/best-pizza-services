@@ -9,11 +9,11 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
-from pizza_data_scraper import settings
-from pizza_data_scraper.models.database import base
+from pizza_data_management import settings
+from pizza_data_management.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_scraper.models.database.categories import Categories
+    from pizza_data_management.models.database.categories import Categories
 
 
 class RankingEditions(base.BaseModel):

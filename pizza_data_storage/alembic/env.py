@@ -14,7 +14,7 @@ from sqlalchemy import (
 from sqlalchemy import exc as sa_exc
 from alembic import context
 
-from pizza_data_scraper import models, settings
+from pizza_data_management import models, settings
 
 logger = logging.getLogger(__name__)
 

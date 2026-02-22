@@ -6,8 +6,8 @@ import re
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_scraper import logic, utils, schemas, settings, models
-from pizza_data_scraper.models.database.base import BaseModel
+from pizza_data_management import logic, utils, schemas, settings, models
+from pizza_data_management.models.database.base import BaseModel
 
 if __name__ == "__main__":
     # FLAGS

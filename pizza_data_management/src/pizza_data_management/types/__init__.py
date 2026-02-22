@@ -1,6 +1,6 @@
 """Types used across the pizza app/services."""
 
-from pizza_data_scraper.types.database import (
+from pizza_data_management.types.database import (
     PostgresName,
     SchemaName,
     TableName,

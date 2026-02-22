@@ -4,7 +4,7 @@ from typing import ClassVar
 
 import pydantic_settings
 
-from pizza_data_scraper import constants, settings
+from pizza_data_management import constants, settings
 
 
 class PizzaDatabaseSettings(settings.DatabaseSettings):

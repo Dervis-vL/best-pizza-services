@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_data_scraper import settings
-from pizza_data_scraper.models.database import base
+from pizza_data_management import settings
+from pizza_data_management.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_scraper.models.database.ranking_editions import RankingEditions
+    from pizza_data_management.models.database.ranking_editions import RankingEditions
 
 
 class Categories(base.BaseModel):

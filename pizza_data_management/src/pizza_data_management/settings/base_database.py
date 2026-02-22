@@ -6,7 +6,7 @@ import pydantic
 import pydantic_settings
 import sqlalchemy as sa
 
-from pizza_data_scraper import types
+from pizza_data_management import types
 
 
 class DatabaseSettings(pydantic_settings.BaseSettings):

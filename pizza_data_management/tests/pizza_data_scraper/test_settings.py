@@ -2,7 +2,7 @@
 
 import os
 
-from pizza_data_scraper import settings
+from pizza_data_management import settings
 
 
 def test_pizza_db_settings():

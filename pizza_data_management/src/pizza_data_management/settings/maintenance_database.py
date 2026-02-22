@@ -1,6 +1,6 @@
 """Settings for maintenance database (used for Alembic migrations)."""
 
-from pizza_data_scraper import config, settings
+from pizza_data_management import config, settings
 
 
 class MaintenanceDatabaseSettings(settings.DatabaseSettings):
