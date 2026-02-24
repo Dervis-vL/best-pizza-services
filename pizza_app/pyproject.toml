@@ -7,7 +7,7 @@ name = "pizza_app"
 version = "0.1.0"
 description = "A Streamlit pizza platform data viewer"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 
 dependencies = [
     "folium>=0.20.0",

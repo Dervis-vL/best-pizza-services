@@ -13,7 +13,8 @@ from streamlit_folium import st_folium
 from pizza_app import repositories, settings, schemas, enums
 
 sqlite_db_path = Path(__file__).parent.parent.parent.parent / "dev" / "db" / "test_pizza_divers_data_set_two.db"
-sqlite_db_path.exists()  # Quick check to ensure the path is correct and the file exists
+sqlite_db_path.exists()
+
 
 # Page CONFIG
 st.set_page_config(
