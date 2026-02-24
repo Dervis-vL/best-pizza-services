@@ -9,6 +9,7 @@ wheels/
 
 # Virtual environments
 .venv
+.python-version
 
 # local
 dev/
