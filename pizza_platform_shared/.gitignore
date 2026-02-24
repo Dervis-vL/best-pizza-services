@@ -7,4 +7,11 @@ wheels/
 *.egg-info
 
 # Virtual environments
+.env
 .venv
+.vscode
+.python-version
+
+# local
+dev/
+*.code-workspace
