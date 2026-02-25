@@ -19,6 +19,7 @@ dependencies = [
     "streamlit>=1.54.0",
     "streamlit-folium>=0.26.1",
     "yarl>=1.22.0",
+    "pizza-platform-shared",
 ]
 
 [dependency-groups]
@@ -33,3 +34,6 @@ pizza-app = "pizza_app.app:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pizza_app"]
+
+[tool.uv.sources]
+pizza-platform-shared = { workspace = true }
