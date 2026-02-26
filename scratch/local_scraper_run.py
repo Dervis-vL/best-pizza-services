@@ -2,11 +2,12 @@
 
 import pathlib
 import re
+from pizza_platform_shared import settings as shared_settings
 
 from sqlalchemy import orm
 import yarl
 
-from pizza_data_management import logic, utils, schemas, settings, models
+from pizza_data_management import logic, utils, schemas, models
 from pizza_data_management.models.database.base import BaseModel
 
 
@@ -39,7 +40,7 @@ if __name__ == "__main__":
             )
     elif DATABASE == "POSTGRESQL":
         engine = utils.get_postgres_engine(
-            db_url=settings.pizza_db.connection_string,
+            db_url=shared_settings.pizza_db.connection_string,
             model=BaseModel,
         )
 

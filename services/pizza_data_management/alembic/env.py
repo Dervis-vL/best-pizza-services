@@ -2,8 +2,10 @@
 
 import logging
 from logging.config import fileConfig
+from pizza_platform_shared import models, settings
 
 import psycopg2.errors as pg_errors
+from sqlalchemy import exc as sa_exc
 from sqlalchemy import (
     create_engine,
     pool,
@@ -11,10 +13,7 @@ from sqlalchemy import (
     Connection,
     engine_from_config
 )
-from sqlalchemy import exc as sa_exc
 from alembic import context
-
-from pizza_data_management import models, settings
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +51,7 @@ def ensure_database_exists() -> None:
     Connects to the default 'postgres' database to execute CREATE DATABASE.
     Uses EAFP pattern - attempts creation and catches duplicate error.
     """
-    target_db_name = settings.pizza_db.database_name
+    target_db_name = settings.pizza_db.name
 
     # Connect to default postgres database
     engine = create_engine(

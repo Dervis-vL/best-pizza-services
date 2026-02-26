@@ -27,5 +27,5 @@ if __name__ == "__main__":
         logic.seed_pizzeria_pages()
 
     if SCRAPE_PIZZERIA_DATA:
-        # Get all pizzerias from db which have 'scraped_at' as null
+        # Scrape, parse and seed
         logic.seed_pizzeria_locations()
