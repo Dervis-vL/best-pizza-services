@@ -9,6 +9,7 @@ import yarl
 from pizza_data_management import logic, utils, schemas, settings, models
 from pizza_data_management.models.database.base import BaseModel
 
+
 if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
