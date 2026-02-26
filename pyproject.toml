@@ -30,9 +30,10 @@ asyncio_mode = "auto"
 
 # Coverage
 addopts = """
-    --cov=apps
-    --cov=services
-    --cov=packages
+    --cov=pizza_app
+    --cov=pizza_data_management
+    --cov=pizza_data_storage
+    --cov=pizza_platform_shared
     --cov-report=term-missing
     --cov-report=html:reports/coverage
 """

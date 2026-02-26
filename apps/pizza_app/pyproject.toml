@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "pizza_app"
 version = "0.1.0"
 description = "A Streamlit pizza platform data viewer"
+authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.13"
 

@@ -5,7 +5,8 @@ build-backend = "hatchling.build"
 [project]
 name = "pizza_data_storage"
 version = "0.1.0"
-description = "A webscraper to get html data about the best pizza's in the world"
+description = "The storage service for db maintenance"
+authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.14"
 
@@ -19,13 +20,6 @@ dependencies = [
     "sqlalchemy>=2.0.46",
     "yarl>=1.22.0",
     "pizza-platform-shared",
-]
-
-[dependency-groups]
-dev = [
-    "pytest",
-    "ruff",
-    "mypy",
 ]
 
 [tool.hatch.build.targets.wheel]
