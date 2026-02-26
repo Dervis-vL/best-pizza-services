@@ -33,3 +33,7 @@ packages = ["src/pizza_data_storage"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

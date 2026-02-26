@@ -5,10 +5,34 @@ members = [
     "services/*",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
     "mypy>=1.10",
     "ruff>=0.4",
 ]
+
+[tool.pytest.ini_options]
+# Discover tests across the whole monorepo
+testpaths = [
+    "apps",
+    "services",
+    "packages",
+]
+
+# Naming conventions
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+asyncio_mode = "auto"
+
+# Coverage
+addopts = """
+    --cov=apps
+    --cov=services
+    --cov=packages
+    --cov-report=term-missing
+    --cov-report=html:reports/coverage
+"""
