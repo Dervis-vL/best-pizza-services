@@ -25,7 +25,7 @@ if __name__ == "__main__":
     ROOT_PATH = pathlib.Path(__file__).parent.parent
     HTML_OUTPUT_PATH = ROOT_PATH / "dev" / "HTML" / "EUROPE_2025.html"
     RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories_test_set.json"
-    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza_divers_data_set_two.db"
+    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza_divers_data_set_three.db"
 
 
     # Load config
