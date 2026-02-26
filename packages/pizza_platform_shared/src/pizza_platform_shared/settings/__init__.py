@@ -7,5 +7,3 @@ __all__ = [
     "DatabaseSettings",
     "PizzaDatabaseSettings",
 ]
-
-pizza_db = PizzaDatabaseSettings()
