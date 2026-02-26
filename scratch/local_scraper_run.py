@@ -14,7 +14,7 @@ if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
     SCRAPE_PIZZERIA_DATA = True
-    WRITE_TO_FILE = False
+    WRITE_TO_FILE = True
 
     # CONSTANTS
     URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     if SCRAPE_PIZZERIA_DATA:
         # Get all pizzerias from db which have 'scraped_at' as null
         not_scraped_pizzerias = utils.query_not_scraped_pizzerias(engine=engine)
-        
+
         # Scrape html data for each pizzeria page
         for i, pizzeria_webpage in enumerate(not_scraped_pizzerias):
             url = yarl.URL(pizzeria_webpage.url)

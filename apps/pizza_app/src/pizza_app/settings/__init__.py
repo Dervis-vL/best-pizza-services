@@ -1,10 +1,8 @@
 """Modules containing scraper settings."""
 
-from pizza_app.settings.base_database import DatabaseSettings
-from pizza_app.settings.pizza_database import PizzaDatabaseSettings
+from pizza_platform_shared.settings import PizzaDatabaseSettings
 
 __all__ = [
-    "DatabaseSettings",
     "PizzaDatabaseSettings",
 ]
 

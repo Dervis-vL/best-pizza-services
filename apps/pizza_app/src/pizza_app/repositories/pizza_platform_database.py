@@ -8,7 +8,7 @@ import pandas as pd
 import sqlalchemy as sa
 from pandera import typing as pa_typing
 
-from pizza_app import settings, schemas, models, types
+from pizza_app import schemas, models, types
 
 
 class PizzaPlatformDatabase:

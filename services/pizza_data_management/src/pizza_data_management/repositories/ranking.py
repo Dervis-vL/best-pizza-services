@@ -11,7 +11,6 @@ from sqlalchemy import orm as sa_orm, select
 from pizza_platform_shared.repositories.base_database import BaseDatabase
 
 from pizza_data_management import models, schemas
-from pizza_data_management.utils import extract_pizzeria_name
 
 logger = logging.getLogger(__name__)
 
