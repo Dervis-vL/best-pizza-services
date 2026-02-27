@@ -56,6 +56,8 @@ class BaseModel(orm.DeclarativeBase):
     )
 
     @staticmethod
-    def create_foreign_key_str(schema_name: str, table_name: str) -> str:
+    def create_foreign_key_str(schema_name: str | None, table_name: str) -> str:
         """Returns the str of the foreign key name with dot separation."""
+        if schema_name is None:
+            return f"{table_name}.id"
         return ".".join((schema_name, table_name, "id"))

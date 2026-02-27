@@ -3,6 +3,7 @@
 from functools import cache
 from typing import TYPE_CHECKING
 
+from pizza_platform_shared.settings.base_database import DatabaseSettings
 from pizza_platform_shared.settings.pizza_database import PizzaDatabaseSettings
 from pizza_platform_shared.settings.maintenance_database import MaintenanceDatabaseSettings
 
@@ -31,3 +32,8 @@ def __getattr__(name: str):
     if name in _loaders:
         return _loaders[name]()
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+__all__ = [
+    "DatabaseSettings",
+]
