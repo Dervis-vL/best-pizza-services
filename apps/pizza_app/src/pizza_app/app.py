@@ -6,13 +6,15 @@ from pathlib import Path
 
 import streamlit as st
 import folium
+import sqlalchemy as sa
 from folium import plugins as fo_plugins
 from pandera import typing as pa_typing
 from streamlit_folium import st_folium
 
 from pizza_app import repositories, settings, schemas, enums
 
-sqlite_db_path = Path(__file__).parent.parent.parent.parent / "dev" / "db" / "test_pizza_divers_data_set_two.db"
+ROOT_PATH = Path(__file__).parent.parent.parent
+sqlite_db_path = ROOT_PATH / "test_pizza_divers_data_set_two.db"
 sqlite_db_path.exists()
 
 
@@ -31,28 +33,27 @@ st.caption("Locations sourced from 50 Top Pizza rankings.")
 def load_locations(db_type: enums.DatabaseType) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
     """Load data from db."""
     if db_type == enums.DatabaseType.POSTGRESQL:
-        connection_string = settings.pizza_db.connection_string
-        schema_name = settings.pizza_db.schema_name
+        pizza_repo = repositories.PizzaPlatformDatabase(
+            db_settings=settings.pizza_db
+        )
     elif db_type == enums.DatabaseType.SQLITE:
-        connection_string = f"sqlite:///{sqlite_db_path}"
-        schema_name = None
+        pizza_repo = repositories.PizzaPlatformDatabase.from_engine(
+            engine=sa.create_engine(
+                f"sqlite:///{sqlite_db_path}",
+                poolclass=sa.pool.StaticPool,
+            ),
+        )
     else:
         raise ValueError(f"Unsupported database type: {db_type}")
-
-    pizza_repo = repositories.PizzaPlatformDatabase(
-        connection_string=connection_string,
-        schema_name=schema_name,
-    )
 
     return pizza_repo.read()
 
 
 try:
     locations_df = load_locations(enums.DatabaseType.SQLITE)
-except Exception as e:
+except Exception as e:  # pylint: disable=broad-exception-caught
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()
-
 
 if locations_df.empty:
     st.warning("No pizzerias with coordinates found in the database.")
@@ -86,10 +87,11 @@ m = folium.Map(
 cluster = fo_plugins.MarkerCluster().add_to(m)
 
 for _, row in filtered.iterrows():
+    name = " ".join(word.capitalize() for word in row["name"].split('-'))
     folium.Marker(
         location=[row["latitude"], row["longitude"]],
-        popup=folium.Popup(f"<b>{row['name']}</b>", max_width=250),
-        tooltip=row["name"],
+        popup=folium.Popup(f"<b>{name}</b>", max_width=250),
+        tooltip=name,
         icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
     ).add_to(cluster)
 

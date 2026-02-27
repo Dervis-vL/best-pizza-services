@@ -10,7 +10,7 @@ from sqlalchemy import orm as sa_orm, select
 
 from pizza_platform_shared.repositories.base_database import BaseDatabase
 
-from pizza_data_management import models, schemas
+from pizza_data_management import constants, models, schemas
 from pizza_data_management.utils import extract_pizzeria_name
 
 logger = logging.getLogger(__name__)
@@ -65,7 +65,7 @@ class PizzeriaRepository(BaseDatabase):
             webpage = session.get(models.Webpages, webpage_id)
             if not webpage:
                 raise ValueError(f"Webpage with id {webpage_id} not found.")
-            webpage.scraped_at = sa.func.now()
+            webpage.scraped_at = sa.func.now()  # pylint: disable=not-callable
 
     @staticmethod
     def _upsert_pizzeria(
@@ -113,8 +113,7 @@ class PizzeriaRepository(BaseDatabase):
     def _upsert_location(
         session: sa_orm.Session, location_config: schemas.LocationSchema
     ) -> models.Locations:
-        from pizza_data_management import constants
-
+        """Upsert a pizzeria location, skipping if coordinates already exist nearby."""
         if location_config.has_coordinates:
             existing = session.scalar(
                 select(models.Locations)
