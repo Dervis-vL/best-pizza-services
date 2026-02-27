@@ -1,0 +1,64 @@
+"""Base database repository."""
+
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from contextlib import contextmanager
+from typing import Generator, Any
+
+import pandas as pd
+import sqlalchemy as sa
+from sqlalchemy import orm as sa_orm
+
+from pizza_platform_shared import settings
+
+
+class BaseDatabase(ABC):
+    """Base database repository.
+
+    Owns the engine and exposes a session in context manager.
+
+    Args:
+        db_settings: Database settings.
+    """
+
+    def __init__(self, db_settings: settings.DatabaseSettings) -> None:
+        """Initialize the database repository."""
+        self._engine = sa.create_engine(db_settings.connection_string, pool_pre_ping=True)
+        self._schema = db_settings.schema_name
+
+    @classmethod
+    def from_engine(cls, engine: sa.Engine) -> "BaseDatabase":
+        """Create a database instance directly from an existing engine, without db settings.
+
+        schema_name will be None — queries must not rely on it.
+        """
+        instance = cls.__new__(cls)
+        instance._engine = engine
+        instance._schema = None
+        return instance
+
+    @contextmanager
+    def _session(self) -> Generator[sa_orm.Session, None, None]:
+        """Get a database session."""
+        with sa_orm.Session(self._engine) as session:
+            try:
+                yield session
+                session.commit()
+            except Exception:
+                session.rollback()
+                raise
+
+    def _read(self, query: sa.Select[Any]) -> pd.DataFrame:
+        """Abstratct method to read data from the database."""
+        try:
+            with self._engine.connect() as conn:
+                df = pd.read_sql(query, conn)
+        except Exception as e:
+            raise RuntimeError(f"Failed to read data from the database: {e}") from e
+
+        return df
+
+    @abstractmethod
+    def _get_read_query(self) -> sa.Select[Any]:
+        """Abstract method to get a read query."""
