@@ -27,6 +27,17 @@ class BaseDatabase(ABC):
         self._engine = sa.create_engine(db_settings.connection_string, pool_pre_ping=True)
         self._schema = db_settings.schema_name
 
+    @classmethod
+    def from_engine(cls, engine: sa.Engine) -> "BaseDatabase":
+        """Create a database instance directly from an existing engine, without db settings.
+
+        schema_name will be None — queries must not rely on it.
+        """
+        instance = cls.__new__(cls)
+        instance._engine = engine
+        instance._schema = None
+        return instance
+
     @contextmanager
     def _session(self) -> Generator[sa_orm.Session, None, None]:
         """Get a database session."""
@@ -51,4 +62,3 @@ class BaseDatabase(ABC):
     @abstractmethod
     def _get_read_query(self) -> sa.Select[Any]:
         """Abstract method to get a read query."""
-        pass

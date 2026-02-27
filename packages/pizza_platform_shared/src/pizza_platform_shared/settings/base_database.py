@@ -36,14 +36,11 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
 
     host: str = pydantic.Field(..., description="Database host")
     port: int = pydantic.Field(..., description="Database port")
-    username: str = pydantic.Field(..., description="Database username")
+    user_name: str = pydantic.Field(..., description="Database username")
+    name: types.PostgresName = pydantic.Field(..., description="Name of the database to connect to")
+    schema_name: types.SchemaName = pydantic.Field(..., description="Name of the schema to use within the database")
     password: pydantic.SecretStr = pydantic.Field(..., description="Database password")
     ssl_enabled: bool = pydantic.Field(..., description="Whether SSL is enabled for the database connection")
-
-    database_name: types.PostgresName = pydantic.Field(
-        ..., description="Name of the database to connect to"
-    )
-    schema_name: types.SchemaName = pydantic.Field(..., description="Name of the schema to use within the database")
 
     # Database tables if required. Must be defined in subclasses, and is not an env var.
     tables: ClassVar[types.TableNames | None]
@@ -78,10 +75,10 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
         """Return connection string from fields."""
         return sa.URL.create(
             "postgresql",
-            username=self.username,
+            username=self.user_name,
             password=self.password.get_secret_value(),
             host=self.host,
             port=self.port,
-            database=self.database_name,
+            database=self.name,
             query={"sslmode": self.ssl_mode},
         )

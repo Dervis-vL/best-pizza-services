@@ -6,6 +6,7 @@ from venv import logger
 
 import bs4 as bs
 import yarl
+import re
 import sqlalchemy as sa
 from sqlalchemy import select, event
 from sqlalchemy import orm
@@ -18,6 +19,64 @@ from pizza_data_management import (
     models,
     settings,
 )
+
+URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
+
+
+def create_pizzeria_schema(soup: bs.BeautifulSoup) -> schemas.PizzeriaEndpointsSchema:
+    """Create a PizzeriaEndpointsSchema from the scraped HTML soup."""
+    # Extract pizzeria URLs from the soup
+    pizzerria_urls = list(set(URL_PATTERN.findall(soup.prettify())))
+    yarl_pizzeria_urls = [yarl.URL(url) for url in pizzerria_urls]
+
+    # Create pizzeria and webpage schemas
+    pizzerias_schemas = [
+        schemas.PizzeriaSchema(
+            name=extract_pizzeria_name(endpoint_path=url.path),
+            slug=url.path.rstrip("/").split("/")[-1],
+            description=None
+        )
+        for url in yarl_pizzeria_urls
+    ]
+
+    webpages_schemas = [
+        schemas.WebpagesSchema(
+            slug=url.path.rstrip("/").split("/")[-1],
+            url=url.human_repr()
+        )
+        for url in yarl_pizzeria_urls
+    ]
+
+    return schemas.PizzeriaEndpointsSchema(
+        pizzerias=pizzerias_schemas,
+        webpages=webpages_schemas
+    )
+
+
+def create_location_schema(soup: bs.BeautifulSoup, pizzeria_id: int) -> schemas.LocationSchema:
+    """Create a LocationSchema from the scraped HTML soup."""
+    # Get lat/lon
+    coordinates = models.coordinate_patterns.extract(
+        html=str(soup),
+    )
+    # Get phone
+    phone_number = models.phone_patterns.extract(
+        html=str(soup),
+    )
+    # Get adress
+    adress = models.adress_patterns.extract(
+        html=str(soup),
+    )
+
+    return schemas.LocationSchema(
+        pizzaria_id=pizzeria_id,
+        adress=adress,
+        city=None,
+        country=None,
+        latitude=coordinates[0] if coordinates else None,
+        longitude=coordinates[1] if coordinates else None,
+        phone=phone_number,
+    )
 
 
 def create_endpoint(category: enums.Categories, year: enums.Year) -> str:

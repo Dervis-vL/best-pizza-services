@@ -1,6 +1,6 @@
 """Pizzeria pandera schema."""
 
-import pandera as pa
+import pandera.pandas as pa
 from pandera import typing as pa_typing
 
 
@@ -18,6 +18,7 @@ class PizzeriaSchema(pa.DataFrameModel):
     longitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-180, le=180)
 
     class Config:
+        """Config."""
         strict = True
         coerce = True
         name = "PizzeriaSchema"
