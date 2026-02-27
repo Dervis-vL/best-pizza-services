@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
     RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories.json"
-    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza_divers_data_set_sqlite.db"
+    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "pizza_data_set_sqlite.db"
 
 
     # Load config
