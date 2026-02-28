@@ -50,6 +50,12 @@ if __name__ == "__main__":
             pizzeria_schema = utils.create_pizzeria_schema(soup=soup)
             pizzeria_repo.upsert_pizzerias_and_webpages(config=pizzeria_schema)
 
+            if WRITE_TO_FILE and soup:
+                # Write to file
+                output_path = ROOT_PATH / "dev" / "HTML" / f"{edition.category.slug}_{edition.year}.html"
+                if not output_path.exists():
+                    utils.soup_to_file(soup, output_path)
+
     if SCRAPE_PIZZERIA_DATA:
         # Scrape, parse and seed locations
         for webpage in pizzeria_repo.get_unscraped_pizzerias():
@@ -62,3 +68,10 @@ if __name__ == "__main__":
                 soup=soup, pizzeria_id=webpage.pizzeria_id
             )
             pizzeria_repo.upsert_location(location_config=location_schema)
+
+            if WRITE_TO_FILE:
+                # Write to file
+                pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{webpage.slug}.html"
+                # Check if file exists
+                if not pizzeria_output_path.exists():
+                    utils.soup_to_file(soup, pizzeria_output_path)
