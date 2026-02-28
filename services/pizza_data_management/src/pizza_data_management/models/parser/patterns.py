@@ -34,7 +34,7 @@ class BasePattern(BaseModel, ABC):
         return None
 
     @abstractmethod
-    def extract(self, **kwargs):
+    def extract(self, html: str):
         """Abstract base method"""
 
 
@@ -118,4 +118,33 @@ class PhonePatterns(BasePattern):
         match = self.search(html)
         if match:
             return match.group("phone").strip()
+        return None
+
+
+class RankingPositionPatterns(BasePattern):
+    """
+    Patterns for extracting a ranked position (1–100) from a ranking-list card's HTML.
+    Run on each individual card/entry's HTML extracted from a ranking page.
+    Each pattern must contain a (?P<position>...) named group.
+
+    Returns None for special-award and excellent pages, which have no numeric position.
+    """
+
+    # Modern format (2022+):
+    # <h2 class="mt-2 posizione scotchmodern rosso caps">13°</h2>
+    posizione_class: re.Pattern[str] = re.compile(
+        r'class="[^"]*\bposizione\b[^"]*"[^>]*>\s*(?P<position>\d+)°',
+    )
+
+    # Older format (2020):
+    # <h2 class="oro margin-bottom-30" style="...">1°</h2>
+    oro_class: re.Pattern[str] = re.compile(
+        r'<h2\b[^>]*class="[^"]*\boro\b[^"]*"[^>]*>\s*(?P<position>\d+)°',
+    )
+
+    def extract(self, html: str) -> int | None:
+        """Return the rank position as an integer, or None if not a ranked entry."""
+        match = self.search(html)
+        if match:
+            return int(match.group("position"))
         return None
