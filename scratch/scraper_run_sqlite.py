@@ -15,8 +15,10 @@ if __name__ == "__main__":
 
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
-    RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories.json"
-    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "pizza_data_set_sqlite.db"
+    DEV_FOLDER_PATH = ROOT_PATH / "dev"
+    RANKINGS_JSON_PATH = DEV_FOLDER_PATH / "JSON" / "yearly_categories.json"
+    DEFAULT_DB_PATH = DEV_FOLDER_PATH / "db" / "test_for_html_storing.db"
+    HTML_OUTPUT_PATH = DEV_FOLDER_PATH / "HTML"
 
 
     # Load config
@@ -52,7 +54,7 @@ if __name__ == "__main__":
 
             if WRITE_TO_FILE and soup:
                 # Write to file
-                output_path = ROOT_PATH / "dev" / "HTML" / f"{edition.category.slug}_{edition.year}.html"
+                output_path = HTML_OUTPUT_PATH / f"{edition.category.slug}_{edition.year}.html"
                 if not output_path.exists():
                     utils.soup_to_file(soup, output_path)
 
@@ -71,7 +73,7 @@ if __name__ == "__main__":
 
             if WRITE_TO_FILE:
                 # Write to file
-                pizzeria_output_path = ROOT_PATH / "dev" / "HTML" / f"{webpage.slug}.html"
+                pizzeria_output_path = HTML_OUTPUT_PATH / f"{webpage.slug}.html"
                 # Check if file exists
                 if not pizzeria_output_path.exists():
                     utils.soup_to_file(soup, pizzeria_output_path)
