@@ -34,9 +34,8 @@ class BasePattern(BaseModel, ABC):
         return None
 
     @abstractmethod
-    def extract(self):
+    def extract(self, **kwargs):
         """Abstract base method"""
-        pass
 
 
 class URLPattern(BasePattern):
