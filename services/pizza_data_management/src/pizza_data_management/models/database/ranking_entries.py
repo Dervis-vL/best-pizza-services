@@ -47,7 +47,7 @@ class RankingEntries(base.BaseModel):
 
     # columns
     position: orm.Mapped[int] = orm.mapped_column(
-        sa.Integer, nullable=False, comment="Position of the pizza in the ranking"
+        sa.Integer, nullable=True, comment="Position of the pizza in the ranking"
     )
 
     # relationships
