@@ -34,9 +34,38 @@ class BasePattern(BaseModel, ABC):
         return None
 
     @abstractmethod
-    def extract(self):
+    def extract(self, html: str):
         """Abstract base method"""
-        pass
+
+
+class CardPatterns(BasePattern):
+    """
+    Patterns for extracting individual ranking card HTML chunks from a full ranking page.
+    Each pattern targets the outer <a> wrapping a single ranking entry.
+
+    Use extract() to get all card chunks, then run URLPattern and
+    RankingPositionPatterns on each chunk to extract URL and position.
+    """
+
+    # Modern (2022+): <a id="scheda" href="...referenza/...">...</a>
+    scheda_id: re.Pattern[str] = re.compile(
+        r'<a\b[^>]*id="scheda"[^>]*>.*?</a>',
+        re.DOTALL,
+    )
+
+    # Older (2020): <a class="...altezza-NNN-desktop..." href="...recensione/...">...</a>
+    altezza_class: re.Pattern[str] = re.compile(
+        r'<a\b[^>]*\baltezza-\d+-desktop\b[^>]*>.*?</a>',
+        re.DOTALL,
+    )
+
+    def extract(self, html: str) -> list[str]:
+        """Return all card HTML chunks using the first pattern that yields results."""
+        for _, pattern in self:
+            cards = pattern.findall(html)
+            if cards:
+                return cards
+        return []
 
 
 class URLPattern(BasePattern):
@@ -48,8 +77,41 @@ class URLPattern(BasePattern):
         r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"'
     )
 
-    def extract(self, html: str):
-        pass
+    def extract(self, html: str) -> str:
+        """Return the raw url string from each cards html, or None."""
+        match = self.search(html)
+        if match:
+            return match.group(1)
+        return None
+
+
+class RankingPositionPatterns(BasePattern):
+    """
+    Patterns for extracting a ranked position (1–100) from a ranking-list card's HTML.
+    Run on each individual card/entry's HTML extracted from a ranking page.
+    Each pattern must contain a (?P<position>...) named group.
+
+    Returns None for special-award and excellent pages, which have no numeric position.
+    """
+
+    # Modern format (2022+):
+    # <h2 class="mt-2 posizione scotchmodern rosso caps">13°</h2>
+    posizione_class: re.Pattern[str] = re.compile(
+        r'class="[^"]*\bposizione\b[^"]*"[^>]*>\s*(?P<position>\d+)°',
+    )
+
+    # Older format (2020):
+    # <h2 class="oro margin-bottom-30" style="...">1°</h2>
+    oro_class: re.Pattern[str] = re.compile(
+        r'<h2\b[^>]*class="[^"]*\boro\b[^"]*"[^>]*>\s*(?P<position>\d+)°',
+    )
+
+    def extract(self, html: str) -> int | None:
+        """Return the rank position as an integer, or None if not a ranked entry."""
+        match = self.search(html)
+        if match:
+            return int(match.group("position"))
+        return None
 
 
 class CoordPatterns(BasePattern):

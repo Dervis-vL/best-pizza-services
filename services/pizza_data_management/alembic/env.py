@@ -2,7 +2,7 @@
 
 import logging
 from logging.config import fileConfig
-from pizza_platform_shared import models, settings
+from pizza_platform_shared import settings
 
 import psycopg2.errors as pg_errors
 from sqlalchemy import exc as sa_exc
@@ -14,6 +14,8 @@ from sqlalchemy import (
     engine_from_config
 )
 from alembic import context
+
+from pizza_data_management import models
 
 logger = logging.getLogger(__name__)
 

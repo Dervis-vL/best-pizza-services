@@ -6,6 +6,7 @@ from pizza_data_management.schemas.category import CategorySchema
 from pizza_data_management.schemas.locations import LocationSchema
 from pizza_data_management.schemas.pizzeria import PizzeriaSchema
 from pizza_data_management.schemas.ranked_edition import RankedEditionSchema
+from pizza_data_management.schemas.ranking_position import RankingPositionSchema
 from pizza_data_management.schemas.webpages import WebpagesSchema
 
 
@@ -41,6 +42,10 @@ class PizzeriaEndpointsSchema(pyd.BaseModel):
     webpages: list[WebpagesSchema] = pyd.Field(
         ...,
         description="List of webpages for pizzerias on 50 Top Pizza"
+    )
+    rankings: list[RankingPositionSchema] = pyd.Field(
+        default_factory=list,
+        description="List of ranking entries linking pizzerias to their edition positions",
     )
 
     @pyd.model_validator(mode="after")

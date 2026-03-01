@@ -36,8 +36,12 @@ class Webpages(base.BaseModel):
     )
 
     # columns
-    url: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=False, comment="URL of the pizzeria's page on 50 Top Pizza")
-    slug: orm.Mapped[str] = orm.mapped_column(sa.String(200), nullable=False, comment="URL-friendly slug for the pizzeria")
+    url: orm.Mapped[str] = orm.mapped_column(
+        sa.String(500), nullable=False, comment="URL of the pizzeria's page on 50 Top Pizza"
+    )
+    slug: orm.Mapped[str] = orm.mapped_column(
+        sa.String(200), nullable=False, comment="URL-friendly slug for the pizzeria"
+    )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
             sa.DateTime(timezone=True),

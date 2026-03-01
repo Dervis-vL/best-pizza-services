@@ -3,20 +3,21 @@
 import pathlib
 
 from local_database_settings import get_sqlite_engine
-from pizza_data_management import logic, utils, repositories
-from pizza_platform_shared import models
+from pizza_data_management import logic, utils, repositories, models
 
 
 if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
     SCRAPE_PIZZERIA_DATA = True
-    WRITE_TO_FILE = True
+    WRITE_TO_FILE = False
 
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
-    RANKINGS_JSON_PATH = ROOT_PATH / "dev" / "JSON" / "yearly_categories.json"
-    DEFAULT_DB_PATH = ROOT_PATH / "dev" / "db" / "test_pizza_divers_data_set_sqlite.db"
+    DEV_FOLDER_PATH = ROOT_PATH / "dev"
+    RANKINGS_JSON_PATH = DEV_FOLDER_PATH / "JSON" / "yearly_categories.json"
+    DEFAULT_DB_PATH = DEV_FOLDER_PATH / "db" / "test_rankings_parsing.db"
+    HTML_OUTPUT_PATH = DEV_FOLDER_PATH / "HTML"
 
 
     # Load config
@@ -47,8 +48,14 @@ if __name__ == "__main__":
                 continue
 
             ranking_repo.mark_edition_scraped(edition_id=edition.id)
-            pizzeria_schema = utils.create_pizzeria_schema(soup=soup)
+            pizzeria_schema = utils.create_pizzeria_schema(soup=soup, edition_id=edition.id)
             pizzeria_repo.upsert_pizzerias_and_webpages(config=pizzeria_schema)
+
+            if WRITE_TO_FILE and soup:
+                # Write to file
+                output_path = HTML_OUTPUT_PATH / f"{edition.category.slug}_{edition.year}.html"
+                if not output_path.exists():
+                    utils.soup_to_file(soup, output_path)
 
     if SCRAPE_PIZZERIA_DATA:
         # Scrape, parse and seed locations
@@ -62,3 +69,10 @@ if __name__ == "__main__":
                 soup=soup, pizzeria_id=webpage.pizzeria_id
             )
             pizzeria_repo.upsert_location(location_config=location_schema)
+
+            if WRITE_TO_FILE:
+                # Write to file
+                pizzeria_output_path = HTML_OUTPUT_PATH / f"{webpage.slug}.html"
+                # Check if file exists
+                if not pizzeria_output_path.exists():
+                    utils.soup_to_file(soup, pizzeria_output_path)

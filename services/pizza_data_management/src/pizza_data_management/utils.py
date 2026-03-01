@@ -6,7 +6,6 @@ from venv import logger
 
 import bs4 as bs
 import yarl
-import re
 import sqlalchemy as sa
 from sqlalchemy import select, event
 from sqlalchemy import orm
@@ -20,36 +19,55 @@ from pizza_data_management import (
     settings,
 )
 
-URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
 
-
-def create_pizzeria_schema(soup: bs.BeautifulSoup) -> schemas.PizzeriaEndpointsSchema:
+def create_pizzeria_schema(
+    soup: bs.BeautifulSoup, edition_id: int
+) -> schemas.PizzeriaEndpointsSchema:
     """Create a PizzeriaEndpointsSchema from the scraped HTML soup."""
-    # Extract pizzeria URLs from the soup
-    pizzerria_urls = list(set(URL_PATTERN.findall(soup.prettify())))
-    yarl_pizzeria_urls = [yarl.URL(url) for url in pizzerria_urls]
+    # Parse cards from the soup
+    cards_html_list = models.card_patterns.extract(
+        html=str(soup),
+    )
 
-    # Create pizzeria and webpage schemas
-    pizzerias_schemas = [
-        schemas.PizzeriaSchema(
-            name=extract_pizzeria_name(endpoint_path=url.path),
-            slug=url.path.rstrip("/").split("/")[-1],
-            description=None
-        )
-        for url in yarl_pizzeria_urls
-    ]
+    # Parse urls, names, slugs and ranks from the cards
+    pizzerias_schemas = []
+    webpages_schemas = []
+    ranks_schemas = []
+    for card in cards_html_list:
+        raw_url = models.url_pattern.extract(html=card)
+        if not raw_url:
+            continue
+        url = yarl.URL(raw_url)
+        position = models.ranking_position_patterns.extract(html=card)
+        name = extract_pizzeria_name(endpoint_path=url.path)
+        slug = url.path.rstrip("/").split("/")[-1]
+        description = None
 
-    webpages_schemas = [
-        schemas.WebpagesSchema(
-            slug=url.path.rstrip("/").split("/")[-1],
-            url=url.human_repr()
+        pizzerias_schemas.append(
+            schemas.PizzeriaSchema(
+                name=name,
+                slug=slug,
+                description=description,
+            )
         )
-        for url in yarl_pizzeria_urls
-    ]
+        webpages_schemas.append(
+            schemas.WebpagesSchema(
+                slug=slug,
+                url=url.human_repr(),
+            )
+        )
+        ranks_schemas.append(
+            schemas.RankingPositionSchema(
+                position=position,
+                pizzeria_slug=slug,
+                edition_id=edition_id,
+            )
+        )
 
     return schemas.PizzeriaEndpointsSchema(
         pizzerias=pizzerias_schemas,
-        webpages=webpages_schemas
+        webpages=webpages_schemas,
+        rankings=ranks_schemas,
     )
 
 

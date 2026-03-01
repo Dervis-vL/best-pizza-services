@@ -1,25 +1,59 @@
 """Model for ranking entries and their associated data."""
 
+from typing import TYPE_CHECKING
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
 from pizza_data_management import settings
 from pizza_data_management.models.database import base
 
+if TYPE_CHECKING:
+    from pizza_data_management.models.database.pizzerias import Pizzerias
+    from pizza_data_management.models.database.ranking_editions import RankingEditions
+
 
 class RankingEntries(base.BaseModel):
     """Model for storing ranking entry information."""
 
+    # table configuration
     __tablename__ = settings.pizza_db.tables.ranking_entries
     __table_args__ = (
         sa.UniqueConstraint(
-            "edition_id", "position", name="uq_ranking_entry_edition_position"
-        ), 
-        {"schema": settings.pizza_db.schema_name}
+            "edition_id", "pizzeria_id", name="uq_ranking_entry_edition_pizzeria"
+        ),
+        {"schema": settings.pizza_db.schema_name},
     )
 
-    edition_id: orm.Mapped[int] = orm.mapped_column(sa.Integer, sa.ForeignKey("pizza.ranking_editions.id"), nullable=False, comment="Foreign key to the ranking edition")
-    pizzeria_id: orm.Mapped[int] = orm.mapped_column(sa.Integer, sa.ForeignKey("pizza.pizzerias.id"), nullable=False, comment="Foreign key to the pizzeria")
+    # foreign key(s)
+    edition_id: orm.Mapped[int] = orm.mapped_column(
+        sa.BigInteger().with_variant(sa.Integer, "sqlite"),
+        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
+            schema_name=settings.pizza_db.schema_name,
+            table_name=settings.pizza_db.tables.ranking_editions,
+        ), ondelete="CASCADE"),
+        nullable=False,
+        comment="Foreign key to the ranking edition",
+    )
+    pizzeria_id: orm.Mapped[int] = orm.mapped_column(
+        sa.BigInteger().with_variant(sa.Integer, "sqlite"),
+        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
+            schema_name=settings.pizza_db.schema_name,
+            table_name=settings.pizza_db.tables.pizzerias,
+        ), ondelete="CASCADE"),
+        nullable=False, 
+        comment="Foreign key to the pizzeria",
+    )
 
-    position: orm.Mapped[int] = orm.mapped_column(sa.Integer, nullable=False, comment="Position of the pizza in the ranking")
-    award: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=True, comment="Award received by the pizza, if any")
+    # columns
+    position: orm.Mapped[int] = orm.mapped_column(
+        sa.Integer, nullable=True, comment="Position of the pizza in the ranking"
+    )
+
+    # relationships
+    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(
+        back_populates="rankings"
+    )
+    edition: orm.Mapped["RankingEditions"] = orm.relationship(
+        back_populates="rankings"
+    )

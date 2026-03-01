@@ -14,7 +14,7 @@ from streamlit_folium import st_folium
 from pizza_app import repositories, settings, schemas, enums
 
 ROOT_PATH = Path(__file__).parent.parent.parent
-sqlite_db_path = ROOT_PATH / "test_pizza_divers_data_set_two.db"
+sqlite_db_path = ROOT_PATH / "test_rankings_parsing.db"
 sqlite_db_path.exists()
 
 

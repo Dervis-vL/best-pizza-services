@@ -40,7 +40,7 @@ def scrape_editions() -> Generator[schemas.PizzeriaEndpointsSchema, None, None]:
             continue
 
         ranking_repo.mark_edition_scraped(edition_id=edition.id)
-        yield utils.create_pizzeria_schema(soup=soup)
+        yield utils.create_pizzeria_schema(soup=soup, edition_id=edition.id)
 
 
 def parse_pizzerias_and_webpages(config: schemas.PizzeriaEndpointsSchema) -> None:
