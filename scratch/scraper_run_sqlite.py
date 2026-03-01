@@ -3,21 +3,20 @@
 import pathlib
 
 from local_database_settings import get_sqlite_engine
-from pizza_data_management import logic, utils, repositories
-from pizza_platform_shared import models
+from pizza_data_management import logic, utils, repositories, models
 
 
 if __name__ == "__main__":
     # FLAGS
     SCRAPE_RANKING_DATA = True
     SCRAPE_PIZZERIA_DATA = True
-    WRITE_TO_FILE = True
+    WRITE_TO_FILE = False
 
     # PATHS
     ROOT_PATH = pathlib.Path(__file__).parent.parent
     DEV_FOLDER_PATH = ROOT_PATH / "dev"
     RANKINGS_JSON_PATH = DEV_FOLDER_PATH / "JSON" / "yearly_categories.json"
-    DEFAULT_DB_PATH = DEV_FOLDER_PATH / "db" / "test_for_html_storing.db"
+    DEFAULT_DB_PATH = DEV_FOLDER_PATH / "db" / "test_rankings_parsing.db"
     HTML_OUTPUT_PATH = DEV_FOLDER_PATH / "HTML"
 
 
@@ -49,7 +48,7 @@ if __name__ == "__main__":
                 continue
 
             ranking_repo.mark_edition_scraped(edition_id=edition.id)
-            pizzeria_schema = utils.create_pizzeria_schema(soup=soup)
+            pizzeria_schema = utils.create_pizzeria_schema(soup=soup, edition_id=edition.id)
             pizzeria_repo.upsert_pizzerias_and_webpages(config=pizzeria_schema)
 
             if WRITE_TO_FILE and soup:
