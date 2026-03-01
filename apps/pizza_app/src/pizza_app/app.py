@@ -127,7 +127,7 @@ for _, row in filtered.iterrows():
     ]
     folium.Marker(
         location=[row["latitude"], row["longitude"]],
-        popup=folium.Popup(f"<b>{"\n".join(results)}</b>", max_width=250),
+        popup=folium.Popup(f"<b><ul>{"".join(f"<li>{r}</li>" for r in results)}</ul></b>", max_width=250),
         tooltip=name,
         icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
     ).add_to(cluster)
