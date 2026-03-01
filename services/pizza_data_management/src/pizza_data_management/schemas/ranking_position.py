@@ -12,8 +12,10 @@ class RankingPositionSchema(pyd.BaseModel):
 
     @pyd.field_validator("position")
     @classmethod
-    def position_positive(cls, v: int) -> int:
+    def position_positive(cls, v: int | None) -> int | None:
         """Validates that the ranking position is a positive integer."""
+        if v is None:
+            return v
         if v < 1:
             raise ValueError(f"Ranking position {v} is not a positive integer")
         return v
