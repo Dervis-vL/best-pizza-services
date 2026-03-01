@@ -9,7 +9,8 @@ from pandera import typing as pa_typing
 
 from pizza_platform_shared.repositories.base_database import BaseDatabase
 
-from pizza_app import models, schemas
+from pizza_platform_shared import models
+from pizza_app import schemas
 
 
 class PizzaPlatformDatabase(BaseDatabase):
@@ -33,7 +34,26 @@ class PizzaPlatformDatabase(BaseDatabase):
             & models.Locations.longitude.is_not(None)
         ).order_by(models.Pizzerias.name)
 
-    def read(self) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
+    def _get_rankings_query(self) -> sa.Select[Any]:
+        """Get a query for all pizzeria rankings with year and category."""
+        return (
+            sa.select(
+                models.Pizzerias.name.label("pizzeria_name"),
+                models.RankingEntries.position,
+                models.RankingEditions.year,
+                models.Categories.name.label("category"),
+            )
+            .join(models.RankingEntries, models.RankingEntries.pizzeria_id == models.Pizzerias.id)
+            .join(models.RankingEditions, models.RankingEditions.id == models.RankingEntries.edition_id)
+            .join(models.Categories, models.Categories.id == models.RankingEditions.category_id)
+            .order_by(
+                models.Pizzerias.name,
+                models.RankingEditions.year.desc(),
+                models.Categories.name,
+            )
+        )
+
+    def read_pizzerias(self) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
         """Return every pizzeria that has lat lon pupulated."""
         query = self._get_read_query()
 
@@ -42,3 +62,13 @@ class PizzaPlatformDatabase(BaseDatabase):
         except Exception as e:
             raise RuntimeError(f"Error reading from database: {e}") from e
         return schemas.PizzeriaSchema.validate(pizzerias_df)
+
+
+    def read_rankings(self) -> pa_typing.DataFrame[schemas.RankingSchema]:
+        """Return all rankings for every pizzeria."""
+        query = self._get_rankings_query()
+        try:
+            df = self._read(query)
+        except Exception as e:
+            raise RuntimeError(f"Error reading rankings from database: {e}") from e
+        return schemas.RankingSchema.validate(df)

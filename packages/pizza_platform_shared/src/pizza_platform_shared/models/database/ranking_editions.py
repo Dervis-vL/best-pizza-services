@@ -14,6 +14,7 @@ from pizza_platform_shared.models.database import base
 
 if TYPE_CHECKING:
     from pizza_platform_shared.models.database.categories import Categories
+    from pizza_platform_shared.models.database.ranking_entries import RankingEntries
 
 
 class RankingEditions(base.BaseModel):
@@ -56,3 +57,4 @@ class RankingEditions(base.BaseModel):
 
     # relationships
     category: orm.Mapped["Categories"] = orm.relationship(back_populates="ranked_editions")
+    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(back_populates="edition")

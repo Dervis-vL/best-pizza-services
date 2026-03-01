@@ -5,6 +5,7 @@ from pizza_platform_shared.models.database.categories import Categories
 from pizza_platform_shared.models.database.locations import Locations
 from pizza_platform_shared.models.database.pizzerias import Pizzerias
 from pizza_platform_shared.models.database.ranking_editions import RankingEditions
+from pizza_platform_shared.models.database.ranking_entries import RankingEntries
 from pizza_platform_shared.models.database.webpages import Webpages
 
 __all__ = [
@@ -13,5 +14,6 @@ __all__ = [
     "Locations",
     "Pizzerias",
     "RankingEditions",
+    "RankingEntries",
     "Webpages",
 ]
