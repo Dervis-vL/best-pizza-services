@@ -2,7 +2,6 @@
 
 import json
 import pathlib
-import re
 from venv import logger
 
 import bs4 as bs
@@ -20,8 +19,6 @@ from pizza_data_management import (
     settings,
 )
 
-URL_PATTERN = re.compile(r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"')
-
 
 def create_pizzeria_schema(
     soup: bs.BeautifulSoup, edition_id: int
@@ -37,7 +34,10 @@ def create_pizzeria_schema(
     webpages_schemas = []
     ranks_schemas = []
     for card in cards_html_list:
-        url = yarl.URL(models.url_pattern.extract(html=card))
+        raw_url = models.url_pattern.extract(html=card)
+        if not raw_url:
+            continue
+        url = yarl.URL(raw_url)
         position = models.ranking_position_patterns.extract(html=card)
         name = extract_pizzeria_name(endpoint_path=url.path)
         slug = url.path.rstrip("/").split("/")[-1]

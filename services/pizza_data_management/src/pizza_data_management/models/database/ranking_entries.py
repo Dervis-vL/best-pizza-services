@@ -19,7 +19,10 @@ class RankingEntries(base.BaseModel):
     # table configuration
     __tablename__ = settings.pizza_db.tables.ranking_entries
     __table_args__ = (
-        {"schema": settings.pizza_db.schema_name}
+        sa.UniqueConstraint(
+            "edition_id", "pizzeria_id", name="uq_ranking_entry_edition_pizzeria"
+        ),
+        {"schema": settings.pizza_db.schema_name},
     )
 
     # foreign key(s)

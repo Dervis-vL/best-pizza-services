@@ -30,7 +30,7 @@ class PizzeriaRepository(BaseDatabase):
         return select(models.Webpages).where(models.Webpages.scraped_at.is_(None))
 
     def upsert_pizzerias_and_webpages(self, config: schemas.PizzeriaEndpointsSchema) -> None:
-        """Write pizzerias and their webpages from config, inserting or updating."""
+        """Write pizzerias, their webpages, and rankings from config, inserting or updating."""
         with self._session() as session:
             pizzeria_map: dict[str, models.Pizzerias] = {}
 
@@ -48,6 +48,17 @@ class PizzeriaRepository(BaseDatabase):
                     )
                     continue
                 self._upsert_webpage(session, webpage_config, pizzeria)
+
+            for ranking_config in config.rankings:
+                name = extract_pizzeria_name(ranking_config.pizzeria_slug)
+                pizzeria = pizzeria_map.get(name)
+                if not pizzeria:
+                    logger.warning(
+                        "Skipping ranking — no pizzeria found for slug '%s'",
+                        ranking_config.pizzeria_slug,
+                    )
+                    continue
+                self._upsert_ranking_entry(session, ranking_config, pizzeria)
 
     def upsert_location(self, location_config: schemas.LocationSchema) -> None:
         """Write a single pizzeria location, skipping if coordinates already exist nearby."""
@@ -108,6 +119,30 @@ class PizzeriaRepository(BaseDatabase):
         )
         session.add(webpage)
         return webpage
+
+    @staticmethod
+    def _upsert_ranking_entry(
+        session: sa_orm.Session,
+        ranking_config: schemas.RankingPositionSchema,
+        pizzeria: models.Pizzerias,
+    ) -> models.RankingEntries:
+        existing = session.scalar(
+            select(models.RankingEntries).where(
+                models.RankingEntries.edition_id == ranking_config.edition_id,
+                models.RankingEntries.pizzeria_id == pizzeria.id,
+            )
+        )
+        if existing:
+            existing.position = ranking_config.position
+            return existing
+
+        entry = models.RankingEntries(
+            edition_id=ranking_config.edition_id,
+            pizzeria_id=pizzeria.id,
+            position=ranking_config.position,
+        )
+        session.add(entry)
+        return entry
 
     @staticmethod
     def _upsert_location(
