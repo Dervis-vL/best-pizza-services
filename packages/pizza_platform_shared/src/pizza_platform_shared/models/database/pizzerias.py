@@ -11,6 +11,7 @@ from pizza_platform_shared.models.database import base
 if TYPE_CHECKING:
     from pizza_platform_shared.models.database.webpages import Webpages
     from pizza_platform_shared.models.database.locations import Locations
+    from pizza_platform_shared.models.database.ranking_entries import RankingEntries
 
 
 class Pizzerias(base.BaseModel):
@@ -24,9 +25,14 @@ class Pizzerias(base.BaseModel):
     )
 
     # columns
-    name: orm.Mapped[str] = orm.mapped_column(sa.String(100), nullable=False, comment="Name of the pizzeria")
-    description: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=True, comment="Description of the pizzeria")
+    name: orm.Mapped[str] = orm.mapped_column(
+        sa.String(100), nullable=False, comment="Name of the pizzeria"
+    )
+    description: orm.Mapped[str] = orm.mapped_column(
+        sa.String(500), nullable=True, comment="Description of the pizzeria"
+    )
 
     # relationships
     webpages: orm.Mapped[list["Webpages"]] = orm.relationship(back_populates="pizzeria")
     locations: orm.Mapped[list["Locations"]] = orm.relationship(back_populates="pizzeria")
+    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(back_populates="pizzeria")
