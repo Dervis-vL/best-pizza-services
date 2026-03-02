@@ -97,21 +97,6 @@ def create_location_schema(soup: bs.BeautifulSoup, pizzeria_id: int) -> schemas.
     )
 
 
-def create_endpoint(category: enums.Categories, year: enums.Year) -> str:
-    """Create an endpoint URL based on category and year.
-
-    :param category: The category for the endpoint.
-    :type category: enums.Categories
-    :param year: The year for the endpoint.
-    :type year: enums.Year
-
-    :return: The constructed endpoint URL.
-    :rtype: str
-    """
-    endpoint_part = getattr(constants.CategoryEndpoints, category.name)
-    return f"{constants.CategoryEndpoints.SELECTION_TYPE}-{endpoint_part}-{year.value}/"
-
-
 def get_pizzeria_url_from_card(card: bs_element.Tag, attr: str) -> yarl.URL:
     """Get the URL from a pizzeria card element.
 
