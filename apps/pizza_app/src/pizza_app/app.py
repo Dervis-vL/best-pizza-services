@@ -11,8 +11,9 @@ import sqlalchemy as sa
 from folium import plugins as fo_plugins
 from pandera import typing as pa_typing
 from streamlit_folium import st_folium
+from pizza_platform_shared import enums as shared_enums
 
-from pizza_app import repositories, settings, schemas, enums
+from pizza_app import repositories, settings, schemas
 
 ROOT_PATH = Path(__file__).parent.parent.parent
 sqlite_db_path = ROOT_PATH / "test_rankings_parsing.db"
@@ -26,18 +27,27 @@ st.set_page_config(
     layout="wide",
 )
 
+# Page HEADER
 st.title("🍕 Pizzerias — World Map")
 st.caption("Locations sourced from 50 Top Pizza rankings.")
+st.write(
+    "Explore the world's best pizzerias, ranked and reviewed by "
+    "[50 Top Pizza](https://www.50toppizza.com). Use the sidebar filters to narrow down by year "
+    "and/or category — whether you're after the global top 50, a regional list, or special awards. "
+    "You might just find an acclaimed slice closer to home than you'd expect."
+)
 
 # Data LOAD
 @st.cache_data(ttl=300, show_spinner="Loading Pizzerias from DB...")
-def load_locations(db_type: enums.DatabaseType) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
+def load_locations(
+    db_type: shared_enums.DatabaseType
+) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
     """Load data from db."""
-    if db_type == enums.DatabaseType.POSTGRESQL:
+    if db_type == shared_enums.DatabaseType.POSTGRESQL:
         pizza_repo = repositories.PizzaPlatformDatabase(
             db_settings=settings.pizza_db
         )
-    elif db_type == enums.DatabaseType.SQLITE:
+    elif db_type == shared_enums.DatabaseType.SQLITE:
         pizza_repo = repositories.PizzaPlatformDatabase.from_engine(
             engine=sa.create_engine(
                 f"sqlite:///{sqlite_db_path}",
@@ -51,13 +61,13 @@ def load_locations(db_type: enums.DatabaseType) -> pa_typing.DataFrame[schemas.P
 
 
 @st.cache_data(ttl=300, show_spinner="Loading Rankings from DB...")
-def load_rankings(db_type: enums.DatabaseType) -> pa_typing.DataFrame[schemas.RankingSchema]:
+def load_rankings(db_type: shared_enums.DatabaseType) -> pa_typing.DataFrame[schemas.RankingSchema]:
     """Load data from db."""
-    if db_type == enums.DatabaseType.POSTGRESQL:
+    if db_type == shared_enums.DatabaseType.POSTGRESQL:
         pizza_repo = repositories.PizzaPlatformDatabase(
             db_settings=settings.pizza_db
         )
-    elif db_type == enums.DatabaseType.SQLITE:
+    elif db_type == shared_enums.DatabaseType.SQLITE:
         pizza_repo = repositories.PizzaPlatformDatabase.from_engine(
             engine=sa.create_engine(
                 f"sqlite:///{sqlite_db_path}",
@@ -71,8 +81,8 @@ def load_rankings(db_type: enums.DatabaseType) -> pa_typing.DataFrame[schemas.Ra
 
 
 try:
-    locations_df = load_locations(enums.DatabaseType.SQLITE)
-    rankings_df = load_rankings(enums.DatabaseType.SQLITE)
+    locations_df = load_locations(shared_enums.DatabaseType.SQLITE)
+    rankings_df = load_rankings(shared_enums.DatabaseType.SQLITE)
 except Exception as e:  # pylint: disable=broad-exception-caught
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()
@@ -91,21 +101,42 @@ with st.sidebar:
     st.header("Filters")
     search = st.text_input("Search by name", placeholder="e.g. Pepe in Grani")
 
-    # TODO: filter by year (with check box for every year present in the data)
+    st.subheader("Years")
+    selected_years = []
+    for year in shared_enums.Year:
+        if st.checkbox(label=str(year.value), value=True, key=f"year_{year.name}"):
+            selected_years.append(year.value)
 
-    # TODO: filter by category (with check box for every category present in the data))
+    st.subheader("Categories")
+    selected_categories = []
+    for cat in shared_enums.Categories:
+        if st.checkbox(label=cat.value, value=True, key=f"cat_{cat.name}"):
+            selected_categories.append(cat.value)
+
+filtered_rankings = rankings_df[
+    rankings_df["year"].isin(selected_years) &
+    rankings_df["category"].isin(selected_categories)
+]
+valid_names = set(filtered_rankings["pizzeria_name"])
 
 if search:
-    filtered = locations_df[locations_df["name"].str.contains(search, case=False, na=False)]
+    filtered = locations_df[
+        locations_df["name"].isin(valid_names) &
+        locations_df["name"].str.contains(search, case=False, na=False)
+    ]
 else:
-    filtered = locations_df
+    filtered = locations_df[locations_df["name"].isin(valid_names)]
+
 
 st.sidebar.metric("Showing", f"{len(filtered)} / {len(locations_df)} pizzerias")
 
 
 # Folium MAP
-avg_lat = filtered["latitude"].mean()
-avg_lng = filtered["longitude"].mean()
+if filtered.empty:
+    avg_lat, avg_lng = 0, 0  # Default to (0,0) if no locations match filters
+else:
+    avg_lat = filtered["latitude"].mean()
+    avg_lng = filtered["longitude"].mean()
 
 m = folium.Map(
     location=[avg_lat, avg_lng],
@@ -117,7 +148,6 @@ m = folium.Map(
 cluster = fo_plugins.MarkerCluster().add_to(m)
 
 for _, row in filtered.iterrows():
-    name = " ".join(word.capitalize() for word in row["name"].split('-'))
     pizzeria_rankings = rankings_df[rankings_df["pizzeria_name"] == row["name"]]
     results = [
         f"#{int(row.position)} of {row.category} {row.year}"
@@ -127,8 +157,10 @@ for _, row in filtered.iterrows():
     ]
     folium.Marker(
         location=[row["latitude"], row["longitude"]],
-        popup=folium.Popup(f"<b><ul>{"".join(f"<li>{r}</li>" for r in results)}</ul></b>", max_width=250),
-        tooltip=name,
+        popup=folium.Popup(
+            f"<b><ul>{"".join(f"<li>{r}</li>" for r in results)}</ul></b>", max_width=250
+        ),
+        tooltip=" ".join(word.capitalize() for word in row["name"].split('-')),
         icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
     ).add_to(cluster)
 
@@ -138,6 +170,18 @@ st_folium(m, width="stretch", height=650, returned_objects=[])
 
 with st.expander("📋 Show all locations as table"):
     st.dataframe(filtered, width="stretch", hide_index=True)
+
+# DISCLAIMER
+st.divider()
+st.caption(
+    "**Disclaimer.** All ranking data displayed in this application is sourced exclusively from "
+    "[50 Top Pizza](https://www.50toppizza.com) and remains the intellectual property of its "
+    "respective owners. This application does not claim any rights over the data. The data has "
+    "not been altered, manipulated, or editorially modified in any way — it is reproduced as "
+    "published. This application is an independent, non-commercial project and is not affiliated "
+    "with, endorsed by, or officially connected to 50 Top Pizza or any of its associated "
+    "organisations."
+)
 
 
 def main() -> None:
