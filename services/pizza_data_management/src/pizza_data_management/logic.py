@@ -89,10 +89,8 @@ def seed_pizzeria_locations() -> None:
 def scrape_data_from_url(url: str) -> bs.BeautifulSoup:
     """Function for scraping data from the best pizza's website.
 
-    :param location: The location to scrape.
-    :type location: enums.Location
-    :param year: The year to scrape.
-    :type year: enums.Year
+    :param url: The URL to scrape.
+    :type url: str
 
     :return: The parsed HTML content.
     :rtype: BeautifulSoup
