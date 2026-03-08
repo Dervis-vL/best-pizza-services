@@ -14,8 +14,9 @@ from folium import plugins as fo_plugins
 from pandera import typing as pa_typing
 from streamlit_folium import st_folium
 from pizza_platform_shared import enums as shared_enums
+from pizza_platform_shared import settings as shared_settings
 
-from pizza_app import constants, repositories, settings, schemas
+from pizza_app import constants, repositories, schemas
 
 ROOT_PATH = Path(__file__).parent.parent.parent
 sqlite_db_path = ROOT_PATH / "test_rankings_parsing.db"
@@ -47,7 +48,7 @@ def load_locations(
     """Load data from db."""
     if db_type == shared_enums.DatabaseType.POSTGRESQL:
         pizza_repo = repositories.PizzaPlatformDatabase(
-            db_settings=settings.pizza_db
+            db_settings=shared_settings.pizza_db
         )
     elif db_type == shared_enums.DatabaseType.SQLITE:
         pizza_repo = repositories.PizzaPlatformDatabase.from_engine(
@@ -67,7 +68,7 @@ def load_rankings(db_type: shared_enums.DatabaseType) -> pa_typing.DataFrame[sch
     """Load data from db."""
     if db_type == shared_enums.DatabaseType.POSTGRESQL:
         pizza_repo = repositories.PizzaPlatformDatabase(
-            db_settings=settings.pizza_db
+            db_settings=shared_settings.pizza_db
         )
     elif db_type == shared_enums.DatabaseType.SQLITE:
         pizza_repo = repositories.PizzaPlatformDatabase.from_engine(

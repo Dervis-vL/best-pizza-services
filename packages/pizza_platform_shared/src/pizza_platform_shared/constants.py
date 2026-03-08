@@ -3,7 +3,7 @@
 from typing import Final
 import yarl
 
-from pizza_app import types
+from pizza_platform_shared import types
 
 
 URL_HOME: Final = yarl.URL("https://www.50toppizza.it/")
