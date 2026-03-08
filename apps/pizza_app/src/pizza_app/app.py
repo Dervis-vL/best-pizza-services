@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
+import sys
 
 import streamlit as st
 import folium
@@ -113,6 +115,16 @@ with st.sidebar:
         if st.checkbox(label=cat.value, value=True, key=f"cat_{cat.name}"):
             selected_categories.append(cat.value)
 
+    st.subheader("Excellent Categories")
+    for cat in shared_enums.CategoriesExcellent:
+        if st.checkbox(label=cat.value, value=False, key=f"cat_{cat.name}"):
+            selected_categories.append(cat.value)
+
+    st.subheader("Special Awards")
+    for cat in shared_enums.CategoriesSpecial:
+        if st.checkbox(label=cat.value, value=False, key=f"cat_{cat.name}"):
+            selected_categories.append(cat.value)
+
 filtered_rankings = rankings_df[
     rankings_df["year"].isin(selected_years) &
     rankings_df["category"].isin(selected_categories)
@@ -187,8 +199,6 @@ st.caption(
 def main() -> None:
     """Entry point — exists so the pyproject script works, but Streamlit
     must be invoked via `streamlit run`, not as a plain Python script."""
-    import subprocess
-    import sys
 
     subprocess.run(
         ["streamlit", "run", __file__, *sys.argv[1:]],
