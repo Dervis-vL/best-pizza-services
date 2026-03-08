@@ -15,7 +15,7 @@ from pandera import typing as pa_typing
 from streamlit_folium import st_folium
 from pizza_platform_shared import enums as shared_enums
 
-from pizza_app import repositories, settings, schemas
+from pizza_app import constants, repositories, settings, schemas
 
 ROOT_PATH = Path(__file__).parent.parent.parent
 sqlite_db_path = ROOT_PATH / "test_rankings_parsing.db"
@@ -100,44 +100,44 @@ if rankings_df.empty:
 
 # Streamlit FILTERS
 with st.sidebar:
-    st.header("Filters")
-    search = st.text_input("Search by name", placeholder="e.g. Pepe in Grani")
+    st.header(constants.Filters.HEADER)
+    search = st.text_input("Search by name", placeholder=constants.Filters.PLACEHOLDER)
 
-    st.subheader("Years")
+    st.subheader(constants.Filters.YEARS)
     selected_years = []
     for year in shared_enums.Year:
         if st.checkbox(label=str(year.value), value=True, key=f"year_{year.name}"):
             selected_years.append(year.value)
 
-    st.subheader("Categories")
+    st.subheader(constants.Filters.CATEGORIES)
     selected_categories = []
     for cat in shared_enums.Categories:
         if st.checkbox(label=cat.value, value=True, key=f"cat_{cat.name}"):
             selected_categories.append(cat.value)
 
-    st.subheader("Excellent Categories")
+    st.subheader(constants.Filters.EXCELLENT_CATEGORIES)
     for cat in shared_enums.CategoriesExcellent:
         if st.checkbox(label=cat.value, value=False, key=f"cat_{cat.name}"):
             selected_categories.append(cat.value)
 
-    st.subheader("Special Awards")
+    st.subheader(constants.Filters.SPECIAL_AWARDS)
     for cat in shared_enums.CategoriesSpecial:
         if st.checkbox(label=cat.value, value=False, key=f"cat_{cat.name}"):
             selected_categories.append(cat.value)
 
 filtered_rankings = rankings_df[
-    rankings_df["year"].isin(selected_years) &
-    rankings_df["category"].isin(selected_categories)
+    rankings_df[schemas.RankingSchema.year].isin(selected_years) &
+    rankings_df[schemas.RankingSchema.category].isin(selected_categories)
 ]
-valid_names = set(filtered_rankings["pizzeria_name"])
+valid_names = set(filtered_rankings[schemas.RankingSchema.pizzeria_name])
 
 if search:
     filtered = locations_df[
-        locations_df["name"].isin(valid_names) &
-        locations_df["name"].str.contains(search, case=False, na=False)
+        locations_df[schemas.PizzeriaSchema.name].isin(valid_names) &
+        locations_df[schemas.PizzeriaSchema.name].str.contains(search, case=False, na=False)
     ]
 else:
-    filtered = locations_df[locations_df["name"].isin(valid_names)]
+    filtered = locations_df[locations_df[schemas.PizzeriaSchema.name].isin(valid_names)]
 
 
 st.sidebar.metric("Showing", f"{len(filtered)} / {len(locations_df)} pizzerias")
@@ -147,8 +147,8 @@ st.sidebar.metric("Showing", f"{len(filtered)} / {len(locations_df)} pizzerias")
 if filtered.empty:
     avg_lat, avg_lng = 0, 0  # Default to (0,0) if no locations match filters
 else:
-    avg_lat = filtered["latitude"].mean()
-    avg_lng = filtered["longitude"].mean()
+    avg_lat = filtered[schemas.PizzeriaSchema.latitude].mean()
+    avg_lng = filtered[schemas.PizzeriaSchema.longitude].mean()
 
 m = folium.Map(
     location=[avg_lat, avg_lng],
@@ -160,7 +160,10 @@ m = folium.Map(
 cluster = fo_plugins.MarkerCluster().add_to(m)
 
 for _, row in filtered.iterrows():
-    pizzeria_rankings = rankings_df[rankings_df["pizzeria_name"] == row["name"]]
+    row: pa_typing.DataFrame[schemas.PizzeriaSchema]
+    pizzeria_rankings = rankings_df[
+        rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.name]
+    ]
     results = [
         f"#{int(row.position)} of {row.category} {row.year}"
         if not pd.isna(row.position)
@@ -168,11 +171,11 @@ for _, row in filtered.iterrows():
         for row in pizzeria_rankings.itertuples()
     ]
     folium.Marker(
-        location=[row["latitude"], row["longitude"]],
+        location=[row[schemas.PizzeriaSchema.latitude], row[schemas.PizzeriaSchema.longitude]],
         popup=folium.Popup(
             f"<b><ul>{"".join(f"<li>{r}</li>" for r in results)}</ul></b>", max_width=250
         ),
-        tooltip=" ".join(word.capitalize() for word in row["name"].split('-')),
+        tooltip=" ".join(word.capitalize() for word in row[schemas.PizzeriaSchema.name].split('-')),
         icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
     ).add_to(cluster)
 
