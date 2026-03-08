@@ -21,7 +21,8 @@ class RankingSchema(pa.DataFrameModel):
         nullable=False, isin=[y.value for y in enums.Year]
     )
     category: pa_typing.Series[str] = pa.Field(
-        nullable=False, str_length={"min_value": 1}, isin=[c.value for c in enums.Categories])
+        nullable=False, str_length={"min_value": 1}, isin=enums.BaseCategories.list()
+    )
 
     class Config:  # pylint: disable=too-few-public-methods
         """Config."""
