@@ -2,25 +2,18 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import subprocess
 import sys
 
 import streamlit as st
 import folium
 import pandas as pd
-import sqlalchemy as sa
 from folium import plugins as fo_plugins
 from pandera import typing as pa_typing
 from streamlit_folium import st_folium
 from pizza_platform_shared import enums as shared_enums
-from pizza_platform_shared import settings as shared_settings
 
-from pizza_app import constants, repositories, schemas
-
-ROOT_PATH = Path(__file__).parent.parent.parent
-sqlite_db_path = ROOT_PATH / "test_rankings_parsing.db"
-sqlite_db_path.exists()
+from pizza_app import constants, schemas, utils
 
 
 # Page CONFIG
@@ -40,52 +33,11 @@ st.write(
     "You might just find an acclaimed slice closer to home than you'd expect."
 )
 
-# Data LOAD
-@st.cache_data(ttl=300, show_spinner="Loading Pizzerias from DB...")
-def load_locations(
-    db_type: shared_enums.DatabaseType
-) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
-    """Load data from db."""
-    if db_type == shared_enums.DatabaseType.POSTGRESQL:
-        pizza_repo = repositories.PizzaPlatformDatabase(
-            db_settings=shared_settings.pizza_db
-        )
-    elif db_type == shared_enums.DatabaseType.SQLITE:
-        pizza_repo = repositories.PizzaPlatformDatabase.from_engine(
-            engine=sa.create_engine(
-                f"sqlite:///{sqlite_db_path}",
-                poolclass=sa.pool.StaticPool,
-            ),
-        )
-    else:
-        raise ValueError(f"Unsupported database type: {db_type}")
-
-    return pizza_repo.read_pizzerias()
-
-
-@st.cache_data(ttl=300, show_spinner="Loading Rankings from DB...")
-def load_rankings(db_type: shared_enums.DatabaseType) -> pa_typing.DataFrame[schemas.RankingSchema]:
-    """Load data from db."""
-    if db_type == shared_enums.DatabaseType.POSTGRESQL:
-        pizza_repo = repositories.PizzaPlatformDatabase(
-            db_settings=shared_settings.pizza_db
-        )
-    elif db_type == shared_enums.DatabaseType.SQLITE:
-        pizza_repo = repositories.PizzaPlatformDatabase.from_engine(
-            engine=sa.create_engine(
-                f"sqlite:///{sqlite_db_path}",
-                poolclass=sa.pool.StaticPool,
-            ),
-        )
-    else:
-        raise ValueError(f"Unsupported database type: {db_type}")
-
-    return pizza_repo.read_rankings()
-
-
+# READ data
 try:
-    locations_df = load_locations(shared_enums.DatabaseType.SQLITE)
-    rankings_df = load_rankings(shared_enums.DatabaseType.SQLITE)
+    repo = utils.create_repo()
+    locations_df = utils.load_locations(db_repo=repo)
+    rankings_df = utils.load_rankings(db_repo=repo)
 except Exception as e:  # pylint: disable=broad-exception-caught
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()
