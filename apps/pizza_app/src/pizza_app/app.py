@@ -36,8 +36,8 @@ st.write(
 # READ data
 try:
     repo = utils.create_repo()
-    locations_df = utils.load_locations(db_repo=repo)
-    rankings_df = utils.load_rankings(db_repo=repo)
+    locations_df = utils.load_locations(_db_repo=repo)
+    rankings_df = utils.load_rankings(_db_repo=repo)
 except Exception as e:  # pylint: disable=broad-exception-caught
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()

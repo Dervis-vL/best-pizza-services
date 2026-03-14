@@ -35,15 +35,15 @@ def create_repo() -> repositories.PizzaPlatformDatabase:
 # Data LOAD
 @st.cache_data(ttl=300, show_spinner="Loading Pizzerias from DB...")
 def load_locations(
-    db_repo: repositories.PizzaPlatformDatabase
+    _db_repo: repositories.PizzaPlatformDatabase
 ) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
     """Load data from db."""
-    return db_repo.read_pizzerias()
+    return _db_repo.read_pizzerias()
 
 
 @st.cache_data(ttl=300, show_spinner="Loading Rankings from DB...")
 def load_rankings(
-    db_repo: repositories.PizzaPlatformDatabase
+    _db_repo: repositories.PizzaPlatformDatabase
 ) -> pa_typing.DataFrame[schemas.RankingSchema]:
     """Load data from db."""
-    return db_repo.read_rankings()
+    return _db_repo.read_rankings()
