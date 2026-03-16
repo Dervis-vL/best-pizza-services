@@ -62,6 +62,7 @@ def set_reverse_geolocation():
         ).where(
             models.Locations.latitude.is_not(None)
             & models.Locations.longitude.is_not(None)
+            & models.Locations.country.is_(None)
         ).order_by(models.Locations.id)
 
         try:
@@ -96,6 +97,8 @@ def set_reverse_geolocation():
         with orm.Session(engine) as session:
             location = session.get(models.Locations, row["id"])
             if location:
+                now = sa.func.now()
+                location.updated_at = now
                 location.city = reverse_location.city
                 location.country = reverse_location.country
                 session.commit()
