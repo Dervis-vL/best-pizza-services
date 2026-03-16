@@ -62,7 +62,7 @@ class GeolocationService:
         print(url_str)
         req = urllib.request.Request(
             url_str,
-            headers={"User-Agent": self._user_agent},
+            headers={"User-Agent": self._user_agent, "Accept-Language": "en"},
         )
         try:
             with urllib.request.urlopen(req, timeout=10) as resp:
