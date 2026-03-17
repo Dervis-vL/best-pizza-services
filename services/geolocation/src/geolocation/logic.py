@@ -59,9 +59,8 @@ class GeolocationService:
     def _fetch(self, lat: float, lon: float) -> dict:
         params = urllib.parse.urlencode({"lat": lat, "lon": lon, "format": "json"})
         url_str = f"{self._BASE_URL}?{params}"
-        print(url_str)
         req = urllib.request.Request(
-            url_str,
+            url_str, 
             headers={"User-Agent": self._user_agent, "Accept-Language": "en"},
         )
         try:

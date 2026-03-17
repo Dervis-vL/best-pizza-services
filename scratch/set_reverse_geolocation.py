@@ -20,9 +20,9 @@ class LocationSchema(pa.DataFrameModel):
 
     Columns:
         id: Display name of the pizzeria.
-        adress: 
-        city: 
-        country: 
+        address: The address matching the coordinates
+        city: The city matching the coordinates
+        country: The country matching the coordinates
         lat:  Latitude, must be within valid geographic range.
         lng:  Longitude, must be within valid geographic range.
     """
@@ -34,7 +34,7 @@ class LocationSchema(pa.DataFrameModel):
     latitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-90, le=90)
     longitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-180, le=180)
 
-    class Config:
+    class Config:  # pylint: disable=too-few-public-methods
         """Config."""
         strict = True
         coerce = True
@@ -97,13 +97,14 @@ def set_reverse_geolocation():
         with orm.Session(engine) as session:
             location = session.get(models.Locations, row["id"])
             if location:
-                now = sa.func.now()
+                now = sa.func.now()  # pylint: disable=not-callable
                 location.updated_at = now
                 location.city = reverse_location.city
                 location.country = reverse_location.country
                 session.commit()
             else:
-                raise ValueError(f"RankingEdition with id {row["id"]} not found.")
+                msg = f"RankingEdition with id {row["id"]} not found."
+                raise ValueError(msg)
 
 
 if __name__ == "__main__":
