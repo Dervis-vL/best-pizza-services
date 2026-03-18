@@ -56,6 +56,9 @@ with st.sidebar:
     st.header(constants.Filters.HEADER)
     search = st.text_input("Search by name", placeholder=constants.Filters.PLACEHOLDER)
 
+    countries = sorted(locations_df[schemas.PizzeriaSchema.country].dropna().unique().tolist())
+    selected_country = st.selectbox("Search by country", options=["All"] + countries)
+
     st.subheader(constants.Filters.YEARS)
     selected_years = []
     for year in shared_enums.Year:
@@ -84,13 +87,23 @@ filtered_rankings = rankings_df[
 ]
 valid_names = set(filtered_rankings[schemas.RankingSchema.pizzeria_name])
 
+country_mask = (
+    (locations_df[schemas.PizzeriaSchema.country] == selected_country)
+    if selected_country != "All"
+    else True
+)
+
 if search:
     filtered = locations_df[
         locations_df[schemas.PizzeriaSchema.name].isin(valid_names) &
-        locations_df[schemas.PizzeriaSchema.name].str.contains(search, case=False, na=False)
+        locations_df[schemas.PizzeriaSchema.name].str.contains(search, case=False, na=False) &
+        country_mask
     ]
 else:
-    filtered = locations_df[locations_df[schemas.PizzeriaSchema.name].isin(valid_names)]
+    filtered = locations_df[
+        locations_df[schemas.PizzeriaSchema.name].isin(valid_names) &
+        country_mask
+    ]
 
 
 st.sidebar.metric("Showing", f"{len(filtered)} / {len(locations_df)} pizzerias")

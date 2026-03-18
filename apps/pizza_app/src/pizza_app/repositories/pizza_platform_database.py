@@ -25,6 +25,8 @@ class PizzaPlatformDatabase(BaseDatabase):
             models.Pizzerias.name,
             models.Locations.latitude,
             models.Locations.longitude,
+            models.Locations.country,
+            models.Locations.city,
         ).join(
             models.Locations,
             models.Locations.pizzeria_id == models.Pizzerias.id,
