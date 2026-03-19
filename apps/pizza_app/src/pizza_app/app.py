@@ -81,6 +81,7 @@ with st.sidebar:
         if st.checkbox(label=cat.value, value=False, key=f"cat_{cat.name}"):
             selected_categories.append(cat.value)
 
+
 filtered_rankings = rankings_df[
     rankings_df[schemas.RankingSchema.year].isin(selected_years) &
     rankings_df[schemas.RankingSchema.category].isin(selected_categories)
