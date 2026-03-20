@@ -53,9 +53,9 @@ if rankings_df.empty:
 
 # Session state initialization
 if "selected_country" not in st.session_state:
-    st.session_state["selected_country"] = "All"
+    st.session_state["selected_country"] = st.query_params.get("country", "All")
 if "selected_city" not in st.session_state:
-    st.session_state["selected_city"] = "All"
+    st.session_state["selected_city"] = st.query_params.get("city", "All")
 
 
 # Streamlit FILTERS
@@ -122,23 +122,31 @@ with st.sidebar:
     st.subheader(constants.Filters.YEARS)
     selected_years = []
     for year in shared_enums.Year:
-        if st.checkbox(label=str(year.value), value=True, key=f"year_{year.name}"):
+        if st.checkbox(
+            label=str(year.value), value=True, key=f"year_{year.name}", bind="query-params"
+        ):
             selected_years.append(year.value)
 
     st.subheader(constants.Filters.CATEGORIES)
     selected_categories = []
     for cat in shared_enums.Categories:
-        if st.checkbox(label=cat.value, value=True, key=f"cat_{cat.name}"):
+        if st.checkbox(
+            label=cat.value, value=True, key=f"cat_{cat.name}", bind="query-params"
+        ):
             selected_categories.append(cat.value)
 
     st.subheader(constants.Filters.EXCELLENT_CATEGORIES)
     for cat in shared_enums.CategoriesExcellent:
-        if st.checkbox(label=cat.value, value=False, key=f"cat_{cat.name}"):
+        if st.checkbox(
+            label=cat.value, value=False, key=f"cat_{cat.name}", bind="query-params"
+        ):
             selected_categories.append(cat.value)
 
     st.subheader(constants.Filters.SPECIAL_AWARDS)
     for cat in shared_enums.CategoriesSpecial:
-        if st.checkbox(label=cat.value, value=False, key=f"cat_{cat.name}"):
+        if st.checkbox(
+            label=cat.value, value=False, key=f"cat_{cat.name}", bind="query-params"
+        ):
             selected_categories.append(cat.value)
 
 
