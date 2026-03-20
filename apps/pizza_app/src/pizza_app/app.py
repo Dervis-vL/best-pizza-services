@@ -58,19 +58,6 @@ if "selected_city" not in st.session_state:
     st.session_state["selected_city"] = "All"
 
 
-# on change functions
-
-
-
-def on_city_change() -> None:
-    """Check city column again after a change"""
-    city = st.session_state["selected_city"]
-    if city != "All":
-        match = relevant_locations[relevant_locations[schemas.PizzeriaSchema.city] == city]
-        if not match.empty:
-            st.session_state["selected_country"] = match.iloc[0][schemas.PizzeriaSchema.country]
-
-
 # Streamlit FILTERS
 with st.sidebar:
     st.header(constants.Filters.HEADER)
