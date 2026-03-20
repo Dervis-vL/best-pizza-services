@@ -53,9 +53,9 @@ if rankings_df.empty:
 
 # Session state initialization
 if "selected_country" not in st.session_state:
-    st.session_state["selected_country"] = st.query_params.get("country", "All")
+    st.session_state["selected_country"] = "All"
 if "selected_city" not in st.session_state:
-    st.session_state["selected_city"] = st.query_params.get("city", "All")
+    st.session_state["selected_city"] = "All"
 
 
 # Streamlit FILTERS
@@ -96,6 +96,7 @@ with st.sidebar:
         options=["All"] + countries,
         key="selected_country",
         on_change=utils.on_country_change,
+        bind="query-params",
     )
 
     if st.session_state["selected_country"] != "All":
@@ -117,6 +118,7 @@ with st.sidebar:
             city_col=schemas.PizzeriaSchema.city,
             country_col=schemas.PizzeriaSchema.country,
         ),
+        bind="query-params",
     )
 
     st.subheader(constants.Filters.YEARS)

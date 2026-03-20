@@ -53,13 +53,6 @@ def load_rankings(
 def on_country_change() -> None:
     """Check country column again after a change."""
     st.session_state["selected_city"] = "All"
-    country = st.session_state["selected_country"]
-    if country == "All":
-        st.query_params.pop("country", None)
-        st.query_params.pop("city", None)
-    else:
-        st.query_params["country"] = country
-        st.query_params.pop("city", None)
 
 
 def make_on_city_change(
@@ -74,8 +67,4 @@ def make_on_city_change(
             match = relevant_locations[relevant_locations[city_col] == city]
             if not match.empty:
                 st.session_state["selected_country"] = match.iloc[0][country_col]
-                st.query_params["country"] = st.session_state["selected_country"]
-            st.query_params["city"] = city
-        else:
-            st.query_params.pop("city", None)
     return on_city_change
