@@ -1,6 +1,7 @@
 """Utility functions for the pizza app."""
 
 from pathlib import Path
+from typing import Callable
 
 import sqlalchemy as sa
 import streamlit as st
@@ -47,3 +48,23 @@ def load_rankings(
 ) -> pa_typing.DataFrame[schemas.RankingSchema]:
     """Load data from db."""
     return _db_repo.read_rankings()
+
+
+def on_country_change() -> None:
+    """Check country column again after a change."""
+    st.session_state["selected_city"] = "All"
+
+
+def make_on_city_change(
+    relevant_locations: pa_typing.DataFrame[schemas.PizzeriaSchema],
+    city_col: str,
+    country_col: str,
+) -> Callable:
+    """Factory to return the on change callback"""
+    def on_city_change() -> None:
+        city = st.session_state["selected_city"]
+        if city != "All":
+            match = relevant_locations[relevant_locations[city_col] == city]
+            if not match.empty:
+                st.session_state["selected_country"] = match.iloc[0][country_col]
+    return on_city_change
