@@ -8,7 +8,7 @@ import streamlit as st
 from pizza_platform_shared import enums as shared_enums
 from pandera import typing as pa_typing
 
-from pizza_app import repositories, schemas, settings
+from pizza_app import constants, repositories, schemas, settings
 
 
 # create repo
@@ -52,7 +52,7 @@ def load_rankings(
 
 def on_country_change() -> None:
     """Check country column again after a change."""
-    st.session_state["selected_city"] = "All"
+    st.session_state[constants.QueryParam.CITY] = constants.Filters.DEFAULT
 
 
 def make_on_city_change(
@@ -62,9 +62,9 @@ def make_on_city_change(
 ) -> Callable:
     """Factory to return the on change callback"""
     def on_city_change() -> None:
-        city = st.session_state["selected_city"]
-        if city != "All":
+        city = st.session_state[constants.QueryParam.CITY]
+        if city != constants.Filters.DEFAULT:
             match = relevant_locations[relevant_locations[city_col] == city]
             if not match.empty:
-                st.session_state["selected_country"] = match.iloc[0][country_col]
+                st.session_state[constants.QueryParam.COUNTRY] = match.iloc[0][country_col]
     return on_city_change

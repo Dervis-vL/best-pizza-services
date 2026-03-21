@@ -36,7 +36,7 @@ def render_list(
             with rankings_col:
                 for ranking_row in pizzeria_rankings.itertuples():
                     if not pd.isna(ranking_row.position):
-                        label = f"**#{int(ranking_row.position)}** {ranking_row.category} {ranking_row.year}"
+                        label = f"{ranking_row.category} {ranking_row.year} **#{int(ranking_row.position)}**"
                     else:
                         label = f"{ranking_row.category} {ranking_row.year}"
                     st.markdown(f"- {label}")
