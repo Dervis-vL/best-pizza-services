@@ -26,17 +26,17 @@ def render_filters(
 
         pre_years = [
             year.value for year in shared_enums.Year
-            if st.session_state.get(f"year_{year.name}", True)
+            if st.session_state.get(f"year_{year.value}", True)
         ]
         pre_categories = (
             [cat.value for cat in shared_enums.Categories if st.session_state.get(
-                f"cat_{cat.name}", True
+                f"cat_{cat.value}", True
             )] +
             [cat.value for cat in shared_enums.CategoriesExcellent if st.session_state.get(
-                f"cat_{cat.name}", False
+                f"cat_{cat.value}", False
             )] +
             [cat.value for cat in shared_enums.CategoriesSpecial if st.session_state.get(
-                f"cat_{cat.name}", False
+                f"cat_{cat.value}", False
             )]
         )
         pre_valid_names = set(
@@ -86,7 +86,7 @@ def render_filters(
         selected_years = []
         for year in shared_enums.Year:
             if st.checkbox(
-                label=str(year.value), value=True, key=f"year_{year.name}", bind=constants.AppContext.BIND
+                label=str(year.value), value=True, key=f"year_{year.value}", bind=constants.AppContext.BIND
             ):
                 selected_years.append(year.value)
 
