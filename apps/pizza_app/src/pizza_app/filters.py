@@ -46,7 +46,7 @@ def render_filters(
             ][schemas.RankingSchema.pizzeria_name]
         )
         relevant_locations = locations_df[
-            locations_df[schemas.PizzeriaSchema.name].isin(pre_valid_names)
+            locations_df[schemas.PizzeriaSchema.slug].isin(pre_valid_names)
         ]
 
         countries = sorted(
@@ -132,14 +132,14 @@ def render_filters(
 
     if search:
         filtered = locations_df[
-            locations_df[schemas.PizzeriaSchema.name].isin(valid_names) &
-            locations_df[schemas.PizzeriaSchema.name].str.contains(search, case=False, na=False) &
+            locations_df[schemas.PizzeriaSchema.slug].isin(valid_names) &
+            locations_df[schemas.PizzeriaSchema.slug].str.contains(search, case=False, na=False) &
             country_mask &
             city_mask
         ]
     else:
         filtered = locations_df[
-            locations_df[schemas.PizzeriaSchema.name].isin(valid_names) &
+            locations_df[schemas.PizzeriaSchema.slug].isin(valid_names) &
             country_mask &
             city_mask
         ]

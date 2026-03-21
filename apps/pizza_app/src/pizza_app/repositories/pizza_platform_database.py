@@ -22,7 +22,7 @@ class PizzaPlatformDatabase(BaseDatabase):
     def _get_read_query(self) -> sa.Select[Any]:
         """Get a query to read pizzeria names and coordinates."""
         return sa.select(
-            models.Pizzerias.name,
+            models.Pizzerias.name.label("slug"),
             models.Locations.latitude,
             models.Locations.longitude,
             models.Locations.country,

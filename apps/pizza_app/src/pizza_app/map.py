@@ -35,7 +35,7 @@ def render_map(
     for _, row in filtered.iterrows():
         row: pa_typing.DataFrame[schemas.PizzeriaSchema]
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.name]
+            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
         ]
         results = [
             f"#{int(row.position)} of {row.category} {row.year}"
@@ -48,7 +48,7 @@ def render_map(
             popup=folium.Popup(
                 f"<b><ul>{"".join(f"<li>{r}</li>" for r in results)}</ul></b>", max_width=250
             ),
-            tooltip=" ".join(word.capitalize() for word in row[schemas.PizzeriaSchema.name].split('-')),
+            tooltip=row[schemas.PizzeriaSchema.name],
             icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
         ).add_to(cluster)
 

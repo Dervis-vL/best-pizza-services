@@ -21,7 +21,7 @@ def render_list(
 
     for _, row in filtered.iterrows():
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.name]
+            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
         ]
 
         with st.container(border=True):

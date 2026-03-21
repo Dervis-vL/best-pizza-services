@@ -23,12 +23,7 @@ st.set_page_config(
 # Page HEADER
 st.title(constants.AppContext.PAGE_TITLE)
 st.caption(constants.AppContext.CAPTION)
-st.write(
-    "Explore the world's best pizzerias, ranked and reviewed by "
-    "[50 Top Pizza](https://www.50toppizza.com). Use the sidebar filters to narrow down by year "
-    "and/or category — whether you're after the global top 50, a regional list, or special awards. "
-    "You might just find an acclaimed slice closer to home than you'd expect."
-)
+st.write(constants.AppContext.HEADER)
 
 # READ data
 try:
@@ -72,19 +67,11 @@ elif view == enums.SegmentedControl.MAP:
 
 # DISCLAIMER
 st.divider()
-st.caption(
-    "**Disclaimer.** All ranking data displayed in this application is sourced exclusively from "
-    "[50 Top Pizza](https://www.50toppizza.com) and remains the intellectual property of its "
-    "respective owners. This application does not claim any rights over the data. The data has "
-    "not been altered, manipulated, or editorially modified in any way — it is reproduced as "
-    "published. This application is an independent, non-commercial project and is not affiliated "
-    "with, endorsed by, or officially connected to 50 Top Pizza or any of its associated "
-    "organisations."
-)
+st.caption(constants.AppContext.DISCLAIMER)
 
 
 def main() -> None:
-    """Entry point — exists so the pyproject script works, but Streamlit
+    """Entry point; exists so the pyproject script works, but Streamlit
     must be invoked via `streamlit run`, not as a plain Python script."""
 
     subprocess.run(
