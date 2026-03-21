@@ -53,7 +53,7 @@ view = st.segmented_control(
     options=enums.SegmentedControl.values(),
     default=enums.SegmentedControl.MAP.value,
     key=enums.SegmentedControl.toggle_key(),
-    bind=constants.AppContext.BIND,
+    bind=constants.QueryParam.BIND,
     label_visibility="collapsed",
 )
 

@@ -3,17 +3,6 @@
 from typing import Final
 
 
-class Filters:
-    """Constants for filter names in the Streamlit app."""
-
-    HEADER: Final[str] = "Filters"
-    PLACEHOLDER: Final[str] = "e.g. Pepe in Grani"
-    YEARS: Final[str] = "Years"
-    CATEGORIES: Final[str] = "Categories"
-    EXCELLENT_CATEGORIES: Final[str] = "Excellent Categories"
-    SPECIAL_AWARDS: Final[str] = "Special Awards"
-
-
 class AppContext:
     """Constants for the config names of the Streamlit app."""
 
@@ -37,4 +26,25 @@ class AppContext:
         project and is not affiliated with, endorsed by, or officially connected to
         50 Top Pizza or any of its associated organisations.
         """
+
+
+class Filters:
+    """Constants for filter names in the Streamlit app."""
+
+    DEFAULT: Final[str] = "All"
+    HEADER: Final[str] = "Filters"
+    PLACEHOLDER: Final[str] = "e.g. Pepe in Grani"
+    YEARS: Final[str] = "Years"
+    CATEGORIES: Final[str] = "Categories"
+    EXCELLENT_CATEGORIES: Final[str] = "Excellent Categories"
+    SPECIAL_AWARDS: Final[str] = "Special Awards"
+
+
+class QueryParam:
+    """Constants for the query params."""
+
+    COUNTRY: Final[str] = "selected_country"
+    CITY: Final[str] = "selected_city"
+    YEAR: Final[str] = "year_"
+    CATEGORY: Final[str] = "cat_"
     BIND: Final[str] = "query-params"

@@ -15,10 +15,10 @@ def render_filters(
 ) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
     """Render the sidebar filters and return the filtered pizzerias dataframe."""
 
-    if "selected_country" not in st.session_state:
-        st.session_state["selected_country"] = "All"
-    if "selected_city" not in st.session_state:
-        st.session_state["selected_city"] = "All"
+    if constants.QueryParam.COUNTRY not in st.session_state:
+        st.session_state[constants.QueryParam.COUNTRY] = constants.Filters.DEFAULT
+    if constants.QueryParam.CITY not in st.session_state:
+        st.session_state[constants.QueryParam.CITY] = constants.Filters.DEFAULT
 
     with st.sidebar:
         st.header(constants.Filters.HEADER)
@@ -26,17 +26,17 @@ def render_filters(
 
         pre_years = [
             year.value for year in shared_enums.Year
-            if st.session_state.get(f"year_{year.value}", True)
+            if st.session_state.get(f"{constants.QueryParam.YEAR}{str(year.value)}", True)
         ]
         pre_categories = (
             [cat.value for cat in shared_enums.Categories if st.session_state.get(
-                f"cat_{cat.value}", True
+                f"{constants.QueryParam.CATEGORY}{cat.name}", True
             )] +
             [cat.value for cat in shared_enums.CategoriesExcellent if st.session_state.get(
-                f"cat_{cat.value}", False
+                f"{constants.QueryParam.CATEGORY}{cat.name}", False
             )] +
             [cat.value for cat in shared_enums.CategoriesSpecial if st.session_state.get(
-                f"cat_{cat.value}", False
+                f"{constants.QueryParam.CATEGORY}{cat.name}", False
             )]
         )
         pre_valid_names = set(
@@ -54,17 +54,17 @@ def render_filters(
         )
         selected_country = st.selectbox(
             "Search by country",
-            options=["All"] + countries,
-            key="selected_country",
+            options=[constants.Filters.DEFAULT] + countries,
+            key=constants.QueryParam.COUNTRY,
             on_change=utils.on_country_change,
-            bind=constants.AppContext.BIND,
+            bind=constants.QueryParam.BIND,
         )
 
-        if st.session_state["selected_country"] != "All":
+        if st.session_state[constants.QueryParam.COUNTRY] != constants.Filters.DEFAULT:
             city_pool = relevant_locations[
                 relevant_locations[
                     schemas.PizzeriaSchema.country
-                ] == st.session_state["selected_country"]
+                ] == st.session_state[constants.QueryParam.COUNTRY]
             ]
         else:
             city_pool = relevant_locations
@@ -72,21 +72,24 @@ def render_filters(
         cities = sorted(city_pool[schemas.PizzeriaSchema.city].dropna().unique().tolist())
         selected_city = st.selectbox(
             "Search by city",
-            options=["All"] + cities,
-            key="selected_city",
+            options=[constants.Filters.DEFAULT] + cities,
+            key=constants.QueryParam.CITY,
             on_change=utils.make_on_city_change(
                 relevant_locations=relevant_locations,
                 city_col=schemas.PizzeriaSchema.city,
                 country_col=schemas.PizzeriaSchema.country,
             ),
-            bind=constants.AppContext.BIND,
+            bind=constants.QueryParam.BIND,
         )
 
         st.subheader(constants.Filters.YEARS)
         selected_years = []
         for year in shared_enums.Year:
             if st.checkbox(
-                label=str(year.value), value=True, key=f"year_{year.value}", bind=constants.AppContext.BIND
+                label=str(year.value),
+                value=True,
+                key=f"{constants.QueryParam.YEAR}{str(year.value)}",
+                bind=constants.QueryParam.BIND,
             ):
                 selected_years.append(year.value)
 
@@ -94,21 +97,30 @@ def render_filters(
         selected_categories = []
         for cat in shared_enums.Categories:
             if st.checkbox(
-                label=cat.value, value=True, key=f"cat_{cat.name}", bind=constants.AppContext.BIND
+                label=cat.value,
+                value=True,
+                key=f"{constants.QueryParam.CATEGORY}{cat.name}",
+                bind=constants.QueryParam.BIND,
             ):
                 selected_categories.append(cat.value)
 
         st.subheader(constants.Filters.EXCELLENT_CATEGORIES)
         for cat in shared_enums.CategoriesExcellent:
             if st.checkbox(
-                label=cat.value, value=False, key=f"cat_{cat.name}", bind=constants.AppContext.BIND
+                label=cat.value,
+                value=False,
+                key=f"{constants.QueryParam.CATEGORY}{cat.name}",
+                bind=constants.QueryParam.BIND,
             ):
                 selected_categories.append(cat.value)
 
         st.subheader(constants.Filters.SPECIAL_AWARDS)
         for cat in shared_enums.CategoriesSpecial:
             if st.checkbox(
-                label=cat.value, value=False, key=f"cat_{cat.name}", bind=constants.AppContext.BIND
+                label=cat.value,
+                value=False,
+                key=f"{constants.QueryParam.CATEGORY}{cat.name}",
+                bind=constants.QueryParam.BIND,
             ):
                 selected_categories.append(cat.value)
 
@@ -120,13 +132,13 @@ def render_filters(
 
     country_mask = (
         (locations_df[schemas.PizzeriaSchema.country] == selected_country)
-        if selected_country != "All"
+        if selected_country != constants.Filters.DEFAULT
         else True
     )
 
     city_mask = (
         (locations_df[schemas.PizzeriaSchema.city] == selected_city)
-        if selected_city != "All"
+        if selected_city != constants.Filters.DEFAULT
         else True
     )
 
