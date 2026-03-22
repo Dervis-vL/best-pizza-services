@@ -29,23 +29,13 @@ st.write(constants.AppContext.HEADER)
 try:
     pizza_adapter = infrastructure.PizzaDataAdapter(repo=utils.create_repo())
     pizza_data: dataclasses.PizzaData = pizza_adapter.load_pizza_data()
-    locations_df = pizza_data.locations
-    rankings_df = pizza_data.rankings
 except Exception as e:  # pylint: disable=broad-exception-caught
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()
 
-if locations_df.empty:
-    st.warning("No pizzerias with coordinates found in the database.")
-    st.stop()
-
-if rankings_df.empty:
-    st.warning("No pizzeria rankings found in the database.")
-    st.stop()
-
 
 # FILTERS (renders sidebar, returns filtered dataframe)
-filtered = pizza_filters.render_filters(locations_df, rankings_df)
+filtered = pizza_filters.render_filters(pizza_data.locations, pizza_data.rankings)
 
 
 # View TOGGLE
@@ -61,9 +51,9 @@ view = st.segmented_control(
 
 # Render VIEW
 if view == enums.SegmentedControl.LIST:
-    list_view.render_list(filtered, rankings_df)
+    list_view.render_list(filtered, pizza_data.rankings)
 elif view == enums.SegmentedControl.MAP:
-    pizza_map.render_map(filtered, rankings_df)
+    pizza_map.render_map(filtered, pizza_data.rankings)
 
 
 # DISCLAIMER
