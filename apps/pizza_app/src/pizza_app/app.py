@@ -7,10 +7,14 @@ import sys
 
 import streamlit as st
 
-from pizza_app import filters as pizza_filters
-from pizza_app import list as list_view
-from pizza_app import map as pizza_map
-from pizza_app import infrastructure, constants, dataclasses, enums, utils
+from pizza_app import (
+    infrastructure,
+    constants,
+    dataclasses,
+    enums,
+    utils,
+    views,
+)
 
 
 # Page CONFIG
@@ -35,7 +39,7 @@ except Exception as e:  # pylint: disable=broad-exception-caught
 
 
 # FILTERS (renders sidebar, returns filtered dataframe)
-filtered = pizza_filters.render_filters(pizza_data.locations, pizza_data.rankings)
+filtered = views.render_filters(pizza_data.locations, pizza_data.rankings)
 
 
 # View TOGGLE
@@ -51,9 +55,9 @@ view = st.segmented_control(
 
 # Render VIEW
 if view == enums.SegmentedControl.LIST:
-    list_view.render_list(filtered, pizza_data.rankings)
+    views.render_list(filtered, pizza_data.rankings)
 elif view == enums.SegmentedControl.MAP:
-    pizza_map.render_map(filtered, pizza_data.rankings)
+    views.render_map(filtered, pizza_data.rankings)
 
 
 # DISCLAIMER
