@@ -34,9 +34,22 @@ def render_list(
                 )
 
             with rankings_col:
-                for ranking_row in pizzeria_rankings.itertuples():
-                    if not pd.isna(ranking_row.position):
-                        label = f"{ranking_row.category} {ranking_row.year} **#{int(ranking_row.position)}**"
-                    else:
-                        label = f"{ranking_row.category} {ranking_row.year}"
-                    st.markdown(f"- {label}")
+                table_rows = ""
+                for category, group in pizzeria_rankings.groupby(
+                    schemas.RankingSchema.category, sort=False
+                ):
+                    entries = list(group.itertuples())
+                    for i, entry in enumerate(entries):
+                        pos = f"<b>#{int(entry.position)}</b>" if not pd.isna(entry.position) else "—"
+                        category_cell = (
+                            f'<td rowspan="{len(entries)}" style="padding-right:1rem;vertical-align:top">'
+                            f"{category}:</td>"
+                            if i == 0
+                            else ""
+                        )
+                        table_rows += (
+                            f"<tr>{category_cell}"
+                            f'<td style="padding-right:1rem;color:gray">{entry.year}</td>'
+                            f"<td>{pos}</td></tr>"
+                        )
+                st.markdown(f"<table>{table_rows}</table>", unsafe_allow_html=True)

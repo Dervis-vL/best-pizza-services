@@ -37,17 +37,27 @@ def render_map(
         pizzeria_rankings = rankings_df[
             rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
         ]
-        results = [
-            f"#{int(row.position)} of {row.category} {row.year}"
-            if not pd.isna(row.position)
-            else f"{row.category} {row.year}"
-            for row in pizzeria_rankings.itertuples()
-        ]
+        table_rows = ""
+        for category, group in pizzeria_rankings.groupby(
+            schemas.RankingSchema.category, sort=False
+        ):
+            entries = list(group.itertuples())
+            for i, entry in enumerate(entries):
+                pos = f"#{int(entry.position)}" if not pd.isna(entry.position) else "—"
+                category_cell = (
+                    f'<td rowspan="{len(entries)}" style="padding-right:8px;vertical-align:top">'
+                    f"<b>{category}:</b></td>"
+                    if i == 0
+                    else ""
+                )
+                table_rows += (
+                    f"<tr>{category_cell}"
+                    f'<td style="padding-right:8px">{entry.year}</td>'
+                    f"<td>{pos}</td></tr>"
+                )
         folium.Marker(
             location=[row[schemas.PizzeriaSchema.latitude], row[schemas.PizzeriaSchema.longitude]],
-            popup=folium.Popup(
-                f"<b><ul>{"".join(f"<li>{r}</li>" for r in results)}</ul></b>", max_width=250
-            ),
+            popup=folium.Popup(f"<table>{table_rows}</table>", max_width=300),
             tooltip=row[schemas.PizzeriaSchema.name],
             icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
         ).add_to(cluster)
