@@ -33,6 +33,7 @@ addopts = """
     --cov=pizza_app
     --cov=pizza_data_management
     --cov=pizza_data_storage
+    --cov=geolocation
     --cov=pizza_platform_shared
     --cov-report=term-missing
     --cov-report=html:reports/coverage

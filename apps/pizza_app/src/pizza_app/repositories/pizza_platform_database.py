@@ -8,7 +8,6 @@ import sqlalchemy as sa
 from pandera import typing as pa_typing
 
 from pizza_platform_shared.repositories.base_database import BaseDatabase
-
 from pizza_platform_shared import models
 from pizza_app import schemas
 
@@ -23,9 +22,11 @@ class PizzaPlatformDatabase(BaseDatabase):
     def _get_read_query(self) -> sa.Select[Any]:
         """Get a query to read pizzeria names and coordinates."""
         return sa.select(
-            models.Pizzerias.name,
+            models.Pizzerias.name.label("slug"),
             models.Locations.latitude,
             models.Locations.longitude,
+            models.Locations.country,
+            models.Locations.city,
         ).join(
             models.Locations,
             models.Locations.pizzeria_id == models.Pizzerias.id,

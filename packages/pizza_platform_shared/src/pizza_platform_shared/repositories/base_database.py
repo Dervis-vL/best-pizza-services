@@ -22,10 +22,10 @@ class BaseDatabase(ABC):
         db_settings: Database settings.
     """
 
-    def __init__(self, db_settings: settings.DatabaseSettings) -> None:
+    def __init__(self, connection_string: str, schema_name: str | None = None) -> None:
         """Initialize the database repository."""
-        self._engine = sa.create_engine(db_settings.connection_string, pool_pre_ping=True)
-        self._schema = db_settings.schema_name
+        self._engine = sa.create_engine(connection_string, pool_pre_ping=True)
+        self._schema = schema_name
 
     @classmethod
     def from_engine(cls, engine: sa.Engine) -> "BaseDatabase":
@@ -37,6 +37,15 @@ class BaseDatabase(ABC):
         instance._engine = engine
         instance._schema = None
         return instance
+
+    @classmethod
+    def from_settings(cls, db_settings: settings.DatabaseSettings) -> "BaseDatabase":
+        """Create a database instance from settings."""
+        return cls(
+            connection_string=db_settings.connection_string,
+            schema_name=db_settings.schema_name
+        )
+
 
     @contextmanager
     def _session(self) -> Generator[sa_orm.Session, None, None]:

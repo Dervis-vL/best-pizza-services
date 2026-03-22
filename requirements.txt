@@ -127,7 +127,7 @@ sqlalchemy==2.0.47
     # via
     #   pizza-app
     #   pizza-platform-shared
-streamlit==1.54.0
+streamlit==1.55.0
     # via
     #   pizza-app
     #   streamlit-folium

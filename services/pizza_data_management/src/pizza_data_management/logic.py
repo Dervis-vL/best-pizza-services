@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 def seed_categories_and_editions(config: schemas.RankingEndpointsSchema) -> None:
     """Seed the database with the ranking categories and editions from a schema."""
 
-    ranking_repo = repositories.RankingRepository(
+    ranking_repo = repositories.RankingRepository.from_settings(
         db_settings=settings.pizza_db
     )
     ranking_repo.upsert_categories_and_editions(config=config)
@@ -30,7 +30,7 @@ def seed_categories_and_editions(config: schemas.RankingEndpointsSchema) -> None
 
 def scrape_editions() -> Generator[schemas.PizzeriaEndpointsSchema, None, None]:
     """Scrape the ranking categories editions html pages."""
-    ranking_repo = repositories.RankingRepository(
+    ranking_repo = repositories.RankingRepository.from_settings(
         db_settings=settings.pizza_db
     )
     unscraped_editions = ranking_repo.get_unscraped_editions()
@@ -46,7 +46,7 @@ def scrape_editions() -> Generator[schemas.PizzeriaEndpointsSchema, None, None]:
 def parse_pizzerias_and_webpages(config: schemas.PizzeriaEndpointsSchema) -> None:
     """Seed the database with the pizzerias and webpages from a schema."""
 
-    pizzeria_repo = repositories.PizzeriaRepository(
+    pizzeria_repo = repositories.PizzeriaRepository.from_settings(
         db_settings=settings.pizza_db
     )
     pizzeria_repo.upsert_pizzerias_and_webpages(config=config)
@@ -60,7 +60,7 @@ def seed_pizzeria_pages() -> None:
 
 def scrape_pizzeria_pages() -> Generator[schemas.LocationSchema, None, None]:
     """Scrape the pizzeria pages for all pizzerias in the DB."""
-    pizzeria_repo = repositories.PizzeriaRepository(
+    pizzeria_repo = repositories.PizzeriaRepository.from_settings(
         db_settings=settings.pizza_db
     )
     for webpage in pizzeria_repo.get_unscraped_pizzerias():
@@ -74,7 +74,7 @@ def scrape_pizzeria_pages() -> Generator[schemas.LocationSchema, None, None]:
 
 def parse_pizzeria_page(location_schema: schemas.LocationSchema) -> None:
     """Parse a pizzeria page and update the database with the location data."""
-    pizzeria_repo = repositories.PizzeriaRepository(
+    pizzeria_repo = repositories.PizzeriaRepository.from_settings(
         db_settings=settings.pizza_db
     )
     pizzeria_repo.upsert_location(location_config=location_schema)

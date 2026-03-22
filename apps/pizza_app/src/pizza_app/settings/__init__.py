@@ -1,9 +1,9 @@
-"""Modules containing scraper settings."""
+"""Settings for the pizza app."""
 
-from pizza_platform_shared.settings import PizzaDatabaseSettings
+from pizza_platform_shared.settings import pizza_db
 
-__all__ = [
-    "PizzaDatabaseSettings",
-]
+from pizza_app.settings.application import Application
 
-pizza_db = PizzaDatabaseSettings()
+app_settings = Application()
+
+__all__ = ["pizza_db", "app_settings"]
