@@ -10,7 +10,7 @@ import streamlit as st
 from pizza_app import filters as pizza_filters
 from pizza_app import list as list_view
 from pizza_app import map as pizza_map
-from pizza_app import constants, enums, utils
+from pizza_app import infrastructure, constants, dataclasses, enums, utils
 
 
 # Page CONFIG
@@ -27,9 +27,10 @@ st.write(constants.AppContext.HEADER)
 
 # READ data
 try:
-    repo = utils.create_repo()
-    locations_df = utils.load_locations(_db_repo=repo)
-    rankings_df = utils.load_rankings(_db_repo=repo)
+    pizza_adapter = infrastructure.PizzaDataAdapter(repo=utils.create_repo())
+    pizza_data: dataclasses.PizzaData = pizza_adapter.load_pizza_data()
+    locations_df = pizza_data.locations
+    rankings_df = pizza_data.rankings
 except Exception as e:  # pylint: disable=broad-exception-caught
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()
