@@ -62,5 +62,5 @@ def render_map(
             icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
         ).add_to(cluster)
 
-    fo_plugins.LocateControl(auto_start=False, initialZoomLevel=10).add_to(m)
+    fo_plugins.LocateControl(auto_start=False, keepCurrentZoomLevel=True).add_to(m)
     st_folium(m, width="stretch", height=650, returned_objects=[])
