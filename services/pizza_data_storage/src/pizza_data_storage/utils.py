@@ -6,8 +6,6 @@ from venv import logger
 
 import bs4 as bs
 import sqlalchemy as sa
-import yarl
-from bs4 import element as bs_element
 from pizza_platform_shared import schemas as shared_schemas
 from sqlalchemy import event, orm, select
 
@@ -15,23 +13,6 @@ from pizza_data_storage import (
     constants,
     models,
 )
-
-
-def get_pizzeria_url_from_card(card: bs_element.Tag, attr: str) -> yarl.URL:
-    """Get the URL from a pizzeria card element.
-
-    :param card: The pizzeria card element.
-    :type card: bs4.element.Tag
-    :param attr: The attribute to extract the URL from.
-    :type attr: str
-
-    :return: The URL extracted from the card element.
-    :rtype: yarl.URL
-    """
-    url_str = card.get(attr)
-    if url_str is None:
-        raise ValueError(f"The attribute '{attr}' is not found in the card element.")
-    return yarl.URL(url_str)
 
 
 def soup_to_file(soup: bs.BeautifulSoup, file_path: pathlib.Path) -> None:
@@ -44,6 +25,19 @@ def soup_to_file(soup: bs.BeautifulSoup, file_path: pathlib.Path) -> None:
     """
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(str(soup))
+
+
+def extract_pizzeria_name(endpoint_path: str) -> str:
+    """Extract pizzeria slug from URL path, stripping version suffixes like '-4'."""
+    slug = endpoint_path.rstrip("/").split("/")[-1]
+    if not slug:
+        raise ValueError(f"Invalid pizzeria endpoint path: {endpoint_path}")
+
+    # Strip numeric suffix (e.g., "napoli-on-the-road-4" -> "napoli-on-the-road")
+    parts = slug.rsplit("-", 1)
+    if len(parts) == 2 and parts[-1].isdigit():
+        return parts[0]
+    return slug
 
 
 def load_ranking_config(
@@ -387,107 +381,3 @@ def get_sqlite_engine(
     model.metadata.create_all(bind=sqlite_engine)
 
     return sqlite_engine
-
-
-def read_from_db(engine: sa.engine.Engine) -> shared_schemas.RankingEndpointsSchema:
-    """Read data from the database and return it as a schema."""
-    with orm.Session(engine) as session:
-        categories = session.execute(select(models.Categories)).scalars().all()
-        editions = session.execute(select(models.RankingEditions)).scalars().all()
-
-    category_schemas = [
-        shared_schemas.CategorySchema(
-            slug=cat.slug,
-            name=cat.name,
-            description=cat.description,
-        )
-        for cat in categories
-    ]
-
-    edition_schemas = [
-        shared_schemas.RankedEditionSchema(
-            slug=next((c.slug for c in categories if c.id == ed.category_id), None),
-            year=ed.year,
-            url=ed.url,
-        )
-        for ed in editions
-    ]
-
-    return shared_schemas.RankingEndpointsSchema(
-        categories=category_schemas,
-        editions=edition_schemas,
-    )
-
-
-def query_not_scraped_ranking_editions(
-    engine: sa.engine.Engine,
-) -> list[models.RankingEditions]:
-    """Eager query the database for ranking editions pages that have not been scraped yet."""
-    # Eager load ranking editions and category data
-    with orm.Session(engine) as session:
-        return (
-            session.execute(
-                select(models.RankingEditions)
-                .where(models.RankingEditions.scraped_at.is_(None))
-                .options(orm.joinedload(models.RankingEditions.category))
-            )
-            .scalars()
-            .all()
-        )
-
-
-def query_not_scraped_pizzerias(engine: sa.engine.Engine) -> list[models.Webpages]:
-    """Lazy query the database for pizzerias that have not been scraped yet."""
-    with orm.Session(engine) as session:
-        return (
-            session.execute(
-                select(models.Webpages).where(models.Webpages.scraped_at.is_(None))
-            )
-            .scalars()
-            .all()
-        )
-
-
-def update_rankings_scraped_at(engine: sa.engine.Engine, edition_id: int) -> None:
-    """Update the 'scraped_at' timestamp for a given ranking edition."""
-    try:
-        with orm.Session(engine) as session:
-            edition = session.get(models.RankingEditions, edition_id)
-            if edition:
-                now = sa.func.now()  # pylint: disable=not-callable
-                edition.scraped_at = now
-                session.commit()
-            else:
-                raise ValueError(f"RankingEdition with id {edition_id} not found.")
-    except Exception as e:
-        logger.error("Error updating scraped_at for edition_id %s: %s", edition_id, e)
-        raise
-
-
-def update_pizzerias_scraped_at(engine: sa.engine.Engine, pizzeria_id: int) -> None:
-    """Update the 'scraped_at' timestamp for a given pizzeria."""
-    try:
-        with orm.Session(engine) as session:
-            pizzeria = session.get(models.Webpages, pizzeria_id)
-            if pizzeria:
-                now = sa.func.now()  # pylint: disable=not-callable
-                pizzeria.scraped_at = now
-                session.commit()
-            else:
-                raise ValueError(f"Pizzerias with id {pizzeria_id} not found.")
-    except Exception as e:
-        logger.error("Error updating scraped_at for pizzeria_id %s: %s", pizzeria_id, e)
-        raise
-
-
-def extract_pizzeria_name(endpoint_path: str) -> str:
-    """Extract pizzeria slug from URL path, stripping version suffixes like '-4'."""
-    slug = endpoint_path.rstrip("/").split("/")[-1]
-    if not slug:
-        raise ValueError(f"Invalid pizzeria endpoint path: {endpoint_path}")
-
-    # Strip numeric suffix (e.g., "napoli-on-the-road-4" -> "napoli-on-the-road")
-    parts = slug.rsplit("-", 1)
-    if len(parts) == 2 and parts[-1].isdigit():
-        return parts[0]
-    return slug
