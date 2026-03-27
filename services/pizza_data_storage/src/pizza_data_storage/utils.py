@@ -5,12 +5,11 @@ import pathlib
 from venv import logger
 
 import bs4 as bs
-import yarl
 import sqlalchemy as sa
-from sqlalchemy import select, event
-from sqlalchemy import orm
+import yarl
 from bs4 import element as bs_element
 from pizza_platform_shared import schemas as shared_schemas
+from sqlalchemy import event, orm, select
 
 from pizza_data_storage import (
     constants,
@@ -47,7 +46,9 @@ def soup_to_file(soup: bs.BeautifulSoup, file_path: pathlib.Path) -> None:
         file.write(str(soup))
 
 
-def load_ranking_config(config_path: pathlib.Path) -> shared_schemas.RankingEndpointsSchema:
+def load_ranking_config(
+    config_path: pathlib.Path,
+) -> shared_schemas.RankingEndpointsSchema:
     """Load ranking configuration from a JSON file.
 
     :param config_path: The path to the configuration JSON file.
@@ -66,8 +67,7 @@ def upsert_category(
 ) -> models.Categories:
     """Insert or update a category."""
     existing = db.scalar(
-        select(models.Categories)
-        .where(models.Categories.slug == category_config.slug)
+        select(models.Categories).where(models.Categories.slug == category_config.slug)
     )
 
     if existing:
@@ -115,13 +115,11 @@ def upsert_edition(
 
 
 def upsert_pizzeria(
-    db: orm.Session,
-    pizzeria_config: shared_schemas.PizzeriaSchema
+    db: orm.Session, pizzeria_config: shared_schemas.PizzeriaSchema
 ) -> models.Pizzerias:
     """Insert or update a pizzeria."""
-    existing = db.scalar(select(
-        models.Pizzerias)
-        .where(models.Pizzerias.name == pizzeria_config.name)
+    existing = db.scalar(
+        select(models.Pizzerias).where(models.Pizzerias.name == pizzeria_config.name)
     )
 
     if existing:
@@ -137,21 +135,24 @@ def upsert_pizzeria(
 
 
 def upsert_location(
-    db: orm.Session,
-    location_config: shared_schemas.LocationSchema
+    db: orm.Session, location_config: shared_schemas.LocationSchema
 ) -> models.Locations:
     """Insert or update a pizzeria location."""
     if location_config.has_coordinates:
         existing = db.scalar(
             select(models.Locations)
-            .where(models.Locations.latitude.between(
-                location_config.latitude - constants.Coordinate.LOC_DELTA,
-                location_config.latitude + constants.Coordinate.LOC_DELTA,
-            ))
-            .where(models.Locations.longitude.between(
-                location_config.longitude - constants.Coordinate.LOC_DELTA,
-                location_config.longitude + constants.Coordinate.LOC_DELTA,
-            ))
+            .where(
+                models.Locations.latitude.between(
+                    location_config.latitude - constants.Coordinate.LOC_DELTA,
+                    location_config.latitude + constants.Coordinate.LOC_DELTA,
+                )
+            )
+            .where(
+                models.Locations.longitude.between(
+                    location_config.longitude - constants.Coordinate.LOC_DELTA,
+                    location_config.longitude + constants.Coordinate.LOC_DELTA,
+                )
+            )
         )
 
         if existing:
@@ -173,7 +174,7 @@ def upsert_location(
 def upsert_webpage(
     db: orm.Session,
     webpage_config: shared_schemas.WebpagesSchema,
-    pizzeria_map: dict[str, models.Pizzerias]
+    pizzeria_map: dict[str, models.Pizzerias],
 ) -> models.Webpages:
     """Insert or update a webpage."""
     slug_to_name = extract_pizzeria_name(endpoint_path=webpage_config.slug)
@@ -201,7 +202,9 @@ def upsert_webpage(
         return webpage
 
 
-def seed_database(db: orm.Session, config: shared_schemas.RankingEndpointsSchema) -> dict[str, int]:
+def seed_database(
+    db: orm.Session, config: shared_schemas.RankingEndpointsSchema
+) -> dict[str, int]:
     """Seed the database with categories and editions from config.
 
     Returns statistics about what was created/updated.
@@ -217,9 +220,8 @@ def seed_database(db: orm.Session, config: shared_schemas.RankingEndpointsSchema
     category_map: dict[str, models.Categories] = {}
 
     for cat_config in config.categories:
-        existing = db.scalar(select(
-            models.Categories)
-            .where(models.Categories.slug == cat_config.slug)
+        existing = db.scalar(
+            select(models.Categories).where(models.Categories.slug == cat_config.slug)
         )
         is_new = existing is None
 
@@ -276,9 +278,10 @@ def seed_pizzeria_database(
     pizzeria_map: dict[str, models.Pizzerias] = {}
 
     for pizzeria_config in config.pizzerias:
-        existing = db.scalar(select(
-            models.Pizzerias)
-            .where(models.Pizzerias.name == pizzeria_config.name)
+        existing = db.scalar(
+            select(models.Pizzerias).where(
+                models.Pizzerias.name == pizzeria_config.name
+            )
         )
         is_new = existing is None
 
@@ -298,7 +301,8 @@ def seed_pizzeria_database(
         pizzeria = pizzeria_map.get(slug_to_name)
         if not pizzeria:
             logger.warning(
-                "Skipping webpage - pizzeria for slug '%s' not found", webpage_config.slug
+                "Skipping webpage - pizzeria for slug '%s' not found",
+                webpage_config.slug,
             )
             continue
 
@@ -321,7 +325,9 @@ def seed_pizzeria_database(
     return stats
 
 
-def seed_location_database(db: orm.Session, config: shared_schemas.LocationSchema) -> None:
+def seed_location_database(
+    db: orm.Session, config: shared_schemas.LocationSchema
+) -> None:
     """Seed the database with pizzeria location data."""
     stats = {
         "locations_created": 0,
@@ -329,9 +335,10 @@ def seed_location_database(db: orm.Session, config: shared_schemas.LocationSchem
     }
 
     # upsert all pizzerias
-    existing = db.scalar(select(
-        models.Locations)
-        .where(models.Locations.pizzeria_id == config.pizzaria_id)
+    existing = db.scalar(
+        select(models.Locations).where(
+            models.Locations.pizzeria_id == config.pizzaria_id
+        )
     )
     is_new = existing is None
 
@@ -347,7 +354,9 @@ def seed_location_database(db: orm.Session, config: shared_schemas.LocationSchem
     return stats
 
 
-def get_sqlite_engine(db_path: pathlib.Path | None, model: orm.DeclarativeBase) -> sa.engine.Engine:
+def get_sqlite_engine(
+    db_path: pathlib.Path | None, model: orm.DeclarativeBase
+) -> sa.engine.Engine:
     """Create engine with SQLite schema handling."""
     if db_path:
         url = f"sqlite:///{db_path}"
@@ -410,25 +419,33 @@ def read_from_db(engine: sa.engine.Engine) -> shared_schemas.RankingEndpointsSch
     )
 
 
-def query_not_scraped_ranking_editions(engine: sa.engine.Engine) -> list[models.RankingEditions]:
+def query_not_scraped_ranking_editions(
+    engine: sa.engine.Engine,
+) -> list[models.RankingEditions]:
     """Eager query the database for ranking editions pages that have not been scraped yet."""
     # Eager load ranking editions and category data
     with orm.Session(engine) as session:
-        return session.execute(
-            select(models.RankingEditions)
-            .where(models.RankingEditions.scraped_at
-            .is_(None)).options(
-                orm.joinedload(models.RankingEditions.category)
+        return (
+            session.execute(
+                select(models.RankingEditions)
+                .where(models.RankingEditions.scraped_at.is_(None))
+                .options(orm.joinedload(models.RankingEditions.category))
             )
-        ).scalars().all()
+            .scalars()
+            .all()
+        )
 
 
 def query_not_scraped_pizzerias(engine: sa.engine.Engine) -> list[models.Webpages]:
     """Lazy query the database for pizzerias that have not been scraped yet."""
     with orm.Session(engine) as session:
-        return session.execute(
-            select(models.Webpages).where(models.Webpages.scraped_at.is_(None))
-        ).scalars().all()
+        return (
+            session.execute(
+                select(models.Webpages).where(models.Webpages.scraped_at.is_(None))
+            )
+            .scalars()
+            .all()
+        )
 
 
 def update_rankings_scraped_at(engine: sa.engine.Engine, edition_id: int) -> None:
