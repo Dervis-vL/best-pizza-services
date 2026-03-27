@@ -76,7 +76,7 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
         return sa.URL.create(
             "postgresql",
             username=self.user_name,
-            password=self.password.get_secret_value(),
+            password=self.password.get_secret_value(),  # pylint: disable=no-member
             host=self.host,
             port=self.port,
             database=self.name,

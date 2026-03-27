@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 import sqlalchemy as sa
 from sqlalchemy import orm as sa_orm, select
 
 from pizza_platform_shared.repositories.base_database import BaseDatabase
+from pizza_platform_shared import schemas as shared_schemas
 
-from pizza_data_management import constants, models, schemas
-from pizza_data_management.utils import extract_pizzeria_name
+from pizza_data_storage import constants, models
+from pizza_data_storage.utils import extract_pizzeria_name
 
 logger = logging.getLogger(__name__)
+
 
 class PizzeriaRepository(BaseDatabase):
     """Repository for seeding and querying pizzerias, webpages, and locations.
@@ -25,11 +26,7 @@ class PizzeriaRepository(BaseDatabase):
         db_settings: Database connection settings.
     """
 
-    def _get_read_query(self) -> sa.Select[Any]:
-        """Unscraped pizzeria webpages."""
-        return select(models.Webpages).where(models.Webpages.scraped_at.is_(None))
-
-    def upsert_pizzerias_and_webpages(self, config: schemas.PizzeriaEndpointsSchema) -> None:
+    def upsert_pizzerias_and_webpages(self, config: shared_schemas.PizzeriaEndpointsSchema) -> None:
         """Write pizzerias, their webpages, and rankings from config, inserting or updating."""
         with self._session() as session:
             pizzeria_map: dict[str, models.Pizzerias] = {}
@@ -60,15 +57,15 @@ class PizzeriaRepository(BaseDatabase):
                     continue
                 self._upsert_ranking_entry(session, ranking_config, pizzeria)
 
-    def upsert_location(self, location_config: schemas.LocationSchema) -> None:
+    def upsert_location(self, location_config: shared_schemas.LocationSchema) -> None:
         """Write a single pizzeria location, skipping if coordinates already exist nearby."""
         with self._session() as session:
             self._upsert_location(session, location_config)
 
     def get_unscraped_pizzerias(self) -> list[models.Webpages]:
         """Return all pizzeria webpages that have not yet been scraped."""
-        with sa_orm.Session(self._engine) as session:
-            return session.execute(self._get_read_query()).scalars().all()
+        query = select(models.Webpages).where(models.Webpages.scraped_at.is_(None))
+        return self._read_orm(query)
 
     def mark_pizzeria_scraped(self, webpage_id: int) -> None:
         """Set scraped_at to now for the given pizzeria webpage."""
@@ -80,7 +77,7 @@ class PizzeriaRepository(BaseDatabase):
 
     @staticmethod
     def _upsert_pizzeria(
-        session: sa_orm.Session, pizzeria_config: schemas.PizzeriaSchema
+        session: sa_orm.Session, pizzeria_config: shared_schemas.PizzeriaSchema
     ) -> models.Pizzerias:
         existing = session.scalar(
             select(models.Pizzerias).where(models.Pizzerias.name == pizzeria_config.name)
@@ -99,7 +96,7 @@ class PizzeriaRepository(BaseDatabase):
     @staticmethod
     def _upsert_webpage(
         session: sa_orm.Session,
-        webpage_config: schemas.WebpagesSchema,
+        webpage_config: shared_schemas.WebpagesSchema,
         pizzeria: models.Pizzerias,
     ) -> models.Webpages:
         existing = session.scalar(
@@ -123,7 +120,7 @@ class PizzeriaRepository(BaseDatabase):
     @staticmethod
     def _upsert_ranking_entry(
         session: sa_orm.Session,
-        ranking_config: schemas.RankingPositionSchema,
+        ranking_config: shared_schemas.RankingPositionSchema,
         pizzeria: models.Pizzerias,
     ) -> models.RankingEntries:
         existing = session.scalar(
@@ -146,7 +143,7 @@ class PizzeriaRepository(BaseDatabase):
 
     @staticmethod
     def _upsert_location(
-        session: sa_orm.Session, location_config: schemas.LocationSchema
+        session: sa_orm.Session, location_config: shared_schemas.LocationSchema
     ) -> models.Locations:
         """Upsert a pizzeria location, skipping if coordinates already exist nearby."""
         if location_config.has_coordinates:

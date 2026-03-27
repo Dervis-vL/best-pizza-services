@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_data_management import settings
-from pizza_data_management.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_management.models.database.pizzerias import Pizzerias
+    from pizza_data_storage.models.database.pizzerias import Pizzerias
 
 
 class Locations(base.BaseModel):

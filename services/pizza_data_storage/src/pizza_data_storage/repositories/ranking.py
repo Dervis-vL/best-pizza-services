@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 import sqlalchemy as sa
 from sqlalchemy import orm as sa_orm, select
 
 from pizza_platform_shared.repositories.base_database import BaseDatabase
+from pizza_platform_shared import schemas as shared_schemas
 
-from pizza_data_management import models, schemas
+from pizza_data_storage import models
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +25,7 @@ class RankingRepository(BaseDatabase):
         db_settings: Database connection settings.
     """
 
-    def _get_read_query(self) -> sa.Select[Any]:
-        """Unscraped ranking editions with their category eagerly loaded."""
-        return (
-            select(models.RankingEditions)
-            .where(models.RankingEditions.scraped_at.is_(None))
-            .options(sa_orm.joinedload(models.RankingEditions.category))
-        )
-
-    def upsert_categories_and_editions(self, config: schemas.RankingEndpointsSchema) -> None:
+    def upsert_categories_and_editions(self, config: shared_schemas.RankingEndpointsSchema) -> None:
         """Write categories and ranking editions from config, inserting or updating."""
         with self._session() as session:
             category_map: dict[str, models.Categories] = {}
@@ -46,7 +38,9 @@ class RankingRepository(BaseDatabase):
             for edition_config in config.editions:
                 category = category_map.get(edition_config.slug)
                 if not category:
-                    logger.warning("Skipping edition — category '%s' not found", edition_config.slug)
+                    logger.warning(
+                        "Skipping edition — category '%s' not found", edition_config.slug
+                    )
                     continue
                 self._upsert_edition(session, edition_config, category)
 
@@ -56,8 +50,12 @@ class RankingRepository(BaseDatabase):
         Relationships are eagerly loaded so objects remain usable after
         the session closes.
         """
-        with sa_orm.Session(self._engine) as session:
-            return session.execute(self._get_read_query()).scalars().all()
+        query = (
+            select(models.RankingEditions)
+            .where(models.RankingEditions.scraped_at.is_(None))
+            .options(sa_orm.joinedload(models.RankingEditions.category))
+        )
+        return self._read_orm(query)
 
     def mark_edition_scraped(self, edition_id: int) -> None:
         """Set scraped_at to now for the given ranking edition."""
@@ -65,11 +63,11 @@ class RankingRepository(BaseDatabase):
             edition = session.get(models.RankingEditions, edition_id)
             if not edition:
                 raise ValueError(f"RankingEdition with id {edition_id} not found.")
-            edition.scraped_at = sa.func.now()
+            edition.scraped_at = sa.func.now()  # pylint: disable=not-callable
 
     @staticmethod
     def _upsert_category(
-        session: sa_orm.Session, cat_config: schemas.CategorySchema
+        session: sa_orm.Session, cat_config: shared_schemas.CategorySchema
     ) -> models.Categories:
         existing = session.scalar(
             select(models.Categories).where(models.Categories.slug == cat_config.slug)
@@ -90,7 +88,7 @@ class RankingRepository(BaseDatabase):
     @staticmethod
     def _upsert_edition(
         session: sa_orm.Session,
-        edition_config: schemas.RankedEditionSchema,
+        edition_config: shared_schemas.RankedEditionSchema,
         category: models.Categories,
     ) -> models.RankingEditions:
         existing = session.scalar(

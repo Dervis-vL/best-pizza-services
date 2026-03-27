@@ -2,7 +2,7 @@
 
 from pizza_platform_shared import settings as shared_settings
 
-from pizza_data_management import config
+from pizza_data_storage.settings import config
 
 
 class MaintenanceDatabaseSettings(shared_settings.DatabaseSettings):

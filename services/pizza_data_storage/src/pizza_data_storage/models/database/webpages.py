@@ -7,11 +7,11 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
-from pizza_data_management import settings
-from pizza_data_management.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_management.models.database.pizzerias import Pizzerias
+    from pizza_data_storage.models.database.pizzerias import Pizzerias
 
 
 class Webpages(base.BaseModel):

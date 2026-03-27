@@ -5,13 +5,13 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_data_management import settings
-from pizza_data_management.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_management.models.database.webpages import Webpages
-    from pizza_data_management.models.database.locations import Locations
-    from pizza_data_management.models.database.ranking_entries import RankingEntries
+    from pizza_data_storage.models.database.webpages import Webpages
+    from pizza_data_storage.models.database.locations import Locations
+    from pizza_data_storage.models.database.ranking_entries import RankingEntries
 
 
 class Pizzerias(base.BaseModel):

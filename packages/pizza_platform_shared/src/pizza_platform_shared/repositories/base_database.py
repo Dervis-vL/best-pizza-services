@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from contextlib import contextmanager
 from typing import Generator, Any
 
@@ -43,13 +43,12 @@ class BaseDatabase(ABC):
         """Create a database instance from settings."""
         return cls(
             connection_string=db_settings.connection_string,
-            schema_name=db_settings.schema_name
+            schema_name=db_settings.schema_name,
         )
-
 
     @contextmanager
     def _session(self) -> Generator[sa_orm.Session, None, None]:
-        """Get a database session."""
+        """ORM session with commit/rollback. Use for writes and ORM reads."""
         with sa_orm.Session(self._engine) as session:
             try:
                 yield session
@@ -58,8 +57,21 @@ class BaseDatabase(ABC):
                 session.rollback()
                 raise
 
-    def _read(self, query: sa.Select[Any]) -> pd.DataFrame:
-        """Abstratct method to read data from the database."""
+    def _read_orm(self, query: sa.Select[Any]) -> list[Any]:
+        """Execute an ORM query and return mapped model instances.
+        
+        Uses a bare session (no commit) since this is read-only.
+        Eager-load any relationships in the query if you need them
+        after this method returns.
+        """
+        with sa_orm.Session(self._engine) as session:
+            return session.execute(query).scalars().all()
+
+    def _read_df(self, query: sa.Select[Any]) -> pd.DataFrame:
+        """Execute a query and return a pandas DataFrame.
+        
+        Bypasses the ORM — use for projections across multiple tables
+        or when the result feeds a data pipeline rather than entity logic."""
         try:
             with self._engine.connect() as conn:
                 df = pd.read_sql(query, conn)
@@ -67,7 +79,3 @@ class BaseDatabase(ABC):
             raise RuntimeError(f"Failed to read data from the database: {e}") from e
 
         return df
-
-    @abstractmethod
-    def _get_read_query(self) -> sa.Select[Any]:
-        """Abstract method to get a read query."""

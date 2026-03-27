@@ -5,12 +5,12 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_data_management import settings
-from pizza_data_management.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_management.models.database.pizzerias import Pizzerias
-    from pizza_data_management.models.database.ranking_editions import RankingEditions
+    from pizza_data_storage.models.database.pizzerias import Pizzerias
+    from pizza_data_storage.models.database.ranking_editions import RankingEditions
 
 
 class RankingEntries(base.BaseModel):
@@ -41,7 +41,7 @@ class RankingEntries(base.BaseModel):
             schema_name=settings.pizza_db.schema_name,
             table_name=settings.pizza_db.tables.pizzerias,
         ), ondelete="CASCADE"),
-        nullable=False, 
+        nullable=False,
         comment="Foreign key to the pizzeria",
     )
 

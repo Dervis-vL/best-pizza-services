@@ -9,12 +9,12 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
 
-from pizza_data_management import settings
-from pizza_data_management.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_management.models.database.categories import Categories
-    from pizza_data_management.models.database.ranking_entries import RankingEntries
+    from pizza_data_storage.models.database.categories import Categories
+    from pizza_data_storage.models.database.ranking_entries import RankingEntries
 
 
 class RankingEditions(base.BaseModel):
@@ -44,8 +44,12 @@ class RankingEditions(base.BaseModel):
     )
 
     # columns
-    year: orm.Mapped[int] = orm.mapped_column(sa.SmallInteger, nullable=False, comment="Year of the ranking edition")
-    url: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=False, comment="Endpoint URL for the ranking edition data")
+    year: orm.Mapped[int] = orm.mapped_column(
+        sa.SmallInteger, nullable=False, comment="Year of the ranking edition"
+    )
+    url: orm.Mapped[str] = orm.mapped_column(
+        sa.String(500), nullable=False, comment="Endpoint URL for the ranking edition data"
+    )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
             sa.DateTime(timezone=True),
