@@ -4,8 +4,8 @@ from pizza_data_storage.models.database.base import BaseModel
 from pizza_data_storage.models.database.categories import Categories
 from pizza_data_storage.models.database.locations import Locations
 from pizza_data_storage.models.database.pizzerias import Pizzerias
-from pizza_data_storage.models.database.ranking_editions import RankingEditions
-from pizza_data_storage.models.database.ranking_entries import RankingEntries
+from pizza_data_storage.models.database.editions import Editions
+from pizza_data_storage.models.database.rankings import Rankings
 from pizza_data_storage.models.database.webpages import Webpages
 
 __all__ = [
@@ -13,7 +13,7 @@ __all__ = [
     "Categories",
     "Locations",
     "Pizzerias",
-    "RankingEditions",
-    "RankingEntries",
+    "Editions",
+    "Rankings",
     "Webpages",
 ]

@@ -1,4 +1,11 @@
-"""Database repository for ranking categories and editions."""
+"""Database repository. 
+
+Repository for the following models/schemas:
+    pizzerias,
+    webpages,
+    rankings,
+    locations.
+"""
 
 from __future__ import annotations
 
@@ -17,26 +24,22 @@ logger = logging.getLogger(__name__)
 
 
 class PizzeriaRepository(BaseDatabase):
-    """Repository for seeding and querying pizzerias, webpages, and locations.
+    """Repository for seeding and querying pizzerias, webpages, rankings, and locations."""
 
-    Handles the second phase of the scraper: writing scraped pizzeria data
-    (pizzerias, webpages, locations) and reading back what still needs scraping.
-
-    Args:
-        db_settings: Database connection settings.
-    """
-
-    def upsert_pizzerias_and_webpages(self, config: shared_schemas.PizzeriaEndpointsSchema) -> None:
-        """Write pizzerias, their webpages, and rankings from config, inserting or updating."""
+    def seed_pizzerias_and_webpages(
+        self,
+        config_schema: shared_schemas.PizzeriaEndpointsSchema
+    ) -> None:
+        """Write pizzerias, their webpages, and ranks from config, inserting or updating."""
         with self._session() as session:
             pizzeria_map: dict[str, models.Pizzerias] = {}
 
-            for pizzeria_config in config.pizzerias:
-                pizzeria = self._upsert_pizzeria(session, pizzeria_config)
+            for pizzeria in config_schema.pizzerias:
+                pizzeria_model = self._upsert_pizzeria(session, pizzeria)
                 session.flush()
-                pizzeria_map[pizzeria_config.name] = pizzeria
+                pizzeria_map[pizzeria.name] = pizzeria_model
 
-            for webpage_config in config.webpages:
+            for webpage_config in config_schema.webpages:
                 name = extract_pizzeria_name(webpage_config.slug)
                 pizzeria = pizzeria_map.get(name)
                 if not pizzeria:
@@ -46,7 +49,7 @@ class PizzeriaRepository(BaseDatabase):
                     continue
                 self._upsert_webpage(session, webpage_config, pizzeria)
 
-            for ranking_config in config.rankings:
+            for ranking_config in config_schema.rankings:
                 name = extract_pizzeria_name(ranking_config.pizzeria_slug)
                 pizzeria = pizzeria_map.get(name)
                 if not pizzeria:
@@ -122,18 +125,18 @@ class PizzeriaRepository(BaseDatabase):
         session: sa_orm.Session,
         ranking_config: shared_schemas.RankingPositionSchema,
         pizzeria: models.Pizzerias,
-    ) -> models.RankingEntries:
+    ) -> models.Rankings:
         existing = session.scalar(
-            select(models.RankingEntries).where(
-                models.RankingEntries.edition_id == ranking_config.edition_id,
-                models.RankingEntries.pizzeria_id == pizzeria.id,
+            select(models.Rankings).where(
+                models.Rankings.edition_id == ranking_config.edition_id,
+                models.Rankings.pizzeria_id == pizzeria.id,
             )
         )
         if existing:
             existing.position = ranking_config.position
             return existing
 
-        entry = models.RankingEntries(
+        entry = models.Rankings(
             edition_id=ranking_config.edition_id,
             pizzeria_id=pizzeria.id,
             position=ranking_config.position,

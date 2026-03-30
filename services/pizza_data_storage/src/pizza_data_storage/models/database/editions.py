@@ -1,4 +1,4 @@
-"""Model for ranking editions and their associated data."""
+"""Model for ranked editions and their associated data."""
 
 from __future__ import annotations
 
@@ -14,14 +14,14 @@ from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
     from pizza_data_storage.models.database.categories import Categories
-    from pizza_data_storage.models.database.ranking_entries import RankingEntries
+    from pizza_data_storage.models.database.rankings import Rankings
 
 
-class RankingEditions(base.BaseModel):
-    """Model for storing ranking edition information."""
+class Editions(base.BaseModel):
+    """Model for storing ranked edition information."""
 
     # table configuration
-    __tablename__ = settings.pizza_db.tables.ranking_editions
+    __tablename__ = settings.pizza_db.tables.editions
     __table_args__ = (
         sa.UniqueConstraint(
             "category_id", "year", name="uq_ranking_edition_category_year"
@@ -45,10 +45,10 @@ class RankingEditions(base.BaseModel):
 
     # columns
     year: orm.Mapped[int] = orm.mapped_column(
-        sa.SmallInteger, nullable=False, comment="Year of the ranking edition"
+        sa.SmallInteger, nullable=False, comment="Year of the ranked edition"
     )
     url: orm.Mapped[str] = orm.mapped_column(
-        sa.String(500), nullable=False, comment="Endpoint URL for the ranking edition data"
+        sa.String(500), nullable=False, comment="Endpoint URL for the ranked edition data"
     )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
@@ -60,5 +60,5 @@ class RankingEditions(base.BaseModel):
     )
 
     # relationships
-    category: orm.Mapped["Categories"] = orm.relationship(back_populates="ranked_editions")
-    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(back_populates="edition")
+    category: orm.Mapped["Categories"] = orm.relationship(back_populates="editions")
+    rankings: orm.Mapped[list["Rankings"]] = orm.relationship(back_populates="edition")

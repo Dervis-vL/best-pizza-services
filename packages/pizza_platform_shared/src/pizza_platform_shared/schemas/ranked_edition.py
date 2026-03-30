@@ -2,10 +2,10 @@
 
 import pydantic as pyd
 
-from pizza_data_management.schemas.base import BaseSchema
+from pizza_platform_shared.schemas.base import BaseSchema
 
 
-class RankedEditionSchema(BaseSchema):
+class EditionSchema(BaseSchema):
     """Schema for validating ranked edition data."""
 
     year: int = pyd.Field(..., description="Year of the ranking edition")

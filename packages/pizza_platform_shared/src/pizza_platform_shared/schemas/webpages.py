@@ -1,6 +1,6 @@
 """Schema for pizzeria websites data."""
 
-from pizza_data_management.schemas.base import BaseSchema
+from pizza_platform_shared.schemas.base import BaseSchema
 
 
 class WebpagesSchema(BaseSchema):

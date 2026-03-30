@@ -17,7 +17,7 @@ class RankingEntries(base.BaseModel):
     """Model for storing ranking entry information."""
 
     # table configuration
-    __tablename__ = settings.pizza_db.tables.ranking_entries
+    __tablename__ = settings.pizza_db.tables.rankings
     __table_args__ = (
         sa.UniqueConstraint(
             "edition_id", "pizzeria_id", name="uq_ranking_entry_edition_pizzeria"
@@ -30,7 +30,7 @@ class RankingEntries(base.BaseModel):
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
         sa.ForeignKey(base.BaseModel.create_foreign_key_str(
             schema_name=settings.pizza_db.schema_name,
-            table_name=settings.pizza_db.tables.ranking_editions,
+            table_name=settings.pizza_db.tables.editions,
         ), ondelete="CASCADE"),
         nullable=False,
         comment="Foreign key to the ranking edition",

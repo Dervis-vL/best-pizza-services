@@ -57,7 +57,7 @@ class BaseDatabase(ABC):
                 session.rollback()
                 raise
 
-    def _read_orm(self, query: sa.Select[Any]) -> list[Any]:
+    def _read_orm(self, query: sa.Select[Any], single: bool = False) -> list[Any]:
         """Execute an ORM query and return mapped model instances.
         
         Uses a bare session (no commit) since this is read-only.
@@ -65,6 +65,8 @@ class BaseDatabase(ABC):
         after this method returns.
         """
         with sa_orm.Session(self._engine) as session:
+            if single:
+                return session.execute(query).scalars().first()
             return session.execute(query).scalars().all()
 
     def _read_df(self, query: sa.Select[Any]) -> pd.DataFrame:

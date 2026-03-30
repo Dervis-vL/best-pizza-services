@@ -4,25 +4,25 @@ import pydantic as pyd
 
 from pizza_platform_shared.schemas.category import CategorySchema
 from pizza_platform_shared.schemas.pizzeria import PizzeriaSchema
-from pizza_platform_shared.schemas.ranked_edition import RankedEditionSchema
+from pizza_platform_shared.schemas.ranked_edition import EditionSchema
 from pizza_platform_shared.schemas.ranking_position import RankingPositionSchema
 from pizza_platform_shared.schemas.webpages import WebpagesSchema
 
 
-class RankingEndpointsSchema(pyd.BaseModel):
+class RankedCategoriesSchema(pyd.BaseModel):
     """Schema for the endpoints to rankings."""
 
     categories: list[CategorySchema] = pyd.Field(
         ...,
         description="List of pizza categories with their details",
     )
-    editions: list[RankedEditionSchema] = pyd.Field(
+    editions: list[EditionSchema] = pyd.Field(
         ...,
         description="List of ranking editions with their details",
     )
 
     @pyd.model_validator(mode="after")
-    def validate(self) -> "RankingEndpointsSchema":
+    def validate_edition_slugs(self) -> "RankedCategoriesSchema":
         """Validates that each edition's category.slug exists in the categories list."""
         valid_slugs = {category.slug for category in self.categories}
         for edition in self.editions:
@@ -48,9 +48,9 @@ class PizzeriaEndpointsSchema(pyd.BaseModel):
     )
 
     @pyd.model_validator(mode="after")
-    def validate(self) -> "PizzeriaEndpointsSchema":
+    def validate_webpage_slugs(self) -> "PizzeriaEndpointsSchema":
         """Validates that each webpage.slug is in the pizzerias name."""
         for pizzeria in self.pizzerias:
-            if not any(webpage.slug.startswith(pizzeria.name) for webpage in self.webpages):
+            if not any(webpage.slug.startswith(pizzeria.slug) for webpage in self.webpages):
                 raise ValueError(f"No matching webpage slug for pizzeria: {pizzeria.name}")
         return self

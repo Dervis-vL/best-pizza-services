@@ -14,7 +14,7 @@ class PizzaTableNames(types.TableNames):
 
     categories: types.TableName = "categories"
     pizzerias: types.TableName = "pizzerias"
-    ranking_editions: types.TableName = "ranking_editions"
-    ranking_entries: types.TableName = "ranking_entries"
+    editions: types.TableName = "editions"
+    rankings: types.TableName = "rankings"
     webpages: types.TableName = "webpages"
     locations: types.TableName = "locations"

@@ -1,6 +1,5 @@
 """Utility functions for the scraper."""
 
-import json
 import pathlib
 from venv import logger
 
@@ -40,22 +39,6 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
     return slug
 
 
-def load_ranking_config(
-    config_path: pathlib.Path,
-) -> shared_schemas.RankingEndpointsSchema:
-    """Load ranking configuration from a JSON file.
-
-    :param config_path: The path to the configuration JSON file.
-    :type config_path: pathlib.Path
-    :return: The ranking endpoints configuration schema.
-    :rtype: schemas.RankingEndpointsSchema
-    """
-    with open(config_path, "r", encoding="utf-8") as file:
-        config_data = json.load(file)
-
-    return shared_schemas.RankingEndpointsSchema.model_validate(config_data)
-
-
 def upsert_category(
     db: orm.Session, category_config: shared_schemas.CategorySchema
 ) -> models.Categories:
@@ -80,18 +63,18 @@ def upsert_category(
 
 def upsert_edition(
     db: orm.Session,
-    edition_config: shared_schemas.RankedEditionSchema,
+    edition_config: shared_schemas.EditionSchema,
     category_map: dict[str, models.Categories],
-) -> models.RankingEditions:
+) -> models.Editions:
     """Insert or update a ranking edition."""
     category = category_map.get(edition_config.slug)
     if not category:
         raise ValueError(f"Category '{edition_config.slug}' not found")
 
     existing = db.scalar(
-        select(models.RankingEditions).where(
-            models.RankingEditions.category_id == category.id,
-            models.RankingEditions.year == edition_config.year,
+        select(models.Editions).where(
+            models.Editions.category_id == category.id,
+            models.Editions.year == edition_config.year,
         )
     )
 
@@ -99,7 +82,7 @@ def upsert_edition(
         existing.url = edition_config.url
         return existing
     else:
-        edition = models.RankingEditions(
+        edition = models.Editions(
             category_id=category.id,
             year=edition_config.year,
             url=edition_config.url,
@@ -197,7 +180,7 @@ def upsert_webpage(
 
 
 def seed_database(
-    db: orm.Session, config: shared_schemas.RankingEndpointsSchema
+    db: orm.Session, config: shared_schemas.RankedCategoriesSchema
 ) -> dict[str, int]:
     """Seed the database with categories and editions from config.
 
@@ -239,9 +222,9 @@ def seed_database(
             continue
 
         existing = db.scalar(
-            select(models.RankingEditions).where(
-                models.RankingEditions.category_id == category.id,
-                models.RankingEditions.year == edition_config.year,
+            select(models.Editions).where(
+                models.Editions.category_id == category.id,
+                models.Editions.year == edition_config.year,
             )
         )
         is_new = existing is None

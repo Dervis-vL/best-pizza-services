@@ -9,7 +9,7 @@ from pizza_data_storage import settings
 from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.database.ranking_editions import RankingEditions
+    from pizza_data_storage.models.database.editions import Editions
 
 
 class Categories(base.BaseModel):
@@ -34,6 +34,6 @@ class Categories(base.BaseModel):
     )
 
     # relationships
-    ranked_editions: orm.Mapped[
-        list["RankingEditions"]
+    editions: orm.Mapped[
+        list["Editions"]
     ] = orm.relationship(back_populates="category")

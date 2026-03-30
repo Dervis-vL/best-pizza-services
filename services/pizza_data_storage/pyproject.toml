@@ -12,7 +12,6 @@ requires-python = ">=3.13"
 
 dependencies = [
     "alembic>=1.18.4",
-    "beautifulsoup4>=4.14.3",
     "pandera>=0.28.1",
     "psycopg2-binary>=2.9.11",
     "pydantic>=2.12.5",
