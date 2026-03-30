@@ -7,8 +7,8 @@ from pizza_platform_shared.schemas.endpoints import (
 )
 from pizza_platform_shared.schemas.locations import LocationSchema
 from pizza_platform_shared.schemas.pizzeria import PizzeriaSchema
-from pizza_platform_shared.schemas.ranked_edition import EditionSchema
-from pizza_platform_shared.schemas.ranking_position import RankingPositionSchema
+from pizza_platform_shared.schemas.edition import EditionSchema
+from pizza_platform_shared.schemas.ranking import RankingSchema
 from pizza_platform_shared.schemas.webpages import WebpagesSchema
 
 __all__ = [
@@ -16,7 +16,7 @@ __all__ = [
     "LocationSchema",
     "EditionSchema",
     "RankedCategoriesSchema",
-    "RankingPositionSchema",
+    "RankingSchema",
     "PizzeriaEndpointsSchema",
     "PizzeriaSchema",
     "WebpagesSchema",

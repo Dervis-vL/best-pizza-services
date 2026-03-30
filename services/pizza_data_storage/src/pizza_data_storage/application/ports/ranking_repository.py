@@ -1,0 +1,28 @@
+"""Ranking repository interface."""
+
+from typing import Protocol
+
+from pizza_platform_shared import schemas as shared_schemas
+
+from pizza_data_storage import models
+
+
+class IRankingsRepository(Protocol):
+    """Interface for a repository handling ranking categories and editions."""
+
+    def seed_categories_and_editions(
+        self, config_schema: shared_schemas.RankedCategoriesSchema
+    ) -> None:
+        """Write categories and ranking editions from config, inserting or updating."""
+
+    def get_editions(self, *, only_unscraped: bool) -> list[models.Editions]:
+        """Return all ranking editions that have not been scraped yet."""
+
+    def get_edition(self, edition_id: int) -> models.Editions | None:
+        """Return a single edition by id."""
+
+    def get_category(self, category_id: int) -> models.Categories | None:
+        """Return a single category by id."""
+
+    def mark_edition_scraped(self, edition_id: int) -> None:
+        """Mark a ranking edition as scraped."""

@@ -46,7 +46,7 @@ class RankingsRepository(BaseDatabase):
                 self._upsert_edition(session, edition, category)
 
     def get_editions(self, *, only_unscraped: bool) -> list[models.Editions]:
-        """Return all ranking editions.
+        """Return all ranking editions, optionally filtering on scraped status.
 
         Relationships are eagerly loaded so objects remain usable after
         the session closes.

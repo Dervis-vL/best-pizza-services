@@ -3,7 +3,7 @@
 import pydantic as pyd
 
 
-class RankingPositionSchema(pyd.BaseModel):
+class RankingSchema(pyd.BaseModel):
     """Schema for validating ranking position data."""
 
     position: int | None = pyd.Field(..., description="Ranking position of the pizzeria")

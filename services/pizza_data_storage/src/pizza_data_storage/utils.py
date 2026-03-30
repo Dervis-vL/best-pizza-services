@@ -26,19 +26,6 @@ def soup_to_file(soup: bs.BeautifulSoup, file_path: pathlib.Path) -> None:
         file.write(str(soup))
 
 
-def extract_pizzeria_name(endpoint_path: str) -> str:
-    """Extract pizzeria slug from URL path, stripping version suffixes like '-4'."""
-    slug = endpoint_path.rstrip("/").split("/")[-1]
-    if not slug:
-        raise ValueError(f"Invalid pizzeria endpoint path: {endpoint_path}")
-
-    # Strip numeric suffix (e.g., "napoli-on-the-road-4" -> "napoli-on-the-road")
-    parts = slug.rsplit("-", 1)
-    if len(parts) == 2 and parts[-1].isdigit():
-        return parts[0]
-    return slug
-
-
 def upsert_category(
     db: orm.Session, category_config: shared_schemas.CategorySchema
 ) -> models.Categories:
@@ -148,37 +135,6 @@ def upsert_location(
     return location
 
 
-def upsert_webpage(
-    db: orm.Session,
-    webpage_config: shared_schemas.WebpagesSchema,
-    pizzeria_map: dict[str, models.Pizzerias],
-) -> models.Webpages:
-    """Insert or update a webpage."""
-    slug_to_name = extract_pizzeria_name(endpoint_path=webpage_config.slug)
-    pizzeria = pizzeria_map.get(slug_to_name)
-    if not pizzeria:
-        raise ValueError(f"Pizzeria for slug '{webpage_config.slug}' not found")
-
-    existing = db.scalar(
-        select(models.Webpages).where(
-            models.Webpages.slug == webpage_config.slug,
-            models.Webpages.pizzeria_id == pizzeria.id,
-        )
-    )
-
-    if existing:
-        existing.url = webpage_config.url
-        return existing
-    else:
-        webpage = models.Webpages(
-            slug=webpage_config.slug,
-            url=webpage_config.url,
-            pizzeria_id=pizzeria.id,
-        )
-        db.add(webpage)
-        return webpage
-
-
 def seed_database(
     db: orm.Session, config: shared_schemas.RankedCategoriesSchema
 ) -> dict[str, int]:
@@ -235,68 +191,6 @@ def seed_database(
             stats["editions_created"] += 1
         else:
             stats["editions_updated"] += 1
-
-    db.commit()
-    return stats
-
-
-def seed_pizzeria_database(
-    db: orm.Session, config: shared_schemas.PizzeriaEndpointsSchema
-) -> dict[str, int]:
-    """Seed the database with pizzeria data."""
-    stats = {
-        "pizzerias_created": 0,
-        "pizzerias_updated": 0,
-        "webpages_created": 0,
-        "webpages_updated": 0,
-    }
-
-    # First pass: upsert all pizzerias
-    pizzeria_map: dict[str, models.Pizzerias] = {}
-
-    for pizzeria_config in config.pizzerias:
-        existing = db.scalar(
-            select(models.Pizzerias).where(
-                models.Pizzerias.name == pizzeria_config.name
-            )
-        )
-        is_new = existing is None
-
-        pizzeria = upsert_pizzeria(db, pizzeria_config)
-        db.flush()  # Get ID for new pizzerias
-
-        pizzeria_map[pizzeria_config.name] = pizzeria
-
-        if is_new:
-            stats["pizzerias_created"] += 1
-        else:
-            stats["pizzerias_updated"] += 1
-
-    # Second pass: upsert all webpages
-    for webpage_config in config.webpages:
-        slug_to_name = extract_pizzeria_name(endpoint_path=webpage_config.slug)
-        pizzeria = pizzeria_map.get(slug_to_name)
-        if not pizzeria:
-            logger.warning(
-                "Skipping webpage - pizzeria for slug '%s' not found",
-                webpage_config.slug,
-            )
-            continue
-
-        existing = db.scalar(
-            select(models.Webpages).where(
-                models.Webpages.slug == webpage_config.slug,
-                models.Webpages.pizzeria_id == pizzeria.id,
-            )
-        )
-        is_new = existing is None
-
-        upsert_webpage(db, webpage_config, pizzeria_map)
-
-        if is_new:
-            stats["webpages_created"] += 1
-        else:
-            stats["webpages_updated"] += 1
 
     db.commit()
     return stats

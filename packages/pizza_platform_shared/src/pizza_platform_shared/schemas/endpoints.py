@@ -4,8 +4,8 @@ import pydantic as pyd
 
 from pizza_platform_shared.schemas.category import CategorySchema
 from pizza_platform_shared.schemas.pizzeria import PizzeriaSchema
-from pizza_platform_shared.schemas.ranked_edition import EditionSchema
-from pizza_platform_shared.schemas.ranking_position import RankingPositionSchema
+from pizza_platform_shared.schemas.edition import EditionSchema
+from pizza_platform_shared.schemas.ranking import RankingSchema
 from pizza_platform_shared.schemas.webpages import WebpagesSchema
 
 
@@ -42,7 +42,7 @@ class PizzeriaEndpointsSchema(pyd.BaseModel):
         ...,
         description="List of webpages for pizzerias on 50 Top Pizza"
     )
-    rankings: list[RankingPositionSchema] = pyd.Field(
+    rankings: list[RankingSchema] = pyd.Field(
         default_factory=list,
         description="List of ranking entries linking pizzerias to their edition positions",
     )
@@ -53,4 +53,16 @@ class PizzeriaEndpointsSchema(pyd.BaseModel):
         for pizzeria in self.pizzerias:
             if not any(webpage.slug.startswith(pizzeria.slug) for webpage in self.webpages):
                 raise ValueError(f"No matching webpage slug for pizzeria: {pizzeria.name}")
+        return self
+
+    @pyd.model_validator(mode="after")
+    def validate_ranking_editions(self) -> "PizzeriaEndpointsSchema":
+        """Validates that each ranking's edition_id is a positive integer."""
+        for ranking in self.rankings:
+            if ranking.edition_id <= 0:
+                raise ValueError(f"Ranking has invalid edition_id: {ranking.edition_id}")
+            if not any(
+                pizzeria.slug.startswith(ranking.pizzeria_slug) for pizzeria in self.pizzerias
+            ):
+                raise ValueError(f"No matching pizzeria slug for ranking: {ranking.pizzeria_slug}")
         return self
