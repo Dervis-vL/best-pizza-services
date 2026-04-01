@@ -67,7 +67,7 @@ class BaseDatabase(ABC):
         with sa_orm.Session(self._engine) as session:
             if single:
                 return session.execute(query).scalars().first()
-            return session.execute(query).scalars().all()
+            return session.execute(query).scalars().unique().all()
 
     def _read_df(self, query: sa.Select[Any]) -> pd.DataFrame:
         """Execute a query and return a pandas DataFrame.
