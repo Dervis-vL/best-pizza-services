@@ -9,6 +9,7 @@ class EditionSchema(BaseSchema):
     """Schema for validating ranked edition data."""
 
     year: int = pyd.Field(..., description="Year of the ranking edition")
+    slug: str | None = pyd.Field(default=None, max_length=200, description="Slug override")
 
     @pyd.field_validator("year")
     @classmethod
