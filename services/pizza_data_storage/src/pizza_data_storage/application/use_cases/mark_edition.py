@@ -3,7 +3,7 @@
 from pizza_data_storage.application import ports
 
 
-class MarkEditionAsScrapedUseCase:
+class MarkEditionAsScrapedUseCase:  # pylint: disable=too-few-public-methods
     """Mark edition as scraped use case."""
 
     def __init__(self, ranking_repository: ports.IRankingsRepository) -> None:

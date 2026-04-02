@@ -3,7 +3,7 @@
 from pizza_data_storage.application import ports
 
 
-class MarkWebpageAsScrapedUseCase:
+class MarkWebpageAsScrapedUseCase:  # pylint: disable=too-few-public-methods
     """Mark webpage as scraped use case."""
 
     def __init__(self, pizza_repository: ports.IPizzeriaRepository) -> None:

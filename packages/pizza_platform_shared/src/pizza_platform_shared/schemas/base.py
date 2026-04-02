@@ -28,3 +28,9 @@ class BaseSchema(pyd.BaseModel):
     def slug_lowercase_no_spaces(cls, v: str) -> str:
         """Returns the slug in lowercase and without spaces."""
         return v.lower().replace(" ", "-").strip()
+
+
+class BaseReadSchema(pyd.BaseModel):
+    """Base schema for reading pizza data."""
+
+    id: int = pyd.Field(..., description="Unique identifier of the resource")

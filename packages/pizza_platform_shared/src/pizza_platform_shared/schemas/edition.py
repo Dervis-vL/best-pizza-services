@@ -2,7 +2,7 @@
 
 import pydantic as pyd
 
-from pizza_platform_shared.schemas.base import BaseSchema
+from pizza_platform_shared.schemas.base import BaseSchema, BaseReadSchema
 
 
 class EditionSchema(BaseSchema):
@@ -10,6 +10,21 @@ class EditionSchema(BaseSchema):
 
     year: int = pyd.Field(..., description="Year of the ranking edition")
     slug: str | None = pyd.Field(default=None, max_length=200, description="Slug override")
+
+    @pyd.field_validator("year")
+    @classmethod
+    def year_reasonable(cls, v: int) -> int:
+        """Validates that the year is within a reasonable range."""
+        if v < 2017 or v > 2030:
+            raise ValueError(f"Year {v} is outside reasonable range (2017-2030)")
+        return v
+
+
+class EditionReadSchema(BaseReadSchema):
+    """Schema for validating ranked edition data."""
+
+    url: str = pyd.Field(..., max_length=500, description="URL of the resource")
+    year: int = pyd.Field(..., description="Year of the ranking edition")
 
     @pyd.field_validator("year")
     @classmethod
