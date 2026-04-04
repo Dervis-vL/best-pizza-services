@@ -4,17 +4,27 @@ from __future__ import annotations
 
 import pydantic as pyd
 
+from pizza_platform_shared.schemas.base import BaseReadSchema
+
 
 class LocationSchema(pyd.BaseModel):
     """Schema for validating pizzeria location data."""
 
     pizzaria_id: int = pyd.Field(..., description="Id foreignkey of the pizzeria")
-    adress: str | None = pyd.Field(default=None, max_length=250, description="Adress of the pizzeria")
-    city: str | None = pyd.Field(default=None, max_length=100, description="City of the pizzeria")
-    country: str | None = pyd.Field(default=None, max_length=100, description="Country of the pizzeria")
+    adress: str | None = pyd.Field(
+        default=None, max_length=250, description="Adress of the pizzeria"
+    )
+    city: str | None = pyd.Field(
+        default=None, max_length=100, description="City of the pizzeria"
+    )
+    country: str | None = pyd.Field(
+        default=None, max_length=100, description="Country of the pizzeria"
+    )
     latitude: float | None = pyd.Field(..., description="Lat of the pizzeria")
     longitude: float | None = pyd.Field(..., description="Lng of the pizzeria")
-    phone: str | None = pyd.Field(default=None, max_length=20, description="Phone of the pizzeria")
+    phone: str | None = pyd.Field(
+        default=None, max_length=20, description="Phone of the pizzeria"
+    )
 
     @property
     def has_coordinates(self) -> bool:
@@ -29,3 +39,7 @@ class LocationSchema(pyd.BaseModel):
             return v
 
         return None
+
+
+class LocationReadSchema(LocationSchema, BaseReadSchema):
+    """Schema for validating pizzeria location data."""

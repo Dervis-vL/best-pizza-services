@@ -19,10 +19,9 @@ class WebpagesSchema(BaseSchema):
         return data
 
 
-class WebpagesReadSchema(BaseReadSchema):
+class WebpagesReadSchema(WebpagesSchema, BaseReadSchema):
     """Schema for validating pizzeria websites data."""
 
-    url: str = pyd.Field(..., max_length=500, description="URL of the resource")
     pizzeria_id: int = pyd.Field(..., description="Foreign key to the pizzerias table")
 
     @pyd.model_validator(mode="before")
