@@ -19,14 +19,12 @@ class EditionSchema(pyd.BaseModel):
             raise ValueError(f"Year {v} is outside reasonable range (2017-2030)")
         return v
 
-    # @pyd.field_validator("url")
-    # @classmethod
-    # def url_contains_year(cls, v: str, info: pyd.FieldValidationInfo) -> str:
-    #     """Validates that the URL contains the year."""
-    #     year = info.data.get("year")
-    #     if year and str(year) not in v:
-    #         raise ValueError(f"URL '{v}' does not contain the year {year}")
-    #     return v
+    @pyd.model_validator(mode="after")
+    def year_in_url(self) -> "EditionSchema":
+        """Validates that the year appears in the URL."""
+        if str(self.year) not in self.url:
+            raise ValueError(f"Year {self.year} must appear in the URL")
+        return self
 
 
 class EditionReadSchema(EditionSchema, BaseReadSchema):

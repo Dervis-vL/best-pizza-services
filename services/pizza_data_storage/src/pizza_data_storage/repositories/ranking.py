@@ -25,25 +25,26 @@ class RankingsRepository(BaseDatabase):
 
     def seed_categories_and_editions(
         self,
-        config_schema: shared_schemas.RankedCategoriesSchema,
+        config_schema: list[shared_schemas.CategorySchema],
     ) -> None:
         """Write categories and ranking editions from config, inserting or updating."""
+        # read all existing slugs from db using self._read_orm()
+        existing_slugs = {
+            category.slug for category in self._read_orm(select(models.Categories.slug))
+        }
+
         with self._session() as session:
-            category_map: dict[str, models.Categories] = {}
-
-            for category in config_schema.categories:
-                category_model = self._upsert_category(session, category)
-                session.flush()
-                category_map[category.slug] = category_model
-
-            for edition in config_schema.editions:
-                category = category_map.get(edition.slug)
-                if not category:
+            for category in config_schema:
+                if category.slug not in existing_slugs and not category.allow_create:
                     logger.warning(
-                        "Skipping edition — category '%s' not found", edition.slug
+                        "Skipping category '%s', it doesn't exist and not allowed to create.",
+                        category.slug,
                     )
                     continue
-                self._upsert_edition(session, edition, category)
+                category_model = self._upsert_category(session, category)
+                session.flush()
+                for edition in category.editions:
+                    self._upsert_edition(session, edition, category_model)
 
     def get_editions(self, *, only_unscraped: bool) -> list[models.Editions]:
         """Return all ranking editions, optionally filtering on scraped status.

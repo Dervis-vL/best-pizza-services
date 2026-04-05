@@ -13,6 +13,9 @@ class CategorySchema(pyd.BaseModel):
     description: str | None = pyd.Field(
         None, max_length=500, description="Description of the category"
     )
+    allow_create: bool = pyd.Field(
+        default=False, description="Whether new entries can be created for this category"
+    )
     editions: list[EditionSchema] = pyd.Field(
         default_factory=list,
         description="List of ranking editions associated with this category",
