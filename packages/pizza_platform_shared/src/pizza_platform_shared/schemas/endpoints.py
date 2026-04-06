@@ -2,33 +2,9 @@
 
 import pydantic as pyd
 
-from pizza_platform_shared.schemas.category import CategorySchema
 from pizza_platform_shared.schemas.pizzeria import PizzeriaSchema
-from pizza_platform_shared.schemas.edition import EditionSchema
 from pizza_platform_shared.schemas.ranking import RankingSchema
 from pizza_platform_shared.schemas.webpages import WebpagesSchema
-
-
-class RankedCategoriesSchema(pyd.BaseModel):
-    """Schema for the endpoints to rankings."""
-
-    categories: list[CategorySchema] = pyd.Field(
-        ...,
-        description="List of pizza categories with their details",
-    )
-    editions: list[EditionSchema] = pyd.Field(
-        ...,
-        description="List of ranking editions with their details",
-    )
-
-    @pyd.model_validator(mode="after")
-    def validate_edition_slugs(self) -> "RankedCategoriesSchema":
-        """Validates that each edition's category.slug exists in the categories list."""
-        valid_slugs = {category.slug for category in self.categories}
-        for edition in self.editions:
-            if edition.slug not in valid_slugs:
-                raise ValueError(f"Edition has invalid category_slug: {edition.slug}")
-        return self
 
 
 class PizzeriaEndpointsSchema(pyd.BaseModel):

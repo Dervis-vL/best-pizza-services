@@ -12,8 +12,8 @@ class SeedCategoriesAndEditionsUseCase:  # pylint: disable=too-few-public-method
         """Initialize the use case."""
         self._ranking_repository = ranking_repository
 
-    def execute(self, config_schema: shared_schemas.RankedCategoriesSchema) -> None:
+    def execute(self, category_schemas: list[shared_schemas.CategorySchema]) -> None:
         """Execute the use case."""
         self._ranking_repository.seed_categories_and_editions(
-            config_schema=config_schema
+            category_schemas=category_schemas
         )

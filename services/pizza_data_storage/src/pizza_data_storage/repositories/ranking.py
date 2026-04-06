@@ -25,16 +25,16 @@ class RankingsRepository(BaseDatabase):
 
     def seed_categories_and_editions(
         self,
-        config_schema: list[shared_schemas.CategorySchema],
+        category_schemas: list[shared_schemas.CategorySchema],
     ) -> None:
-        """Write categories and ranking editions from config, inserting or updating."""
+        """Write categories and editions from config, inserting or updating."""
         # read all existing slugs from db using self._read_orm()
         existing_slugs = {
             category.slug for category in self._read_orm(select(models.Categories.slug))
         }
 
         with self._session() as session:
-            for category in config_schema:
+            for category in category_schemas:
                 if category.slug not in existing_slugs and not category.allow_create:
                     logger.warning(
                         "Skipping category '%s', it doesn't exist and not allowed to create.",

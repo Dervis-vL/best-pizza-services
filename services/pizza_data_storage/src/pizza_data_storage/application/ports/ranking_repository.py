@@ -11,9 +11,9 @@ class IRankingsRepository(Protocol):
     """Interface for a repository handling ranking categories and editions."""
 
     def seed_categories_and_editions(
-        self, config_schema: shared_schemas.RankedCategoriesSchema
+        self, category_schemas: list[shared_schemas.CategorySchema]
     ) -> None:
-        """Write categories and ranking editions from config, inserting or updating."""
+        """Write categories and editions from config, inserting or updating."""
 
     def get_editions(self, *, only_unscraped: bool) -> list[models.Editions]:
         """Return all ranking editions that have not been scraped yet."""
