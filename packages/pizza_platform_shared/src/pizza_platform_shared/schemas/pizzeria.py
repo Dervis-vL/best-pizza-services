@@ -3,6 +3,8 @@
 import pydantic as pyd
 
 from pizza_platform_shared.schemas.base import BaseReadSchema
+from pizza_platform_shared.schemas.ranking import RankingSchema
+from pizza_platform_shared.schemas.webpages import WebpagesSchema
 
 
 class PizzeriaSchema(pyd.BaseModel):
@@ -10,6 +12,14 @@ class PizzeriaSchema(pyd.BaseModel):
 
     slug: str = pyd.Field(..., max_length=100, description="Slug for the pizzeria, used in URLs")
     description: str | None = pyd.Field(None, max_length=500, description="Pizzeria description")
+    rankings: list[RankingSchema] = pyd.Field(
+        default_factory=list,
+        description="List of rankings linking to this pizzeria",
+    )
+    webpages: list[WebpagesSchema] = pyd.Field(
+        default_factory=list,
+        description="List of webpages linked to this pizzeria",
+    )
 
     @pyd.computed_field
     @property

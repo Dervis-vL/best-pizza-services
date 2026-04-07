@@ -27,35 +27,18 @@ class PizzeriaRepository(BaseDatabase):
 
     def seed_pizzerias_webpages_and_rankings(
         self,
-        config_schema: shared_schemas.PizzeriaEndpointsSchema
+        config_schemas: list[shared_schemas.PizzeriaSchema]
     ) -> None:
         """Write pizzerias, their webpages, and ranks from config, inserting or updating."""
         with self._session() as session:
-            pizzeria_map: dict[str, models.Pizzerias] = {}
-
-            for pizzeria in config_schema.pizzerias:
+            for pizzeria in config_schemas:
                 pizzeria_model = self._upsert_pizzeria(session, pizzeria)
                 session.flush()
-                pizzeria_map[pizzeria.slug] = pizzeria_model
+                for webpage in pizzeria.webpages:
+                    self._upsert_webpage(session, webpage, pizzeria_model)
 
-            for webpage in config_schema.webpages:
-                pizzeria_model = pizzeria_map.get(webpage.slug)
-                if not pizzeria_model:
-                    logger.warning(
-                        "Skipping webpage — no pizzeria found for slug '%s'", webpage.slug
-                    )
-                    continue
-                self._upsert_webpage(session, webpage, pizzeria_model)
-
-            for ranking in config_schema.rankings:
-                pizzeria = pizzeria_map.get(ranking.pizzeria_slug)
-                if not pizzeria:
-                    logger.warning(
-                        "Skipping ranking — no pizzeria found for slug '%s'",
-                        ranking.pizzeria_slug,
-                    )
-                    continue
-                self._upsert_ranking(session, ranking, pizzeria)
+                for ranking in pizzeria.rankings:
+                    self._upsert_ranking(session, ranking, pizzeria_model)
 
     def seed_location(self, location_config: shared_schemas.LocationSchema) -> None:
         """Write location from config schema, inserting or updating."""

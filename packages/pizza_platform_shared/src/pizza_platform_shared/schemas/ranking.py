@@ -10,7 +10,6 @@ class RankingSchema(pyd.BaseModel):
     """Schema for validating ranking position data."""
 
     position: int | None = pyd.Field(default=None, description="Ranking position of the pizzeria")
-    pizzeria_slug: str = pyd.Field(..., max_length=200, description="Slug of the ranked pizzeria")
     edition_id: int = pyd.Field(..., description="Foreign key to the editions table")
     awards: str | None = pyd.Field(
         default=None, max_length=500, description="Awards or special mentions for the pizzeria"

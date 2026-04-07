@@ -11,7 +11,7 @@ class IPizzeriaRepository(Protocol):
     """Interface for a repository handling pizzerias and their webpages."""
 
     def seed_pizzerias_webpages_and_rankings(
-        self, config_schema: shared_schemas.PizzeriaEndpointsSchema
+        self, config_schemas: list[shared_schemas.PizzeriaSchema]
     ) -> None:
         """Write pizzerias and webpages from config, inserting or updating."""
 

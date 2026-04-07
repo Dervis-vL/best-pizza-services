@@ -12,7 +12,7 @@ class SeedPizzeriasWebpagesRankingsUseCase:  # pylint: disable=too-few-public-me
         """Initialize the use case."""
         self._pizzeria_repository = pizzeria_repository
 
-    def execute(self, config_schema: shared_schemas.PizzeriaEndpointsSchema) -> None:
+    def execute(self, config_schema: list[shared_schemas.PizzeriaSchema]) -> None:
         """Execute the use case."""
         self._pizzeria_repository.seed_pizzerias_webpages_and_rankings(
             config_schema=config_schema
