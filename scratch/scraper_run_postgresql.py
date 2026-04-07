@@ -2,7 +2,7 @@
 
 import pathlib
 
-from pizza_data_management import logic, utils
+from pizza_data_collector import logic, utils
 
 
 if __name__ == "__main__":

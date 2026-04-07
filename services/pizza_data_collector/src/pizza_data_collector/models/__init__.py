@@ -1,13 +1,13 @@
 """Module for pizza data scraper models."""
 
-from pizza_data_management.models.database.base import BaseModel
-from pizza_data_management.models.database.categories import Categories
-from pizza_data_management.models.database.locations import Locations
-from pizza_data_management.models.database.pizzerias import Pizzerias
-from pizza_data_management.models.database.ranking_editions import RankingEditions
-from pizza_data_management.models.database.ranking_entries import RankingEntries
-from pizza_data_management.models.database.webpages import Webpages
-from pizza_data_management.models.parser.patterns import (
+from pizza_data_collector.models.database.base import BaseModel
+from pizza_data_collector.models.database.categories import Categories
+from pizza_data_collector.models.database.locations import Locations
+from pizza_data_collector.models.database.pizzerias import Pizzerias
+from pizza_data_collector.models.database.ranking_editions import RankingEditions
+from pizza_data_collector.models.database.ranking_entries import RankingEntries
+from pizza_data_collector.models.database.webpages import Webpages
+from pizza_data_collector.models.parser.patterns import (
     AddressPatterns,
     CardPatterns,
     CoordPatterns,

@@ -32,7 +32,7 @@ asyncio_mode = "auto"
 # Coverage
 addopts = """
     --cov=pizza_app
-    --cov=pizza_data_management
+    --cov=pizza_data_collector
     --cov=pizza_data_storage
     --cov=geolocation
     --cov=pizza_platform_shared

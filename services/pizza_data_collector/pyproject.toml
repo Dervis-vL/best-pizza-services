@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pizza_data_management"
+name = "pizza_data_collector"
 version = "0.1.0"
 description = "A webscraper and data parser for the pizza platform"
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/pizza_data_management"]
+packages = ["src/pizza_data_collector"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }

@@ -1,6 +1,6 @@
 """Tests for the settings module."""
 
-from pizza_data_management import settings
+from pizza_data_collector import settings
 
 
 def test_pizza_db_settings():

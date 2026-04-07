@@ -14,7 +14,7 @@ from urllib.error import HTTPError, URLError
 
 import bs4 as bs
 
-from pizza_data_management import repositories, schemas, settings, utils
+from pizza_data_collector import repositories, schemas, settings, utils
 
 logger = logging.getLogger(__name__)
 
