@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from pizza_data_collector.application.ports.http_client import IHttpClient
 
 
-class EditionScraper:  # pylint: disable=too-few-public-methods
+class Scraper:  # pylint: disable=too-few-public-methods
     """Edition scraper implementation for pizza data collector service."""
 
     def __init__(self, http_client: IHttpClient) -> None:

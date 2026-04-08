@@ -4,6 +4,7 @@ from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from pizza_data_collector.exceptions import URLExtractionError
 
+
 class HttpClient:  # pylint: disable=too-few-public-methods
     """HTTP client implementation for pizza data collector service."""
 
