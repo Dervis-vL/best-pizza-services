@@ -1,12 +1,5 @@
 """Module for pizza data scraper models."""
 
-from pizza_data_collector.models.database.base import BaseModel
-from pizza_data_collector.models.database.categories import Categories
-from pizza_data_collector.models.database.locations import Locations
-from pizza_data_collector.models.database.pizzerias import Pizzerias
-from pizza_data_collector.models.database.ranking_editions import RankingEditions
-from pizza_data_collector.models.database.ranking_entries import RankingEntries
-from pizza_data_collector.models.database.webpages import Webpages
 from pizza_data_collector.models.parser.patterns import (
     AddressPatterns,
     CardPatterns,
@@ -26,16 +19,9 @@ url_pattern = URLPatterns()
 
 __all__ = [
     "adress_patterns",
-    "BaseModel",
-    "Categories",
     "card_patterns",
     "coordinate_patterns",
-    "Locations",
     "phone_patterns",
-    "Pizzerias",
-    "RankingEditions",
-    "RankingEntries",
     "ranking_position_patterns",
     "URLPatterns",
-    "Webpages",
 ]
