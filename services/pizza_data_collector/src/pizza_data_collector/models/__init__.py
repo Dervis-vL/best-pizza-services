@@ -13,7 +13,7 @@ from pizza_data_collector.models.parser.patterns import (
     CoordPatterns,
     PhonePatterns,
     RankingPositionPatterns,
-    URLPattern,
+    URLPatterns,
 )
 
 adress_patterns = AddressPatterns()
@@ -21,7 +21,7 @@ card_patterns = CardPatterns()
 coordinate_patterns = CoordPatterns()
 phone_patterns = PhonePatterns()
 ranking_position_patterns = RankingPositionPatterns()
-url_pattern = URLPattern()
+url_pattern = URLPatterns()
 
 
 __all__ = [
@@ -36,6 +36,6 @@ __all__ = [
     "RankingEditions",
     "RankingEntries",
     "ranking_position_patterns",
-    "URLPattern",
+    "URLPatterns",
     "Webpages",
 ]

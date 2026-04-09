@@ -1,5 +1,7 @@
 """Edition scraper implementation for pizza data collector service."""
 
+import pathlib
+
 from bs4 import BeautifulSoup
 from pizza_data_collector.application.ports.http_client import IHttpClient
 
@@ -11,7 +13,7 @@ class Scraper:  # pylint: disable=too-few-public-methods
         """Initializes the edition scraper with an HTTP client."""
         self._client = http_client
 
-    def scrape(self, url: str) -> BeautifulSoup:
+    def scrape(self, url: pathlib.Path) -> BeautifulSoup:
         """Scrapes the content of the given URL and returns a BeautifulSoup object."""
         html = self._client.fetch(url)
-        return BeautifulSoup(html, "html.parser")
+        return BeautifulSoup(html, features="html.parser")

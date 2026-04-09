@@ -34,7 +34,7 @@ class PizzeriaParser:  # pylint: disable=too-few-public-methods
         return LocationSchema(
             pizzaria_id=pizzeria_id,
             adress=address,
-            city=None,  # extracted from address string if needed
+            city=None,
             country=None,
             latitude=coords.get("lat") if coords else None,
             longitude=coords.get("lng") if coords else None,

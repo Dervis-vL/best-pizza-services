@@ -68,7 +68,7 @@ class CardPatterns(BasePattern):
         return []
 
 
-class URLPattern(BasePattern):
+class URLPatterns(BasePattern):
     """
     Pattern for extracting the raw url string.
     """
