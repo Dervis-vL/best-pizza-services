@@ -66,9 +66,15 @@ def ensure_database_exists() -> None:
             conn.execute(text(f'CREATE DATABASE "{target_db_name}"'))
             logger.info("Database '%s' created successfully.", target_db_name)
     except sa_exc.ProgrammingError as err:
-        if not isinstance(err.orig, pg_errors.DuplicateDatabase):  # pylint: disable=no-member
+        if isinstance(err.orig, pg_errors.DuplicateDatabase):  # pylint: disable=no-member
+            logger.debug("Database '%s' already exists.", target_db_name)
+        elif isinstance(err.orig, pg_errors.InsufficientPrivilege):  # pylint: disable=no-member
+            logger.debug(
+                "No CREATEDB privilege — assuming database '%s' already exists (managed host).",
+                target_db_name,
+            )
+        else:
             raise
-        logger.debug("Database '%s' already exists.", target_db_name)
     finally:
         engine.dispose()
 
