@@ -7,7 +7,7 @@ from pizza_data_collector.application.ports.http_client import IHttpClient
 
 
 class Scraper:  # pylint: disable=too-few-public-methods
-    """Edition scraper implementation for pizza data collector service."""
+    """Scraper implementation for pizza data collector service."""
 
     def __init__(self, http_client: IHttpClient) -> None:
         """Initializes the edition scraper with an HTTP client."""
