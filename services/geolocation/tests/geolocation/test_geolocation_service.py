@@ -11,5 +11,5 @@ def test_reverse_geocode():
     result = service.reverse_geocode(41.8902, 12.4922)
     # THEN we get the expected country, city, and address
     assert isinstance(result, models.LocationResult)
-    assert result.country == "Italia"
-    assert result.city == "Roma"
+    assert result.country == "Italy"
+    assert result.city == "Rome"
