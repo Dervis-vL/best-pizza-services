@@ -19,7 +19,7 @@ class Locations(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.locations
     __table_args__ = (
         sa.UniqueConstraint(
-            "latitude", "longitude", name="uq_location_latitude_longitude"
+            "pizzeria_id", "latitude", "longitude", name="uq_location_pizzeria_latitude_longitude"
         ),
         {"schema": settings.pizza_db.schema_name}
     )
