@@ -1,8 +1,8 @@
-"""initial revision 01
+"""Initial revision 01
 
-Revision ID: 5201ba02694e
+Revision ID: 4a4c6103ebb6
 Revises: 
-Create Date: 2026-04-12 15:32:57.472280
+Create Date: 2026-04-12 18:20:05.219986
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '5201ba02694e'
+revision: str = '4a4c6103ebb6'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -29,7 +29,8 @@ def upgrade() -> None:
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('slug', name='uq_category_slug')
+    sa.UniqueConstraint('slug', name='uq_category_slug'),
+    schema='api_v1'
     )
     op.create_table('pizzerias',
     sa.Column('name', sa.String(length=100), nullable=False, comment='Name of the pizzeria'),
@@ -38,7 +39,8 @@ def upgrade() -> None:
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name', name='uq_pizzeria_name')
+    sa.UniqueConstraint('name', name='uq_pizzeria_name'),
+    schema='api_v1'
     )
     op.create_table('editions',
     sa.Column('category_id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), nullable=False, comment='Foreign key to the categories table'),
@@ -48,10 +50,11 @@ def upgrade() -> None:
     sa.Column('id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), sa.Identity(always=True, start=1, increment=1, minvalue=1, maxvalue=9223372036854775807, cycle=False, cache=1), nullable=False),
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['category_id'], ['api_v1.categories.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('category_id', 'year', name='uq_ranking_edition_category_year'),
-    sa.UniqueConstraint('url', name='uq_ranking_edition_url')
+    sa.UniqueConstraint('url', name='uq_ranking_edition_url'),
+    schema='api_v1'
     )
     op.create_table('locations',
     sa.Column('pizzeria_id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), nullable=False, comment='Foreign key to the pizzerias table'),
@@ -64,9 +67,10 @@ def upgrade() -> None:
     sa.Column('id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), sa.Identity(always=True, start=1, increment=1, minvalue=1, maxvalue=9223372036854775807, cycle=False, cache=1), nullable=False),
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['pizzeria_id'], ['pizzerias.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['pizzeria_id'], ['api_v1.pizzerias.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('pizzeria_id', 'latitude', 'longitude', name='uq_location_pizzeria_latitude_longitude')
+    sa.UniqueConstraint('pizzeria_id', 'latitude', 'longitude', name='uq_location_pizzeria_latitude_longitude'),
+    schema='api_v1'
     )
     op.create_table('webpages',
     sa.Column('pizzeria_id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), nullable=False, comment='Foreign key to the pizzerias table'),
@@ -76,9 +80,10 @@ def upgrade() -> None:
     sa.Column('id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), sa.Identity(always=True, start=1, increment=1, minvalue=1, maxvalue=9223372036854775807, cycle=False, cache=1), nullable=False),
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['pizzeria_id'], ['pizzerias.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['pizzeria_id'], ['api_v1.pizzerias.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('slug', name='uq_webpage_slug')
+    sa.UniqueConstraint('slug', name='uq_webpage_slug'),
+    schema='api_v1'
     )
     op.create_table('rankings',
     sa.Column('edition_id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), nullable=False, comment='Foreign key to the ranking edition'),
@@ -87,10 +92,11 @@ def upgrade() -> None:
     sa.Column('id', sa.BigInteger().with_variant(sa.Integer(), 'sqlite'), sa.Identity(always=True, start=1, increment=1, minvalue=1, maxvalue=9223372036854775807, cycle=False, cache=1), nullable=False),
     sa.Column('created_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(sa.DateTime(timezone=True), 'sqlite'), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['edition_id'], ['editions.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['pizzeria_id'], ['pizzerias.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['edition_id'], ['api_v1.editions.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['pizzeria_id'], ['api_v1.pizzerias.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('edition_id', 'pizzeria_id', name='uq_ranking_entry_edition_pizzeria')
+    sa.UniqueConstraint('edition_id', 'pizzeria_id', name='uq_ranking_entry_edition_pizzeria'),
+    schema='api_v1'
     )
     # ### end Alembic commands ###
 
@@ -98,10 +104,10 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('rankings')
-    op.drop_table('webpages')
-    op.drop_table('locations')
-    op.drop_table('editions')
-    op.drop_table('pizzerias')
-    op.drop_table('categories')
+    op.drop_table('rankings', schema='api_v1')
+    op.drop_table('webpages', schema='api_v1')
+    op.drop_table('locations', schema='api_v1')
+    op.drop_table('editions', schema='api_v1')
+    op.drop_table('pizzerias', schema='api_v1')
+    op.drop_table('categories', schema='api_v1')
     # ### end Alembic commands ###
