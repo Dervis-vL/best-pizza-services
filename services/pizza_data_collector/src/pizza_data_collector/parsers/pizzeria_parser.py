@@ -36,7 +36,7 @@ class PizzeriaParser:  # pylint: disable=too-few-public-methods
             adress=address,
             city=None,
             country=None,
-            latitude=coords.get("lat") if coords else None,
-            longitude=coords.get("lng") if coords else None,
+            latitude=coords[0],
+            longitude=coords[1],
             phone=phone,
         )
