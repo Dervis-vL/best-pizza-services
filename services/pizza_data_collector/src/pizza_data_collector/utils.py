@@ -4,40 +4,8 @@ import pathlib
 
 import bs4 as bs
 import sqlalchemy as sa
-from pizza_platform_shared import schemas, settings
-from sqlalchemy import event, orm
-
-from pizza_data_collector import (
-    models,
-)
-
-
-def create_location_schema(
-    soup: bs.BeautifulSoup, pizzeria_id: int
-) -> schemas.LocationSchema:
-    """Create a LocationSchema from the scraped HTML soup."""
-    # Get lat/lon
-    coordinates = models.coordinate_patterns.extract(
-        html=str(soup),
-    )
-    # Get phone
-    phone_number = models.phone_patterns.extract(
-        html=str(soup),
-    )
-    # Get adress
-    adress = models.adress_patterns.extract(
-        html=str(soup),
-    )
-
-    return schemas.LocationSchema(
-        pizzaria_id=pizzeria_id,
-        adress=adress,
-        city=None,
-        country=None,
-        latitude=coordinates[0] if coordinates else None,
-        longitude=coordinates[1] if coordinates else None,
-        phone=phone_number,
-    )
+from pizza_platform_shared import settings
+from sqlalchemy import orm
 
 
 def soup_to_file(soup: bs.BeautifulSoup, file_path: pathlib.Path) -> None:
@@ -50,41 +18,6 @@ def soup_to_file(soup: bs.BeautifulSoup, file_path: pathlib.Path) -> None:
     """
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(str(soup))
-
-
-def get_sqlite_engine(
-    db_path: pathlib.Path | None, model: orm.DeclarativeBase
-) -> sa.engine.Engine:
-    """Create engine with SQLite schema handling."""
-    if db_path:
-        url = f"sqlite:///{db_path}"
-        poolclass = sa.pool.StaticPool
-    else:
-        url = "sqlite:///:memory:"
-        poolclass = sa.pool.NullPool
-
-    # Create engine with appropriate pool class for SQLite
-    sqlite_engine = sa.create_engine(
-        url,
-        connect_args={"check_same_thread": False},
-        poolclass=poolclass,
-    )
-
-    # Enable foreign key enforcement for SQLite
-    @event.listens_for(sqlite_engine, "connect")
-    def set_sqlite_pragma(dbapi_connection, connection_record):
-        cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON")
-        cursor.close()
-
-    # Remove schema for SQLite
-    for table in model.metadata.tables.values():
-        table.schema = None
-
-    # Create tables
-    model.metadata.create_all(bind=sqlite_engine)
-
-    return sqlite_engine
 
 
 def get_postgres_engine(db_url: str, model: orm.DeclarativeBase) -> sa.engine.Engine:
