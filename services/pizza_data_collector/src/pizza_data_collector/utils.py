@@ -96,7 +96,9 @@ def get_postgres_engine(db_url: str, model: orm.DeclarativeBase) -> sa.engine.En
     with postgres_engine.connect() as connection:
         result = connection.execute(
             sa.text(
-                f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{schema_name}'"
+                f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{
+                    schema_name
+                }'"
             )
         )
         if result.first() is None:
