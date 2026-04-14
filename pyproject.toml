@@ -1,3 +1,6 @@
+[tool.uv]
+package = false
+
 [tool.uv.workspace]
 members = [
     "apps/*",
@@ -39,3 +42,6 @@ addopts = """
     --cov-report=term-missing
     --cov-report=html:reports/coverage
 """
+
+[tool.ruff]
+line-length = 88
