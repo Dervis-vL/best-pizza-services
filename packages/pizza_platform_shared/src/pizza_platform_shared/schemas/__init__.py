@@ -1,23 +1,23 @@
-"""Pizza platform pandera schemas."""
+"""Pizza platform pydantic schemas."""
 
-from pizza_platform_shared.schemas.category import CategorySchema
-from pizza_platform_shared.schemas.endpoints import (
-    RankingEndpointsSchema,
-    PizzeriaEndpointsSchema,
-)
-from pizza_platform_shared.schemas.locations import LocationSchema
-from pizza_platform_shared.schemas.pizzeria import PizzeriaSchema
-from pizza_platform_shared.schemas.ranked_edition import RankedEditionSchema
-from pizza_platform_shared.schemas.ranking_position import RankingPositionSchema
-from pizza_platform_shared.schemas.webpages import WebpagesSchema
+from pizza_platform_shared.schemas.category import CategoryReadSchema, CategorySchema
+from pizza_platform_shared.schemas.edition import EditionReadSchema, EditionSchema
+from pizza_platform_shared.schemas.locations import LocationReadSchema, LocationSchema
+from pizza_platform_shared.schemas.pizzeria import PizzeriaReadSchema, PizzeriaSchema
+from pizza_platform_shared.schemas.ranking import RankingReadSchema, RankingSchema
+from pizza_platform_shared.schemas.webpages import WebpagesReadSchema, WebpagesSchema
 
 __all__ = [
     "CategorySchema",
+    "CategoryReadSchema",
     "LocationSchema",
-    "RankedEditionSchema",
-    "RankingEndpointsSchema",
-    "RankingPositionSchema",
-    "PizzeriaEndpointsSchema",
+    "LocationReadSchema",
+    "EditionSchema",
+    "EditionReadSchema",
+    "RankingSchema",
+    "RankingReadSchema",
     "PizzeriaSchema",
+    "PizzeriaReadSchema",
     "WebpagesSchema",
+    "WebpagesReadSchema",
 ]

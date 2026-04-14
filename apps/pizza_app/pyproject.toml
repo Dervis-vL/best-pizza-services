@@ -23,13 +23,6 @@ dependencies = [
     "pizza-platform-shared",
 ]
 
-[dependency-groups]
-dev = [
-    "pytest",
-    "ruff",
-    "mypy",
-]
-
 [project.scripts]
 pizza-app = "pizza_app.app:main"
 
@@ -38,7 +31,3 @@ packages = ["src/pizza_app"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-asyncio_mode = "auto"

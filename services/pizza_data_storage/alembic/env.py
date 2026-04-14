@@ -2,8 +2,10 @@
 
 import logging
 from logging.config import fileConfig
+from pizza_platform_shared import settings
 
 import psycopg2.errors as pg_errors
+from sqlalchemy import exc as sa_exc
 from sqlalchemy import (
     create_engine,
     pool,
@@ -11,16 +13,15 @@ from sqlalchemy import (
     Connection,
     engine_from_config
 )
-from sqlalchemy import exc as sa_exc
 from alembic import context
 
-from pizza_data_management import models, settings
+from pizza_data_storage import models
 
 logger = logging.getLogger(__name__)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-config = context.config
+config = context.config  # pylint: disable=no-member
 config.set_main_option(
         "sqlalchemy.url",
         settings.pizza_db.connection_string.render_as_string(hide_password=False).replace(
@@ -52,7 +53,7 @@ def ensure_database_exists() -> None:
     Connects to the default 'postgres' database to execute CREATE DATABASE.
     Uses EAFP pattern - attempts creation and catches duplicate error.
     """
-    target_db_name = settings.pizza_db.database_name
+    target_db_name = settings.pizza_db.name
 
     # Connect to default postgres database
     engine = create_engine(
@@ -65,9 +66,15 @@ def ensure_database_exists() -> None:
             conn.execute(text(f'CREATE DATABASE "{target_db_name}"'))
             logger.info("Database '%s' created successfully.", target_db_name)
     except sa_exc.ProgrammingError as err:
-        if not isinstance(err.orig, pg_errors.DuplicateDatabase):
+        if isinstance(err.orig, pg_errors.DuplicateDatabase):  # pylint: disable=no-member
+            logger.debug("Database '%s' already exists.", target_db_name)
+        elif isinstance(err.orig, pg_errors.InsufficientPrivilege):  # pylint: disable=no-member
+            logger.debug(
+                "No CREATEDB privilege — assuming database '%s' already exists (managed host).",
+                target_db_name,
+            )
+        else:
             raise
-        logger.debug("Database '%s' already exists.", target_db_name)
     finally:
         engine.dispose()
 
@@ -99,7 +106,7 @@ def run_migrations_offline() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(
+    context.configure(  # pylint: disable=no-member
         url=url,
         target_metadata=target_metadata,
         include_schemas=True,
@@ -108,8 +115,8 @@ def run_migrations_offline() -> None:
         dialect_opts={"paramstyle": "named"},
     )
 
-    with context.begin_transaction():
-        context.run_migrations()
+    with context.begin_transaction():  # pylint: disable=no-member
+        context.run_migrations()  # pylint: disable=no-member
 
 
 def run_migrations_online() -> None:
@@ -128,20 +135,20 @@ def run_migrations_online() -> None:
     with connectable.connect() as connection:
         ensure_schema_exists(connection=connection)
 
-        context.configure(
+        context.configure(  # pylint: disable=no-member
             connection=connection,
             include_schemas=True,
             version_table_schema=settings.pizza_db.schema_name,
             target_metadata=target_metadata,
         )
 
-        with context.begin_transaction():
-            context.run_migrations()
+        with context.begin_transaction():  # pylint: disable=no-member
+            context.run_migrations()  # pylint: disable=no-member
 
 # Database must exist before running migrations:
 ensure_database_exists()
 
-if context.is_offline_mode():
+if context.is_offline_mode():  # pylint: disable=no-member
     run_migrations_offline()
 else:
     run_migrations_online()

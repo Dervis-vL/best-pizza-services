@@ -17,7 +17,3 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/geolocation"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-asyncio_mode = "auto"

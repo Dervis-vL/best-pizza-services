@@ -59,7 +59,7 @@ class PizzaPlatformDatabase(BaseDatabase):
         query = self._get_read_query()
 
         try:
-            pizzerias_df = self._read(query)
+            pizzerias_df = self._read_df(query)
         except Exception as e:
             raise RuntimeError(f"Error reading from database: {e}") from e
         return schemas.PizzeriaSchema.validate(pizzerias_df)
@@ -69,7 +69,7 @@ class PizzaPlatformDatabase(BaseDatabase):
         """Return all rankings for every pizzeria."""
         query = self._get_rankings_query()
         try:
-            df = self._read(query)
+            df = self._read_df(query)
         except Exception as e:
             raise RuntimeError(f"Error reading rankings from database: {e}") from e
         return schemas.RankingSchema.validate(df)

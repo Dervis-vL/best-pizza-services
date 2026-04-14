@@ -21,7 +21,7 @@ class RankingEditions(base.BaseModel):
     """Model for storing ranking edition information."""
 
     # table configuration
-    __tablename__ = settings.pizza_db.tables.ranking_editions
+    __tablename__ = settings.pizza_db.tables.editions
     __table_args__ = (
         sa.UniqueConstraint(
             "category_id", "year", name="uq_ranking_edition_category_year"

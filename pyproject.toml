@@ -1,3 +1,6 @@
+[tool.uv]
+package = false
+
 [tool.uv.workspace]
 members = [
     "apps/*",
@@ -12,6 +15,8 @@ dev = [
     "pytest-cov>=5.0",
     "mypy>=1.10",
     "ruff>=0.4",
+    "deptry>=0.25.1",
+    "python-dotenv>=1.2.1",
 ]
 
 [tool.pytest.ini_options]
@@ -30,11 +35,15 @@ asyncio_mode = "auto"
 
 # Coverage
 addopts = """
+    --import-mode=importlib
     --cov=pizza_app
-    --cov=pizza_data_management
+    --cov=pizza_data_collector
     --cov=pizza_data_storage
     --cov=geolocation
     --cov=pizza_platform_shared
     --cov-report=term-missing
     --cov-report=html:reports/coverage
 """
+
+[tool.ruff]
+line-length = 88
