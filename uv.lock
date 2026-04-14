@@ -854,13 +854,6 @@ dependencies = [
     { name = "yarl" },
 ]
 
-[package.dev-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "ruff" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "folium", specifier = ">=0.20.0" },
@@ -873,13 +866,6 @@ requires-dist = [
     { name = "streamlit", specifier = ">=1.55.0" },
     { name = "streamlit-folium", specifier = ">=0.26.1" },
     { name = "yarl", specifier = ">=1.22.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "ruff" },
 ]
 
 [[package]]
