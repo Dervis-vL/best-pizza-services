@@ -7,6 +7,6 @@ def test_pizza_db_settings():
     """Test that pizza DB settings are loaded correctly."""
     assert settings.pizza_db.host == "localhost"
     assert settings.pizza_db.port == 5432
-    assert settings.pizza_db.user_name == "best-pizzas-ever"
-    assert settings.pizza_db.name == "pizza"
+    assert settings.pizza_db.user_name == "best_pizza_user"
+    assert settings.pizza_db.name == "pizza_platform"
     assert settings.pizza_db.ssl_enabled is False

@@ -35,6 +35,7 @@ asyncio_mode = "auto"
 
 # Coverage
 addopts = """
+    --import-mode=importlib
     --cov=pizza_app
     --cov=pizza_data_collector
     --cov=pizza_data_storage
