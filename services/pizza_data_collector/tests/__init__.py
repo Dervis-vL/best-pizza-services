@@ -1,1 +1,1 @@
-"""Tests for the pizza data scraper."""
+"""Tests for the pizza data collector."""
