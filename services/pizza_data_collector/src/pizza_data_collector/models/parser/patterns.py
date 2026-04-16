@@ -44,8 +44,14 @@ class CardPatterns(BasePattern):
     Each pattern targets the outer <a> wrapping a single ranking entry.
 
     Use extract() to get all card chunks, then run URLPattern and
-    RankingPositionPatterns on each chunk to extract URL and position.
+    RankingPositionPatterns or AwarsNamePatterns on each chunk to extract URL and position.
     """
+
+    # Special awards (2022+): must be first pattern since award pages also have id="scheda" anchors
+    testo_card: re.Pattern[str] = re.compile(
+        r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
+        re.DOTALL,
+    )
 
     # Modern (2022+): <a id="scheda" href="...referenza/...">...</a>
     scheda_id: re.Pattern[str] = re.compile(
@@ -66,31 +72,6 @@ class CardPatterns(BasePattern):
             if cards:
                 return cards
         return []
-
-
-class AwardCardPatterns(BasePattern):
-    """
-    Pattern for extracting individual special award card HTML chunks from an awards page.
-    Each card is wrapped in <div id="sponsor_speciali testo-card">...</div>.
-    There are no nested <div> elements inside these cards, so non-greedy match is safe.
-
-    Use extract() to get all card chunks, then run AwardNamePatterns and URLPatterns
-    on each chunk to extract the award name, sponsor, and pizzeria URL.
-    """
-
-    testo_card: re.Pattern[str] = re.compile(
-        r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
-        re.DOTALL,
-    )
-
-    def extract(self, html: str) -> list[str]:
-        """Return all award card HTML chunks."""
-        for _, pattern in self:
-            cards = pattern.findall(html)
-            if cards:
-                return cards
-        return []
-
 
 
 class URLPatterns(BasePattern):
