@@ -182,3 +182,54 @@ class PhonePatterns(BasePattern):
         if match:
             return match.group("phone").strip()
         return None
+
+
+class AwardCardPatterns(BasePattern):
+    """
+    Pattern for extracting individual special award card HTML chunks from an awards page.
+    Each card is wrapped in <div id="sponsor_speciali testo-card">...</div>.
+    There are no nested <div> elements inside these cards, so non-greedy match is safe.
+
+    Use extract() to get all card chunks, then run AwardNamePatterns and URLPatterns
+    on each chunk to extract the award name, sponsor, and pizzeria URL.
+    """
+
+    testo_card: re.Pattern[str] = re.compile(
+        r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
+        re.DOTALL,
+    )
+
+    def extract(self, html: str) -> list[str]:
+        """Return all award card HTML chunks."""
+        return self.testo_card.findall(html)
+
+
+class AwardNamePatterns(BasePattern):
+    """
+    Pattern for extracting the award name and sponsor from a special awards card.
+    Run on each individual card HTML chunk extracted by AwardCardPatterns.
+
+    The source element looks like:
+        <h2 class="grigioscuro scotchmodern ...">
+            Best Fried Food 2025<br/>
+            Il Fritturista - Oleificio Zucchi Award
+        </h2>
+
+    The (?P<award>...) group captures the text before <br/> (the award name).
+    The (?P<sponsor>...) group captures the text after <br/> (the sponsor).
+    Both are stripped of whitespace in extract().
+    """
+
+    grigioscuro_h2: re.Pattern[str] = re.compile(
+        r'<h2\b[^>]*\bgrigioscuro\b[^>]*>'
+        r'\s*(?P<award>.+?)<br\s*/?>'
+        r'(?P<sponsor>.+?)\s*</h2>',
+        re.DOTALL,
+    )
+
+    def extract(self, html: str) -> tuple[str, str] | tuple[None, None]:
+        """Return (award_name, sponsor) stripped of whitespace, or (None, None)."""
+        match = self.search(html)
+        if match:
+            return match.group("award").strip(), match.group("sponsor").strip()
+        return None, None
