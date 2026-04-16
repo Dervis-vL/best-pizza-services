@@ -9,12 +9,13 @@ from pizza_data_storage import settings
 from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
+    from pizza_data_storage.models.database.awards import Awards
     from pizza_data_storage.models.database.webpages import Webpages
     from pizza_data_storage.models.database.locations import Locations
     from pizza_data_storage.models.database.rankings import Rankings
 
 
-class Pizzerias(base.BaseModel):
+class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
     """Model for storing pizza category information."""
 
     # table configuration
@@ -36,3 +37,4 @@ class Pizzerias(base.BaseModel):
     webpages: orm.Mapped[list["Webpages"]] = orm.relationship(back_populates="pizzeria")
     locations: orm.Mapped[list["Locations"]] = orm.relationship(back_populates="pizzeria")
     rankings: orm.Mapped[list["Rankings"]] = orm.relationship(back_populates="pizzeria")
+    awards: orm.Mapped[list["Awards"]] = orm.relationship(back_populates="pizzeria")
