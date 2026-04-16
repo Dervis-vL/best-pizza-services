@@ -68,6 +68,31 @@ class CardPatterns(BasePattern):
         return []
 
 
+class AwardCardPatterns(BasePattern):
+    """
+    Pattern for extracting individual special award card HTML chunks from an awards page.
+    Each card is wrapped in <div id="sponsor_speciali testo-card">...</div>.
+    There are no nested <div> elements inside these cards, so non-greedy match is safe.
+
+    Use extract() to get all card chunks, then run AwardNamePatterns and URLPatterns
+    on each chunk to extract the award name, sponsor, and pizzeria URL.
+    """
+
+    testo_card: re.Pattern[str] = re.compile(
+        r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
+        re.DOTALL,
+    )
+
+    def extract(self, html: str) -> list[str]:
+        """Return all award card HTML chunks."""
+        for _, pattern in self:
+            cards = pattern.findall(html)
+            if cards:
+                return cards
+        return []
+
+
+
 class URLPatterns(BasePattern):
     """
     Pattern for extracting the raw url string.
@@ -182,26 +207,6 @@ class PhonePatterns(BasePattern):
         if match:
             return match.group("phone").strip()
         return None
-
-
-class AwardCardPatterns(BasePattern):
-    """
-    Pattern for extracting individual special award card HTML chunks from an awards page.
-    Each card is wrapped in <div id="sponsor_speciali testo-card">...</div>.
-    There are no nested <div> elements inside these cards, so non-greedy match is safe.
-
-    Use extract() to get all card chunks, then run AwardNamePatterns and URLPatterns
-    on each chunk to extract the award name, sponsor, and pizzeria URL.
-    """
-
-    testo_card: re.Pattern[str] = re.compile(
-        r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
-        re.DOTALL,
-    )
-
-    def extract(self, html: str) -> list[str]:
-        """Return all award card HTML chunks."""
-        return self.testo_card.findall(html)
 
 
 class AwardNamePatterns(BasePattern):
