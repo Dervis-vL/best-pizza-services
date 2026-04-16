@@ -40,6 +40,8 @@ class PizzeriaRepository(BaseDatabase):
                 for ranking in pizzeria.rankings:
                     self._upsert_ranking(session, ranking, pizzeria_model)
 
+                # Add awards
+
     def seed_location(self, location_config: shared_schemas.LocationSchema) -> None:
         """Write location from config schema, inserting or updating."""
         with self._session() as session:
