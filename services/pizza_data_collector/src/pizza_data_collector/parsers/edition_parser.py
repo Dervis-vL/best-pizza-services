@@ -63,4 +63,6 @@ class EditionParser:  # pylint: disable=too-few-public-methods
                     pizzerias[slug].rankings.append(ranking_schema)
                     pizzerias[slug].webpages.append(webpage_schema)
 
+                # TODO: Add situation when no award or rank
+
         return list(pizzerias.values())
