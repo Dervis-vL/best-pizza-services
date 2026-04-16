@@ -14,11 +14,13 @@ class EditionParser:  # pylint: disable=too-few-public-methods
         card_patterns: models.CardPatterns,
         url_pattern: models.URLPatterns,
         position_patterns: models.RankingPositionPatterns,
+        awards_patterns: models.AwardNamePatterns,
     ) -> None:
         """Initializes the edition parser with the necessary patterns."""
         self._cards = card_patterns
         self._urls = url_pattern
         self._positions = position_patterns
+        self._awards = awards_patterns
 
     def parse(self, soup: BeautifulSoup, edition_id: int) -> list[schemas.PizzeriaSchema]:
         """Parses the edition page soup and returns structured data."""
@@ -31,18 +33,31 @@ class EditionParser:  # pylint: disable=too-few-public-methods
                 continue
 
             slug = utils.extract_pizzeria_name(endpoint_path=url)
-            position = self._positions.extract(html=card)
 
-            if slug not in pizzerias:
-                pizzerias[slug] = schemas.PizzeriaSchema(
-                    slug=slug,
-                    rankings=[schemas.RankingSchema(position=position, edition_id=edition_id, awards=None)],
-                    webpages=[schemas.WebpagesSchema(url=url, slug=slug)],
-                )
+            # see if cards are for awards or ranking
+            award_name = self._awards.extract(html=card)
+            if award_name:
+                award = self._awards.extract(html=card)
+                if slug not in pizzerias:
+                    pizzerias[slug] = schemas.PizzeriaSchema(
+                        slug=slug,
+                        rankings=[],
+                        awards=[schemas.AwardsSchema(name=award, edition_id=edition_id)],
+                        webpages=[schemas.WebpagesSchema(url=url, slug=slug)],
+                    )
             else:
-                pizzerias[slug].rankings.append(
-                    schemas.RankingSchema(position=position, edition_id=edition_id, awards=None)
-                )
-                pizzerias[slug].webpages.append(schemas.WebpagesSchema(url=url, slug=slug))
+                position = self._positions.extract(html=card)
+                if slug not in pizzerias:
+                    pizzerias[slug] = schemas.PizzeriaSchema(
+                        slug=slug,
+                        rankings=[schemas.RankingSchema(position=position, edition_id=edition_id, awards=None)],
+                        awards=[],
+                        webpages=[schemas.WebpagesSchema(url=url, slug=slug)],
+                    )
+                else:
+                    pizzerias[slug].rankings.append(
+                        schemas.RankingSchema(position=position, edition_id=edition_id, awards=None)
+                    )
+                    pizzerias[slug].webpages.append(schemas.WebpagesSchema(url=url, slug=slug))
 
         return list(pizzerias.values())
