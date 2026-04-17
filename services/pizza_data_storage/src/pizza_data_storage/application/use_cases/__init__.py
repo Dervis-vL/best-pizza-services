@@ -3,8 +3,8 @@
 from pizza_data_storage.application.use_cases.seed_categories_editions import (
     SeedCategoriesAndEditionsUseCase
 )
-from pizza_data_storage.application.use_cases.seed_pizzerias_webpages_rankings import (
-    SeedPizzeriasWebpagesRankingsUseCase
+from pizza_data_storage.application.use_cases.seed_pizzerias_webpages_rating import (
+    SeedPizzeriasWebpagesRatingsUseCase
 )
 from pizza_data_storage.application.use_cases.seed_location import (
     SeedLocationUseCase
@@ -24,7 +24,7 @@ from pizza_data_storage.application.use_cases.mark_webpage import (
 
 __all__ = [
     "SeedCategoriesAndEditionsUseCase",
-    "SeedPizzeriasWebpagesRankingsUseCase",
+    "SeedPizzeriasWebpagesRatingsUseCase",
     "SeedLocationUseCase",
     "GetUnscrapedEditionsUseCase",
     "GetUnscrapedWebpagesUseCase",
