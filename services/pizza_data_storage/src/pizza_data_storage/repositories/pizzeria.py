@@ -177,13 +177,13 @@ class PizzeriaRepository(BaseDatabase):
             )
         )
         if existing:
-            existing.award = award_config.awards
+            existing.award = award_config.award
             return existing
 
         award = models.Awards(
             edition_id=award_config.edition_id,
             pizzeria_id=pizzeria.id,
-            award=award_config.awards,
+            award=award_config.award,
             sponsor=award_config.sponsor,
         )
         session.add(award)
