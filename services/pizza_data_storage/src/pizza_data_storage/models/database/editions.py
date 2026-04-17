@@ -13,6 +13,7 @@ from pizza_data_storage import settings
 from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
+    from pizza_data_storage.models.database.awards import Awards
     from pizza_data_storage.models.database.categories import Categories
     from pizza_data_storage.models.database.rankings import Rankings
 
@@ -62,3 +63,4 @@ class Editions(base.BaseModel):
     # relationships
     category: orm.Mapped["Categories"] = orm.relationship(back_populates="editions")
     rankings: orm.Mapped[list["Rankings"]] = orm.relationship(back_populates="edition")
+    awards: orm.Mapped[list["Awards"]] = orm.relationship(back_populates="edition")

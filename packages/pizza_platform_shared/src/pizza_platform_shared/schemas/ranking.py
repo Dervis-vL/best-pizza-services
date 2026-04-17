@@ -5,15 +5,11 @@ import pydantic as pyd
 from pizza_platform_shared.schemas.base import BaseReadSchema
 
 
-
 class RankingSchema(pyd.BaseModel):
     """Schema for validating ranking position data."""
 
-    position: int | None = pyd.Field(default=None, description="Ranking position of the pizzeria")
+    position: int = pyd.Field(..., description="Ranking position of the pizzeria")
     edition_id: int = pyd.Field(..., description="Foreign key to the editions table")
-    awards: str | None = pyd.Field(
-        default=None, max_length=500, description="Awards or special mentions for the pizzeria"
-    )
 
     @pyd.field_validator("position")
     @classmethod

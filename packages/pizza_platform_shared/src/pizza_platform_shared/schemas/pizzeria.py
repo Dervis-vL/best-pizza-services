@@ -2,6 +2,7 @@
 
 import pydantic as pyd
 
+from pizza_platform_shared import schemas as shared_schemas
 from pizza_platform_shared.schemas.base import BaseReadSchema
 from pizza_platform_shared.schemas.ranking import RankingSchema
 from pizza_platform_shared.schemas.webpages import WebpagesSchema
@@ -19,6 +20,10 @@ class PizzeriaSchema(pyd.BaseModel):
     webpages: list[WebpagesSchema] = pyd.Field(
         default_factory=list,
         description="List of webpages linked to this pizzeria",
+    )
+    awards: list[shared_schemas.AwardsSchema] | None = pyd.Field(
+        default_factory=list,
+        description="List of awards received by the pizzeria",
     )
 
     @pyd.computed_field

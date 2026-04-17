@@ -2,6 +2,7 @@
 
 from pizza_data_collector.models.parser.patterns import (
     AddressPatterns,
+    AwardNamePatterns,
     CardPatterns,
     CoordPatterns,
     PhonePatterns,
@@ -10,6 +11,7 @@ from pizza_data_collector.models.parser.patterns import (
 )
 
 adress_patterns = AddressPatterns()
+award_name_patterns = AwardNamePatterns()
 card_patterns = CardPatterns()
 coordinate_patterns = CoordPatterns()
 phone_patterns = PhonePatterns()
@@ -19,6 +21,7 @@ url_pattern = URLPatterns()
 
 __all__ = [
     "adress_patterns",
+    "award_name_patterns",
     "card_patterns",
     "coordinate_patterns",
     "phone_patterns",

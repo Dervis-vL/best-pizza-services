@@ -12,6 +12,7 @@ URL_HOME: Final = yarl.URL("https://www.50toppizza.it/")
 class PizzaTableNames(types.TableNames):
     """Constants for pizza database table names."""
 
+    awards: types.TableName = "awards"
     categories: types.TableName = "categories"
     pizzerias: types.TableName = "pizzerias"
     editions: types.TableName = "editions"

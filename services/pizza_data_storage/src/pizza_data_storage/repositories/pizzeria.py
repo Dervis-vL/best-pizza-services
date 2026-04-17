@@ -4,6 +4,7 @@ Repository for the following models/schemas:
     pizzerias,
     webpages,
     rankings,
+    awards,
     locations.
 """
 
@@ -25,11 +26,11 @@ logger = logging.getLogger(__name__)
 class PizzeriaRepository(BaseDatabase):
     """Repository for seeding and querying pizzerias, webpages, rankings, and locations."""
 
-    def seed_pizzerias_webpages_and_rankings(
+    def seed_pizzerias_webpages_and_rating(
         self,
         config_schemas: list[shared_schemas.PizzeriaSchema]
     ) -> None:
-        """Write pizzerias, their webpages, and ranks from config, inserting or updating."""
+        """Write pizzerias, their webpages, and ranks or award from config, inserting or updating."""
         with self._session() as session:
             for pizzeria in config_schemas:
                 pizzeria_model = self._upsert_pizzeria(session, pizzeria)
@@ -39,6 +40,9 @@ class PizzeriaRepository(BaseDatabase):
 
                 for ranking in pizzeria.rankings:
                     self._upsert_ranking(session, ranking, pizzeria_model)
+
+                for award in pizzeria.awards:
+                    self._upsert_award(session, award, pizzeria_model)
 
     def seed_location(self, location_config: shared_schemas.LocationSchema) -> None:
         """Write location from config schema, inserting or updating."""
@@ -90,6 +94,7 @@ class PizzeriaRepository(BaseDatabase):
     def _upsert_pizzeria(
         session: sa_orm.Session, pizzeria_config: shared_schemas.PizzeriaSchema
     ) -> models.Pizzerias:
+        """Upsert pizzeria, skipping if description already exists."""
         existing = session.scalar(
             select(models.Pizzerias)
             .where(models.Pizzerias.name == pizzeria_config.name)
@@ -111,6 +116,7 @@ class PizzeriaRepository(BaseDatabase):
         webpage_config: shared_schemas.WebpagesSchema,
         pizzeria: models.Pizzerias,
     ) -> models.Webpages:
+        """Upsert webpage for the pizzeria, skipping if the url already exists."""
         existing = session.scalar(
             select(models.Webpages)
             .where(
@@ -136,6 +142,7 @@ class PizzeriaRepository(BaseDatabase):
         ranking_config: shared_schemas.RankingSchema,
         pizzeria: models.Pizzerias,
     ) -> models.Rankings:
+        """Upsert rank for top pizzerias, skipping if position already exists."""
         existing = session.scalar(
             select(models.Rankings)
             .where(
@@ -154,6 +161,33 @@ class PizzeriaRepository(BaseDatabase):
         )
         session.add(ranking)
         return ranking
+
+    @staticmethod
+    def _upsert_award(
+        session: sa_orm.Session,
+        award_config: shared_schemas.AwardsSchema,
+        pizzeria: models.Pizzerias,
+    ) -> models.Awards:
+        """Upsert awards for special pizzerias, skipping if award already exists."""
+        existing = session.scalar(
+            select(models.Awards)
+            .where(
+                models.Awards.edition_id == award_config.edition_id,
+                models.Awards.pizzeria_id == pizzeria.id,
+            )
+        )
+        if existing:
+            existing.award = award_config.award
+            return existing
+
+        award = models.Awards(
+            edition_id=award_config.edition_id,
+            pizzeria_id=pizzeria.id,
+            award=award_config.award,
+            sponsor=award_config.sponsor,
+        )
+        session.add(award)
+        return award
 
     @staticmethod
     def _upsert_location(

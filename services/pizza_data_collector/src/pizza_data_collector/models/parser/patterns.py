@@ -44,8 +44,14 @@ class CardPatterns(BasePattern):
     Each pattern targets the outer <a> wrapping a single ranking entry.
 
     Use extract() to get all card chunks, then run URLPattern and
-    RankingPositionPatterns on each chunk to extract URL and position.
+    RankingPositionPatterns or AwarsNamePatterns on each chunk to extract URL and position.
     """
+
+    # Special awards (2022+): must be first pattern since award pages also have id="scheda" anchors
+    testo_card: re.Pattern[str] = re.compile(
+        r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
+        re.DOTALL,
+    )
 
     # Modern (2022+): <a id="scheda" href="...referenza/...">...</a>
     scheda_id: re.Pattern[str] = re.compile(
@@ -182,3 +188,34 @@ class PhonePatterns(BasePattern):
         if match:
             return match.group("phone").strip()
         return None
+
+
+class AwardNamePatterns(BasePattern):
+    """
+    Pattern for extracting the award name and sponsor from a special awards card.
+    Run on each individual card HTML chunk extracted by AwardCardPatterns.
+
+    The source element looks like:
+        <h2 class="grigioscuro scotchmodern ...">
+            Best Fried Food 2025<br/>
+            Il Fritturista - Oleificio Zucchi Award
+        </h2>
+
+    The (?P<award>...) group captures the text before <br/> (the award name).
+    The (?P<sponsor>...) group captures the text after <br/> (the sponsor).
+    Both are stripped of whitespace in extract().
+    """
+
+    grigioscuro_h2: re.Pattern[str] = re.compile(
+        r'<h2\b[^>]*\bgrigioscuro\b[^>]*>'
+        r'\s*(?P<award>.+?)<br\s*/?>'
+        r'(?P<sponsor>.+?)\s*</h2>',
+        re.DOTALL,
+    )
+
+    def extract(self, html: str) -> tuple[str, str] | tuple[None, None]:
+        """Return (award_name, sponsor) stripped of whitespace, or (None, None)."""
+        match = self.search(html)
+        if match:
+            return match.group("award").strip(), match.group("sponsor").strip()
+        return None, None

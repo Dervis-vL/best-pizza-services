@@ -1,5 +1,6 @@
 """Pizza platform pydantic schemas."""
 
+from pizza_platform_shared.schemas.awards import AwardsReadSchema, AwardsSchema
 from pizza_platform_shared.schemas.category import CategoryReadSchema, CategorySchema
 from pizza_platform_shared.schemas.edition import EditionReadSchema, EditionSchema
 from pizza_platform_shared.schemas.locations import LocationReadSchema, LocationSchema
@@ -8,6 +9,8 @@ from pizza_platform_shared.schemas.ranking import RankingReadSchema, RankingSche
 from pizza_platform_shared.schemas.webpages import WebpagesReadSchema, WebpagesSchema
 
 __all__ = [
+    "AwardsSchema",
+    "AwardsReadSchema",
     "CategorySchema",
     "CategoryReadSchema",
     "LocationSchema",
