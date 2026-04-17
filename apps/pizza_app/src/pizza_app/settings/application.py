@@ -16,9 +16,8 @@ class Application(pyd_settings.BaseSettings):
         pyd.Field(description="Type of database to connect to."),
     ]
 
-    class Config:
-        """Pydantic config."""
-
-        extra="ignore"
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = pyd_settings.SettingsConfigDict(
+        extra="ignore",
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
