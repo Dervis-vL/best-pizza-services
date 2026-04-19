@@ -20,7 +20,7 @@ class Webpages(base.BaseModel):
     # table configuration
     __tablename__ = settings.pizza_db.tables.webpages
     __table_args__ = (
-        sa.UniqueConstraint("slug", name="uq_webpage_slug"),
+        sa.UniqueConstraint("pizzeria_id", "url", name="uq_webpage_pizzeria_url"),
         {"schema": settings.pizza_db.schema_name}
     )
 
