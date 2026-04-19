@@ -54,6 +54,13 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
         and parts[-2].isdigit() and int(parts[-2]) >= 2022
     ):
         parts = parts[:-2]
+    # last two values between 1-10  ->  strip last 2
+    elif (
+        len(parts) > 2
+        and parts[-1].isdigit() and 0 < int(parts[-1]) < 11
+        and parts[-2].isdigit() and 0 < int(parts[-2]) < 11
+    ):
+        parts = parts[:-2]
     # last value between 1-14  ->  strip last 1
     elif parts[-1].isdigit() and 0 < int(parts[-1]) < 14:
         parts = parts[:-1]
