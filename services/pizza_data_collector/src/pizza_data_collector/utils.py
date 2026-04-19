@@ -19,10 +19,6 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
 
     parts = slug.split("-")
 
-    # All parts are digits (e.g. 2023-10-15)  ->  return as-is
-    if all(p.isdigit() for p in parts):
-        return slug
-
     # Last two values >= 2022, third-to-last between 1-11  ->  strip last 3
     if (
         len(parts) > 3
@@ -31,11 +27,18 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
         and parts[-3].isdigit() and 0 < int(parts[-3]) <= 11
     ):
         parts = parts[:-3]
-    # Last value >= 2022, second-to-last 1-11  ->  strip last 2
+    # last two values >= 2022, 2+ parts  ->  strip both
+    elif (
+        len(parts) >= 2
+        and parts[-1].isdigit() and int(parts[-1]) >= 2022
+        and parts[-2].isdigit() and int(parts[-2]) >= 2022
+    ):
+        parts = parts[:-2]
+    # Last value >= 2022, second-to-last 1-5  ->  strip last 2
     elif (
         len(parts) > 2
         and parts[-1].isdigit() and int(parts[-1]) >= 2022
-        and parts[-2].isdigit() and 0 < int(parts[-2]) <= 11
+        and parts[-2].isdigit() and 0 < int(parts[-2]) <= 5
     ):
         parts = parts[:-2]
     # Last value >= 2022, 2+ parts  ->  strip last
@@ -48,7 +51,7 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
     elif (
         len(parts) > 2
         and parts[-1].isdigit() and 0 < int(parts[-1]) < 14
-        and parts[-2].isdigit() and int(parts[-2]) > 2022
+        and parts[-2].isdigit() and int(parts[-2]) >= 2022
     ):
         parts = parts[:-2]
     # last value between 1-14  ->  strip last 1
