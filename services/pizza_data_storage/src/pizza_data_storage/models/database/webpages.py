@@ -50,6 +50,14 @@ class Webpages(base.BaseModel):
         nullable=True,
         comment="Timestamp when the data was scraped"
     )
+    parsed_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
+        postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
+            sa.DateTime(timezone=True),
+            "sqlite"
+        ),
+        nullable=True,
+        comment="Timestamp when the data was parsed"
+    )
 
     # relationships
     pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(

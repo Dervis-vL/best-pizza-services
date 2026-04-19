@@ -36,10 +36,10 @@ class EditionParser:  # pylint: disable=too-few-public-methods
                 continue
 
             slug = utils.extract_pizzeria_name(endpoint_path=url)
-            webpage_schema = schemas.WebpagesSchema(url=url, slug=slug)
+            webpage_schema = schemas.WebpageSchema(url=url, slug=slug)
 
             if award is not None:
-                award_schema = schemas.AwardsSchema(
+                award_schema = schemas.AwardSchema(
                     award=award, sponsor=sponsor, edition_id=edition_id
                 )
                 if slug not in pizzerias:

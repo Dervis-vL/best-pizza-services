@@ -125,7 +125,7 @@ class PizzeriaRepository(BaseDatabase):
     @staticmethod
     def _upsert_webpage(
         session: sa_orm.Session,
-        webpage_config: shared_schemas.WebpagesSchema,
+        webpage_config: shared_schemas.WebpageSchema,
         pizzeria_id: int,
     ) -> models.Webpages:
         """Upsert webpage for the pizzeria, skipping if the url already exists."""
@@ -177,7 +177,7 @@ class PizzeriaRepository(BaseDatabase):
     @staticmethod
     def _upsert_award(
         session: sa_orm.Session,
-        award_config: shared_schemas.AwardsSchema,
+        award_config: shared_schemas.AwardSchema,
         pizzeria_id: int,
     ) -> models.Awards:
         """Upsert awards for special pizzerias, skipping if award already exists."""
