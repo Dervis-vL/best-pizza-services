@@ -21,7 +21,7 @@ class PizzeriaSchema(pyd.BaseModel):
         default_factory=list,
         description="List of webpages linked to this pizzeria",
     )
-    awards: list[shared_schemas.AwardsSchema] | None = pyd.Field(
+    awards: list[shared_schemas.AwardsSchema] = pyd.Field(
         default_factory=list,
         description="List of awards received by the pizzeria",
     )
@@ -32,16 +32,11 @@ class PizzeriaSchema(pyd.BaseModel):
         """Derive the display name from the slug."""
         return " ".join(word.capitalize() for word in self.slug.split("-"))  # pylint: disable=no-member
 
-    # strip numeric suffic from slug when passed ina as input
-    @pyd.model_validator(mode="before")
+    @pyd.field_validator("slug", mode="before")
     @classmethod
-    def strip_slug_version_suffix(cls, data: dict) -> dict:
-        """Strip numeric version suffixes from slug."""
-        if slug := data.get("slug"):
-            parts = slug.rsplit("-", 1)
-            if len(parts) == 2 and parts[-1].isdigit():
-                data["slug"] = parts[0]
-        return data
+    def normalize_slug(cls, v: str) -> str:
+        """Soft validation/normalization of the slug value."""
+        return v.lower().replace(" ", "-").strip()
 
 
 class PizzeriaReadSchema(PizzeriaSchema, BaseReadSchema):
