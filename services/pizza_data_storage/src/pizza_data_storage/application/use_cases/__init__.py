@@ -9,25 +9,33 @@ from pizza_data_storage.application.use_cases.seed_pizzerias_webpages_rating imp
 from pizza_data_storage.application.use_cases.seed_location import (
     SeedLocationUseCase
 )
-from pizza_data_storage.application.use_cases.get_unscraped_webpages import (
-    GetUnscrapedWebpagesUseCase
+from pizza_data_storage.application.use_cases.get_pizzerias import (
+    GetPizzeriasUseCase
 )
-from pizza_data_storage.application.use_cases.get_unscraped_editions import (
-    GetUnscrapedEditionsUseCase
+from pizza_data_storage.application.use_cases.get_webpages import (
+    GetWebpagesUseCase
+)
+from pizza_data_storage.application.use_cases.get_editions import (
+    GetEditionsUseCase
 )
 from pizza_data_storage.application.use_cases.mark_edition import (
-    MarkEditionAsScrapedUseCase
+    MarkEditionAsScrapedUseCase,
+    MarkEditionAsParsedUseCase,
 )
 from pizza_data_storage.application.use_cases.mark_webpage import (
-    MarkWebpageAsScrapedUseCase
+    MarkWebpageAsScrapedUseCase,
+    MarkWebpageAsParsedUseCase,
 )
 
 __all__ = [
     "SeedCategoriesAndEditionsUseCase",
     "SeedPizzeriasWebpagesRatingsUseCase",
     "SeedLocationUseCase",
-    "GetUnscrapedEditionsUseCase",
-    "GetUnscrapedWebpagesUseCase",
+    "GetEditionsUseCase",
+    "GetPizzeriasUseCase",
+    "GetWebpagesUseCase",
     "MarkEditionAsScrapedUseCase",
+    "MarkEditionAsParsedUseCase",
     "MarkWebpageAsScrapedUseCase",
+    "MarkWebpageAsParsedUseCase",
 ]

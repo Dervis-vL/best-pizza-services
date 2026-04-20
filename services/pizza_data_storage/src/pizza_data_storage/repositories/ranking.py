@@ -46,8 +46,10 @@ class RankingsRepository(BaseDatabase):
                 for edition in category.editions:
                     self._upsert_edition(session, edition, category_model)
 
-    def get_editions(self, *, only_unscraped: bool) -> list[models.Editions]:
-        """Return all ranking editions, optionally filtering on scraped status.
+    def get_editions(
+        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+    ) -> list[models.Editions]:
+        """Return all editions, optionally filtering on scraped and parsed status.
 
         Relationships are eagerly loaded so objects remain usable after
         the session closes.
@@ -61,6 +63,8 @@ class RankingsRepository(BaseDatabase):
         )
         if only_unscraped:
             query = query.where(models.Editions.scraped_at.is_(None))
+        if only_unparsed:
+            query = query.where(models.Editions.parsed_at.is_(None))
 
         return self._read_orm(query)
 
@@ -86,12 +90,20 @@ class RankingsRepository(BaseDatabase):
         return self._read_orm(query, single=True)
 
     def mark_edition_scraped(self, edition_id: int) -> None:
-        """Set scraped_at to now for the given ranking edition."""
+        """Set scraped_at to now for the given edition."""
         with self._session() as session:
             edition = session.get(models.Editions, edition_id)
             if not edition:
                 raise ValueError(f"Edition with id {edition_id} not found.")
             edition.scraped_at = sa.func.now()  # pylint: disable=not-callable
+
+    def mark_edition_parsed(self, edition_id: int) -> None:
+        """Set parsed_at to now for the given edition."""
+        with self._session() as session:
+            edition = session.get(models.Editions, edition_id)
+            if not edition:
+                raise ValueError(f"Edition with id {edition_id} not found.")
+            edition.parsed_at = sa.func.now()  # pylint: disable=not-callable
 
     @staticmethod
     def _upsert_category(

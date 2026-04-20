@@ -8,10 +8,9 @@ from pizza_platform_shared.schemas.ranking import RankingSchema
 from pizza_platform_shared.schemas.webpage import WebpageSchema
 
 
-class PizzeriaSchema(pyd.BaseModel):
+class PizzeriaBaseSchema(pyd.BaseModel):
     """Schema for validating pizzeria data."""
 
-    slug: str = pyd.Field(..., max_length=100, description="Slug for the pizzeria, used in URLs")
     description: str | None = pyd.Field(None, max_length=500, description="Pizzeria description")
     rankings: list[RankingSchema] = pyd.Field(
         default_factory=list,
@@ -26,6 +25,12 @@ class PizzeriaSchema(pyd.BaseModel):
         description="List of awards received by the pizzeria",
     )
 
+
+class PizzeriaSchema(PizzeriaBaseSchema):
+    """Schema for validating pizzeria data."""
+
+    slug: str = pyd.Field(..., max_length=100, description="Slug for the pizzeria")
+
     @pyd.computed_field
     @property
     def name(self) -> str:
@@ -39,5 +44,7 @@ class PizzeriaSchema(pyd.BaseModel):
         return v.lower().replace(" ", "-").strip()
 
 
-class PizzeriaReadSchema(PizzeriaSchema, BaseReadSchema):
+class PizzeriaReadSchema(PizzeriaBaseSchema, BaseReadSchema):
     """Schema for validating pizzeria data."""
+
+    name: str = pyd.Field(..., max_length=100, description="Name for pizzeria")

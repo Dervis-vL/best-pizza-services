@@ -15,8 +15,10 @@ class IRankingsRepository(Protocol):
     ) -> None:
         """Write categories and editions from config, inserting or updating."""
 
-    def get_editions(self, *, only_unscraped: bool) -> list[models.Editions]:
-        """Return all ranking editions that have not been scraped yet."""
+    def get_editions(
+        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+    ) -> list[models.Editions]:
+        """Return all ranking editions, optional that have not been scraped or parsed yet."""
 
     def get_edition(self, edition_id: int) -> models.Editions | None:
         """Return a single edition by id."""
@@ -25,4 +27,7 @@ class IRankingsRepository(Protocol):
         """Return a single category by id."""
 
     def mark_edition_scraped(self, edition_id: int) -> None:
-        """Mark a ranking edition as scraped."""
+        """Mark an edition as scraped."""
+
+    def mark_edition_parsed(self, edition_id: int) -> None:
+        """Mark an edition as parsed."""

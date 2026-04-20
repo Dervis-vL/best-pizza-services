@@ -61,8 +61,10 @@ class PizzeriaRepository(BaseDatabase):
         with self._session() as session:
             self._upsert_location(session, location_config)
 
-    def get_webpages(self, *, only_unscraped: bool) -> list[models.Webpages]:
-        """Return all webpages of pizzerias, optionally filtering on scraped status.
+    def get_webpages(
+        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+    ) -> list[models.Webpages]:
+        """Return all webpages of pizzerias, optionally filtering on scraped and parsed status.
 
         Relationships are eagerly loaded so objects remain usable after
         the session closes.
@@ -75,6 +77,8 @@ class PizzeriaRepository(BaseDatabase):
         )
         if only_unscraped:
             query = query.where(models.Webpages.scraped_at.is_(None))
+        if only_unparsed:
+            query = query.where(models.Webpages.parsed_at.is_(None))
 
         return self._read_orm(query)
 
@@ -85,6 +89,7 @@ class PizzeriaRepository(BaseDatabase):
             .options(
                 sa_orm.joinedload(models.Pizzerias.webpages),
                 sa_orm.joinedload(models.Pizzerias.rankings),
+                sa_orm.joinedload(models.Pizzerias.awards),
                 sa_orm.joinedload(models.Pizzerias.locations),
             )
         )
@@ -101,6 +106,14 @@ class PizzeriaRepository(BaseDatabase):
             if not webpage:
                 raise ValueError(f"Webpage with id {webpage_id} not found.")
             webpage.scraped_at = sa.func.now()  # pylint: disable=not-callable
+
+    def mark_webpage_parsed(self, webpage_id: int) -> None:
+        """Set parsed_at to now for the given pizzeria webpage."""
+        with self._session() as session:
+            webpage = session.get(models.Webpages, webpage_id)
+            if not webpage:
+                raise ValueError(f"Webpage with id {webpage_id} not found.")
+            webpage.parsed_at = sa.func.now()  # pylint: disable=not-callable
 
     @staticmethod
     def _upsert_pizzeria(
