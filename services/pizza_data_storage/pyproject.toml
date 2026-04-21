@@ -19,6 +19,7 @@ dependencies = [
     "sqlalchemy>=2.0.46",
     "yarl>=1.22.0",
     "pizza-platform-shared",
+    "boto3>=1.42.92",
 ]
 
 [tool.hatch.build.targets.wheel]
