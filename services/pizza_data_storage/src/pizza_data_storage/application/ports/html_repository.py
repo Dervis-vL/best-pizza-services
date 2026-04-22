@@ -2,6 +2,8 @@
 
 from typing import Protocol
 
+from pizza_data_storage import enums
+
 
 class IHtmlStorageRepository(Protocol):
     """Port for HTML object storage.
@@ -11,25 +13,24 @@ class IHtmlStorageRepository(Protocol):
     in-memory fake for local testing.
     """
 
-    def save_edition_html(
+    def save_html(
         self,
         *,
         html: str,
-        category_id: str,
-        year: int,
+        model_id: int,
+        model_name: enums.HtmlModelName,
     ) -> str:
-        """."""
+        """Store an HTML string in Glacier object storage."""
 
-    def get_edition_html(self, *, key: str) -> str:
-        """."""
+    def get_html(self, *, model_name: enums.HtmlModelName, model_id: int) -> str:
+        """Retrieve an HTML string from object storage."""
 
-    def list_edition_keys(
+    def list_keys(
         self,
         *,
-        category_id: str | None = None,
-        year: int | None = None,
+        model_name: enums.HtmlModelName | None = None,
     ) -> list[str]:
-        """."""
+        """List stored HTML keys, optionally filtered by category or year."""
 
-    def edition_html_exists(self, *, category_id: str, year: int) -> bool:
-        """."""
+    def html_exists(self, *, model_id: int, model_name: enums.HtmlModelName) -> bool:
+        """Check whether an HTML file already exists in storage."""
