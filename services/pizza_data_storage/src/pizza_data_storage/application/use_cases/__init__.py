@@ -26,6 +26,18 @@ from pizza_data_storage.application.use_cases.mark_webpage import (
     MarkWebpageAsScrapedUseCase,
     MarkWebpageAsParsedUseCase,
 )
+from pizza_data_storage.application.use_cases.use_webpage_storage import (
+    StoreWebpageHtmlUseCase,
+    GetWebpageHtmlUseCase,
+    WebpageHtmlExistsUseCase,
+    ListWebpageKeysUseCase,
+)
+from pizza_data_storage.application.use_cases.use_edition_storage import (
+    StoreEditionHtmlUseCase,
+    GetEditionHtmlUseCase,
+    EditionHtmlExistsUseCase,
+    ListEditionKeysUseCase,
+)
 
 __all__ = [
     "SeedCategoriesAndEditionsUseCase",
@@ -38,4 +50,12 @@ __all__ = [
     "MarkEditionAsParsedUseCase",
     "MarkWebpageAsScrapedUseCase",
     "MarkWebpageAsParsedUseCase",
+    "StoreWebpageHtmlUseCase",
+    "GetWebpageHtmlUseCase",
+    "WebpageHtmlExistsUseCase",
+    "ListWebpageKeysUseCase",
+    "StoreEditionHtmlUseCase",
+    "GetEditionHtmlUseCase",
+    "EditionHtmlExistsUseCase",
+    "ListEditionKeysUseCase",
 ]

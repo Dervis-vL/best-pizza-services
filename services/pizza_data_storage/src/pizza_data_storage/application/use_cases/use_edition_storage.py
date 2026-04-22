@@ -58,6 +58,21 @@ class GetEditionHtmlUseCase:  # pylint: disable=too-few-public-methods
         return bs4.BeautifulSoup(html, "html.parser")
 
 
+class EditionHtmlExistsUseCase:  # pylint: disable=too-few-public-methods
+    """Check whether an edition's HTML already exists in storage."""
+
+    def __init__(self, html_repository: ports.IHtmlStorageRepository) -> None:
+        """Initialize the use case."""
+        self._html_repository = html_repository
+
+    def execute(self, *, model_id: int) -> bool:
+        """Return True if the edition's HTML already exists in storage."""
+        return self._html_repository.html_exists(
+            model_id=model_id,
+            model_name=enums.HtmlModelName.EDITIONS,
+        )
+
+
 class ListEditionKeysUseCase:  # pylint: disable=too-few-public-methods
     """List stored edition HTML keys, optionally filtered."""
 
