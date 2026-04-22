@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import logging
-from typing import Literal
 
 from botocore.exceptions import ClientError
 
 from pizza_platform_shared import repositories as shared_repos
-from pizza_data_storage import constants
+from pizza_data_storage import constants, enums
 
 logger = logging.getLogger(__name__)
 
@@ -20,13 +19,13 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
         self,
         *,
         html: str,
-        model_id: str,
-        model_name: Literal["editions", "webpages"],
+        model_id: int,
+        model_name: enums.HtmlModelName,
     ) -> str:
         """Store an HTML string in Glacier object storage."""
         key = self._build_key(
-            model_name=model_id,
-            model_id=model_name,
+            model_name=model_name,
+            model_id=model_id,
         )
 
         self._client.put_object(
@@ -39,7 +38,7 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
         logger.info("Stored %s HTML at key=%s", model_name, key)
         return key
 
-    def get_html(self, *, model_name: Literal["editions", "webpages"], model_id: str) -> str:
+    def get_html(self, *, model_name: enums.HtmlModelName, model_id: int) -> str:
         """Retrieve an edition's HTML string from object storage."""
         key = self._build_key(
             model_name=model_name,
@@ -56,7 +55,7 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
                 raise KeyError(f"No HTML found at key: {key}") from e
             raise
 
-    def list_keys(self, *, model_name: Literal["editions", "webpages"] | None = None) -> list[str]:
+    def list_keys(self, *, model_name: enums.HtmlModelName | None = None) -> list[str]:
         """List stored edition HTML keys, optionally filtered by category or year."""
         prefix = self._build_prefix(model_name=model_name)
         response = self._client.list_objects_v2(
@@ -67,7 +66,7 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
         logger.info("Listed %d keys under prefix=%s", len(keys), prefix)
         return keys
 
-    def html_exists(self, *, model_id: str, model_name: Literal["editions", "webpages"]) -> bool:
+    def html_exists(self, *, model_id: int, model_name: enums.HtmlModelName) -> bool:
         """Check whether an edition HTML file already exists in storage."""
         key = self._build_key(model_name=model_name, model_id=model_id)
 
@@ -79,18 +78,3 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
             if e.response["Error"]["Code"] == "404":
                 return False
             raise
-
-    @staticmethod
-    def _build_key(*, model_name: str, model_id: str) -> str:
-        """Build the canonical object key for an edition HTML file."""
-        return f"{constants.StorageKeys.SCRAPES_PREFIX}/{model_name}/id_{model_id}.html"
-
-    @staticmethod
-    def _build_prefix(
-        *,
-        model_name: Literal["editions", "webpages"] | None = None,
-    ) -> str:
-        """Build an S3 prefix for listing, as specific as the filters allow."""
-        if model_name:
-            return f"{constants.StorageKeys.SCRAPES_PREFIX}/{model_name}/"
-        return f"{constants.StorageKeys.SCRAPES_PREFIX}/"
