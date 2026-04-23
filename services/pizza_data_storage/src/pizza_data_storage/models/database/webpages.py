@@ -20,7 +20,7 @@ class Webpages(base.BaseModel):
     # table configuration
     __tablename__ = settings.pizza_db.tables.webpages
     __table_args__ = (
-        sa.UniqueConstraint("slug", name="uq_webpage_slug"),
+        sa.UniqueConstraint("pizzeria_id", "url", name="uq_webpage_pizzeria_url"),
         {"schema": settings.pizza_db.schema_name}
     )
 
@@ -49,6 +49,14 @@ class Webpages(base.BaseModel):
         ),
         nullable=True,
         comment="Timestamp when the data was scraped"
+    )
+    parsed_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
+        postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
+            sa.DateTime(timezone=True),
+            "sqlite"
+        ),
+        nullable=True,
+        comment="Timestamp when the data was parsed"
     )
 
     # relationships

@@ -13,7 +13,9 @@ class Scraper:  # pylint: disable=too-few-public-methods
         """Initializes the edition scraper with an HTTP client."""
         self._client = http_client
 
-    def scrape(self, url: pathlib.Path) -> BeautifulSoup:
+    def scrape(self, url: pathlib.Path) -> BeautifulSoup | None:
         """Scrapes the content of the given URL and returns a BeautifulSoup object."""
         html = self._client.fetch(url)
+        if html is None:
+            return None
         return BeautifulSoup(html, features="html.parser")

@@ -45,3 +45,13 @@ class PizzaTableNames(types.TableNames):
     ranking_entries: types.TableName = "ranking_entries"
     webpages: types.TableName = "webpages"
     locations: types.TableName = "locations"
+
+
+class StorageKeys:
+    """Constants for storage keys."""
+
+    SCRAPES_PREFIX: Final[str] = "scrapes"
+    HTML_SUFFIX: Final[str] = "html"
+    JSON_SUFFIX: Final[str] = "json"
+    STORAGE_TYPE: Final[str] = "s3"
+    STORAGE_TIER: Final[str] = "STANDARD"

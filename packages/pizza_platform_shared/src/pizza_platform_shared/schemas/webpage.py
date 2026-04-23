@@ -5,7 +5,7 @@ import pydantic as pyd
 from pizza_platform_shared.schemas.base import BaseReadSchema
 
 
-class WebpagesSchema(pyd.BaseModel):
+class WebpageSchema(pyd.BaseModel):
     """Schema for validating pizzeria websites data."""
 
     url: str = pyd.Field(..., max_length=500, description="URL of the resource")
@@ -32,7 +32,7 @@ class WebpagesSchema(pyd.BaseModel):
         return v.lower().replace(" ", "-").strip()
 
 
-class WebpagesReadSchema(WebpagesSchema, BaseReadSchema):
+class WebpageReadSchema(WebpageSchema, BaseReadSchema):
     """Schema for validating pizzeria websites data."""
 
     pizzeria_id: int = pyd.Field(..., description="Foreign key to the pizzerias table")

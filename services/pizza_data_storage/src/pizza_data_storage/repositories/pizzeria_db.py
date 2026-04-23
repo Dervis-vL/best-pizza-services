@@ -30,27 +30,41 @@ class PizzeriaRepository(BaseDatabase):
         self,
         config_schemas: list[shared_schemas.PizzeriaSchema]
     ) -> None:
-        """Write pizzerias, their webpages, and ranks or award from config, inserting or updating."""
+        """Write pizzerias, their webpages, and rating from config, inserting or updating."""
         with self._session() as session:
             for pizzeria in config_schemas:
                 pizzeria_model = self._upsert_pizzeria(session, pizzeria)
                 session.flush()
                 for webpage in pizzeria.webpages:
-                    self._upsert_webpage(session, webpage, pizzeria_model)
+                    self._upsert_webpage(
+                        session=session,
+                        webpage_config=webpage,
+                        pizzeria_id=pizzeria_model.id,
+                    )
 
                 for ranking in pizzeria.rankings:
-                    self._upsert_ranking(session, ranking, pizzeria_model)
+                    self._upsert_ranking(
+                        session=session,
+                        ranking_config=ranking,
+                        pizzeria_id=pizzeria_model.id,
+                    )
 
                 for award in pizzeria.awards:
-                    self._upsert_award(session, award, pizzeria_model)
+                    self._upsert_award(
+                        session=session,
+                        award_config=award,
+                        pizzeria_id=pizzeria_model.id,
+                    )
 
     def seed_location(self, location_config: shared_schemas.LocationSchema) -> None:
         """Write location from config schema, inserting or updating."""
         with self._session() as session:
             self._upsert_location(session, location_config)
 
-    def get_webpages(self, *, only_unscraped: bool) -> list[models.Webpages]:
-        """Return all webpages of pizzerias, optionally filtering on scraped status.
+    def get_webpages(
+        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+    ) -> list[models.Webpages]:
+        """Return all webpages of pizzerias, optionally filtering on scraped and parsed status.
 
         Relationships are eagerly loaded so objects remain usable after
         the session closes.
@@ -63,6 +77,8 @@ class PizzeriaRepository(BaseDatabase):
         )
         if only_unscraped:
             query = query.where(models.Webpages.scraped_at.is_(None))
+        if only_unparsed:
+            query = query.where(models.Webpages.parsed_at.is_(None))
 
         return self._read_orm(query)
 
@@ -73,6 +89,7 @@ class PizzeriaRepository(BaseDatabase):
             .options(
                 sa_orm.joinedload(models.Pizzerias.webpages),
                 sa_orm.joinedload(models.Pizzerias.rankings),
+                sa_orm.joinedload(models.Pizzerias.awards),
                 sa_orm.joinedload(models.Pizzerias.locations),
             )
         )
@@ -90,11 +107,19 @@ class PizzeriaRepository(BaseDatabase):
                 raise ValueError(f"Webpage with id {webpage_id} not found.")
             webpage.scraped_at = sa.func.now()  # pylint: disable=not-callable
 
+    def mark_webpage_parsed(self, webpage_id: int) -> None:
+        """Set parsed_at to now for the given pizzeria webpage."""
+        with self._session() as session:
+            webpage = session.get(models.Webpages, webpage_id)
+            if not webpage:
+                raise ValueError(f"Webpage with id {webpage_id} not found.")
+            webpage.parsed_at = sa.func.now()  # pylint: disable=not-callable
+
     @staticmethod
     def _upsert_pizzeria(
         session: sa_orm.Session, pizzeria_config: shared_schemas.PizzeriaSchema
     ) -> models.Pizzerias:
-        """Upsert pizzeria, skipping if description already exists."""
+        """Upsert pizzeria, skipping if name already exists."""
         existing = session.scalar(
             select(models.Pizzerias)
             .where(models.Pizzerias.name == pizzeria_config.name)
@@ -113,25 +138,25 @@ class PizzeriaRepository(BaseDatabase):
     @staticmethod
     def _upsert_webpage(
         session: sa_orm.Session,
-        webpage_config: shared_schemas.WebpagesSchema,
-        pizzeria: models.Pizzerias,
+        webpage_config: shared_schemas.WebpageSchema,
+        pizzeria_id: int,
     ) -> models.Webpages:
         """Upsert webpage for the pizzeria, skipping if the url already exists."""
         existing = session.scalar(
             select(models.Webpages)
             .where(
-                models.Webpages.slug == webpage_config.slug,
-                models.Webpages.pizzeria_id == pizzeria.id,
+                models.Webpages.pizzeria_id == pizzeria_id,
+                models.Webpages.url == webpage_config.url,
             )
         )
         if existing:
-            existing.url = webpage_config.url
+            existing.slug = webpage_config.slug
             return existing
 
         webpage = models.Webpages(
             slug=webpage_config.slug,
             url=webpage_config.url,
-            pizzeria_id=pizzeria.id,
+            pizzeria_id=pizzeria_id,
         )
         session.add(webpage)
         return webpage
@@ -140,14 +165,14 @@ class PizzeriaRepository(BaseDatabase):
     def _upsert_ranking(
         session: sa_orm.Session,
         ranking_config: shared_schemas.RankingSchema,
-        pizzeria: models.Pizzerias,
+        pizzeria_id: int,
     ) -> models.Rankings:
         """Upsert rank for top pizzerias, skipping if position already exists."""
         existing = session.scalar(
             select(models.Rankings)
             .where(
                 models.Rankings.edition_id == ranking_config.edition_id,
-                models.Rankings.pizzeria_id == pizzeria.id,
+                models.Rankings.pizzeria_id == pizzeria_id,
             )
         )
         if existing:
@@ -156,7 +181,7 @@ class PizzeriaRepository(BaseDatabase):
 
         ranking = models.Rankings(
             edition_id=ranking_config.edition_id,
-            pizzeria_id=pizzeria.id,
+            pizzeria_id=pizzeria_id,
             position=ranking_config.position,
         )
         session.add(ranking)
@@ -165,15 +190,15 @@ class PizzeriaRepository(BaseDatabase):
     @staticmethod
     def _upsert_award(
         session: sa_orm.Session,
-        award_config: shared_schemas.AwardsSchema,
-        pizzeria: models.Pizzerias,
+        award_config: shared_schemas.AwardSchema,
+        pizzeria_id: int,
     ) -> models.Awards:
         """Upsert awards for special pizzerias, skipping if award already exists."""
         existing = session.scalar(
             select(models.Awards)
             .where(
                 models.Awards.edition_id == award_config.edition_id,
-                models.Awards.pizzeria_id == pizzeria.id,
+                models.Awards.pizzeria_id == pizzeria_id,
             )
         )
         if existing:
@@ -182,7 +207,7 @@ class PizzeriaRepository(BaseDatabase):
 
         award = models.Awards(
             edition_id=award_config.edition_id,
-            pizzeria_id=pizzeria.id,
+            pizzeria_id=pizzeria_id,
             award=award_config.award,
             sponsor=award_config.sponsor,
         )

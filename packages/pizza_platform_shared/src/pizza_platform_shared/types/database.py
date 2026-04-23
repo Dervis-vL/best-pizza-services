@@ -20,6 +20,23 @@ SchemaName = Annotated[
 
 TableName = PostgresName
 
+BucketName = Annotated[
+    str,
+    pydantic.StringConstraints(
+        pattern=r"^[a-z0-9][a-z0-9\-]*[a-z0-9]$",
+        min_length=3,
+        max_length=63,
+    )
+]
+
+Region = Annotated[
+    str,
+    pydantic.StringConstraints(
+        pattern=r"^[a-z]{2}-[a-z]{3}$",
+        max_length=6,
+    )
+]
+
 
 class TableNames(pydantic.BaseModel):
     """Base model for table names. 

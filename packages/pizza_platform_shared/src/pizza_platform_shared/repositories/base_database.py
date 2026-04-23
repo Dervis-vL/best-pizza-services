@@ -40,7 +40,7 @@ class BaseDatabase(ABC):
 
     @classmethod
     def from_settings(cls, db_settings: settings.DatabaseSettings) -> "BaseDatabase":
-        """Create a database instance from settings."""
+        """Create a database repo instance from settings."""
         return cls(
             connection_string=db_settings.connection_string,
             schema_name=db_settings.schema_name,

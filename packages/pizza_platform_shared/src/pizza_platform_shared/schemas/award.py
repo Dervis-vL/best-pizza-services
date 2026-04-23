@@ -5,7 +5,7 @@ import pydantic as pyd
 from pizza_platform_shared.schemas.base import BaseReadSchema
 
 
-class AwardsSchema(pyd.BaseModel):
+class AwardSchema(pyd.BaseModel):
     """Schema for validating special awards data."""
 
     award: str = pyd.Field(max_length=255, description="Awards or specials for the pizzeria")
@@ -13,7 +13,7 @@ class AwardsSchema(pyd.BaseModel):
     edition_id: int = pyd.Field(..., description="Foreign key to the editions table")
 
 
-class AwardsReadSchema(AwardsSchema, BaseReadSchema):
+class AwardReadSchema(AwardSchema, BaseReadSchema):
     """Schema for validating special awards data."""
 
     pizzeria_id: int = pyd.Field(..., description="Foreign key to the pizzerias table")
