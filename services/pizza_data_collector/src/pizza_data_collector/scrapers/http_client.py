@@ -1,8 +1,11 @@
 """HTTP client implementation for pizza data collector service."""
 
+import logging
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from pizza_data_collector.exceptions import URLExtractionError
+
+logger = logging.getLogger(__name__)
 
 
 class HttpClient:  # pylint: disable=too-few-public-methods
@@ -12,14 +15,16 @@ class HttpClient:  # pylint: disable=too-few-public-methods
         """Initializes the HTTP client with an optional timeout."""
         self._timeout = timeout
 
-    def fetch(self, url: str) -> bytes:
+    def fetch(self, url: str) -> bytes | None:
         """Fetches the content of the given URL."""
         try:
             with urlopen(url, timeout=self._timeout) as response:
                 return response.read()
         except HTTPError as e:
-            raise URLExtractionError(f"HTTP {e.code} fetching {url}") from e
+            logger.warning("HTTP %s fetching %s", e.code, url)
         except URLError as e:
-            raise URLExtractionError(f"URL error fetching {url}: {e.reason}") from e
+            logger.warning("URL error fetching %s: %s", url, e.reason)
         except TimeoutError as e:
+            logger.warning("Timeout fetching %s", url)
             raise URLExtractionError(f"Timeout fetching {url}") from e
+        return None
