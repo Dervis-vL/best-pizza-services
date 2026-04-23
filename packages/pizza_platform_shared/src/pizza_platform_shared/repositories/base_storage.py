@@ -23,7 +23,7 @@ class BaseStorage:  # pylint: disable=too-few-public-methods
     def from_settings(cls, storage_settings: settings.PizzaStorageSettings) -> "BaseStorage":
         """Create a storage repo instance from settings."""
         client = boto3.client(
-            "s3",
+            constants.StorageKeys.STORAGE_TYPE,
             endpoint_url=str(storage_settings.endpoint),
             aws_access_key_id=storage_settings.key_id,
             aws_secret_access_key=storage_settings.secret.get_secret_value(),
