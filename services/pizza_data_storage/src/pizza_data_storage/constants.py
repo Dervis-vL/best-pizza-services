@@ -54,4 +54,4 @@ class StorageKeys:
     HTML_SUFFIX: Final[str] = "html"
     JSON_SUFFIX: Final[str] = "json"
     STORAGE_TYPE: Final[str] = "s3"
-    STORAGE_TIER: Final[str] = "STANDARD_IA"
+    STORAGE_TIER: Final[str] = "STANDARD"
