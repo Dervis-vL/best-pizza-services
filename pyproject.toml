@@ -37,6 +37,7 @@ asyncio_mode = "auto"
 addopts = """
     --import-mode=importlib
     --cov=pizza_app
+    --cov=pizza_api
     --cov=pizza_data_collector
     --cov=pizza_data_storage
     --cov=geolocation
