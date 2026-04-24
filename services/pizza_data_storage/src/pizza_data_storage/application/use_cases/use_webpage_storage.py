@@ -24,21 +24,11 @@ class StoreWebpageHtmlUseCase:  # pylint: disable=too-few-public-methods
         model_id: int,
     ) -> str | None:
         """Convert soup to HTML string and store it."""
-        model_name = enums.HtmlModelName.WEBPAGES
-        if self._html_repository.html_exists(
-            model_id=model_id, model_name=model_name
-        ):
-            logger.info(
-                "HTML for model_name=%s and model_id=%d already exists. Skipping save.",
-                model_name,
-                model_id,
-            )
-            return None
         html = soup.prettify()
         return self._html_repository.save_html(
             html=html,
             model_id=model_id,
-            model_name=model_name,
+            model_name=enums.HtmlModelName.WEBPAGES,
         )
 
 
