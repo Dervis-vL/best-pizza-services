@@ -9,8 +9,8 @@ from pizza_platform_shared.schemas.base import BaseReadSchema
 class CategoryBaseSchema(pyd.BaseModel):
     """Schema for validating category data."""
 
-    slug: str = pyd.Field(..., max_length=200, description="URL-friendly slug")
-    name: str = pyd.Field(..., max_length=100, description="Name of the pizza category")
+    slug: str = pyd.Field(..., max_length=50, description="URL-friendly slug")
+    name: str = pyd.Field(..., max_length=50, description="Name of the pizza category")
     description: str | None = pyd.Field(
         None, max_length=500, description="Description of the category"
     )
