@@ -83,7 +83,7 @@ class GeolocationService:
             or addr.get("village")
             or addr.get("municipality")
             or ""
-        )
+        ).split(",")[0].strip().split("-")[0].strip()
         return models.LocationResult(
             country=addr.get("country", ""),
             city=city,

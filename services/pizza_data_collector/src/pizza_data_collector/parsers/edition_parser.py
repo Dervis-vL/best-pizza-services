@@ -30,11 +30,12 @@ class EditionParser:  # pylint: disable=too-few-public-methods
         for card in html_cards_list:
             # Extract data from card
             url = self._urls.extract(html=card)
-            award, sponsor = self._awards.extract(html=card)
+            raw_award, sponsor = self._awards.extract(html=card)
             position = self._positions.extract(html=card)
             if url is None:
                 continue
 
+            award = utils.standardize_award_name(raw_award) if raw_award else None
             slug = utils.extract_pizzeria_name(endpoint_path=url)
             webpage_schema = schemas.WebpageSchema(url=url, slug=slug)
 

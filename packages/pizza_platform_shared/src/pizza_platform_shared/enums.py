@@ -58,6 +58,7 @@ class CategoriesSpecial(BaseCategories):
 class Year(IntEnum):
     """Enum for years of pizza rankings."""
 
+    Y2026 = 2026
     Y2025 = 2025
     Y2024 = 2024
     Y2023 = 2023

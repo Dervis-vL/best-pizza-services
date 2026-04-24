@@ -15,10 +15,10 @@ class LocationSchema(pyd.BaseModel):
         default=None, max_length=250, description="Adress of the pizzeria"
     )
     city: str | None = pyd.Field(
-        default=None, max_length=100, description="City of the pizzeria"
+        default=None, max_length=50, description="City of the pizzeria"
     )
     country: str | None = pyd.Field(
-        default=None, max_length=100, description="Country of the pizzeria"
+        default=None, max_length=50, description="Country of the pizzeria"
     )
     latitude: float | None = pyd.Field(..., description="Lat of the pizzeria")
     longitude: float | None = pyd.Field(..., description="Lng of the pizzeria")

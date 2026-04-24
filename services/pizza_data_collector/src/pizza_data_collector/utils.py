@@ -1,5 +1,27 @@
 """Utility functions for the scraper."""
 
+from pizza_platform_shared import enums as shared_enums
+
+
+def standardize_award_name(raw_award_name: str) -> str:
+    """Standardize award name by:
+        - Stripping "-" and everything after it (e.g. "Best Pizza - Italy" -> "Best Pizza")
+        - Stripping leading and trailing whitespace
+        - Removing trailing year (e.g. "Best Pizza 2023" -> "Best Pizza")
+        - Uppercasing first letter of each word (e.g. "best pizza" -> "Best Pizza")
+    """
+    # Strip "-" and everything after it
+    award_name = raw_award_name.split("-")[0]
+    # Strip whitespace
+    award_name = award_name.strip()
+    # Remove trailing year
+    words = award_name.split()
+    if words and words[-1] in map(str, shared_enums.Year):
+        award_name = " ".join(words[:-1])
+    # Uppercase first letter of each word
+    award_name = award_name.title()
+    return award_name
+
 
 def extract_pizzeria_name(endpoint_path: str) -> str:
     """Extract pizzeria name from URL path, stripping date and version suffixes.
