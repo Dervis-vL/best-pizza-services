@@ -1,22 +1,14 @@
 """Parse all unparsed pizzeria webpages use case."""
 
-from dataclasses import dataclass
-
 from geolocation.application import use_cases as geo_use_cases
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
 
-
-@dataclass
-class ParseWebpagesResult:
-    """Result of parsing all unparsed pizzeria webpages."""
-
-    parsed: int
-    skipped: int  # HTML not in storage yet
+from pizza_api.application import results
 
 
-class ParseWebpagesUseCase:
-    """Parse stored HTML for every unparsed webpage, enrich with geolocation, and seed the location."""
+class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
+    """Parse stored HTML for every unparsed webpage, enrich with geolocation, seed location."""
 
     def __init__(
         self,
@@ -37,7 +29,7 @@ class ParseWebpagesUseCase:
         self._mark_parsed_uc = mark_parsed_uc
         self._seed_location_uc = seed_location_uc
 
-    def execute(self) -> ParseWebpagesResult:
+    def execute(self) -> results.ParseWebpagesResult:
         """Execute the use case."""
         unparsed = self._get_webpages_uc.execute(only_unparsed=True)
         parsed, skipped = 0, 0
@@ -51,4 +43,4 @@ class ParseWebpagesUseCase:
             self._mark_parsed_uc.execute(webpage_id=webpage.id)
             self._seed_location_uc.execute(location_config=enriched)
             parsed += 1
-        return ParseWebpagesResult(parsed=parsed, skipped=skipped)
+        return results.ParseWebpagesResult(parsed=parsed, skipped=skipped)

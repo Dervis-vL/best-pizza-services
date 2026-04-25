@@ -1,20 +1,12 @@
 """Scrape all unscraped pizzeria webpages use case."""
 
-from dataclasses import dataclass
-
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
 
-
-@dataclass
-class ScrapeWebpagesResult:
-    """Result of scraping all unscraped pizzeria webpages."""
-
-    scraped: int
-    failed: int
+from pizza_api.application import results
 
 
-class ScrapeWebpagesUseCase:
+class ScrapeWebpagesUseCase:  # pylint: disable=too-few-public-methods
     """Fetch and store HTML for every unscraped pizzeria webpage."""
 
     def __init__(
@@ -30,7 +22,7 @@ class ScrapeWebpagesUseCase:
         self._store_html_uc = store_html_uc
         self._mark_scraped_uc = mark_scraped_uc
 
-    def execute(self) -> ScrapeWebpagesResult:
+    def execute(self) -> results.ScrapeWebpagesResult:
         """Execute the use case."""
         unscraped = self._get_webpages_uc.execute(only_unscraped=True)
         scraped, failed = 0, 0
@@ -42,4 +34,4 @@ class ScrapeWebpagesUseCase:
             self._store_html_uc.execute(soup=soup, model_id=webpage.id)
             self._mark_scraped_uc.execute(webpage_id=webpage.id)
             scraped += 1
-        return ScrapeWebpagesResult(scraped=scraped, failed=failed)
+        return results.ScrapeWebpagesResult(scraped=scraped, failed=failed)

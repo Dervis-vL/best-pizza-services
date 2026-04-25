@@ -1,20 +1,12 @@
 """Parse all unparsed editions use case."""
 
-from dataclasses import dataclass
-
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
 
-
-@dataclass
-class ParseEditionsResult:
-    """Result of parsing all unparsed editions."""
-
-    parsed: int
-    skipped: int  # HTML not in storage yet
+from pizza_api.application import results
 
 
-class ParseEditionsUseCase:
+class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
     """Parse stored HTML for every unparsed edition and seed the resulting pizzerias."""
 
     def __init__(
@@ -34,7 +26,7 @@ class ParseEditionsUseCase:
         self._mark_parsed_uc = mark_parsed_uc
         self._seed_pizzerias_uc = seed_pizzerias_uc
 
-    def execute(self) -> ParseEditionsResult:
+    def execute(self) -> results.ParseEditionsResult:
         """Execute the use case."""
         unparsed = self._get_editions_uc.execute(only_unparsed=True)
         parsed, skipped = 0, 0
@@ -47,4 +39,4 @@ class ParseEditionsUseCase:
             self._mark_parsed_uc.execute(edition_id=edition.id)
             self._seed_pizzerias_uc.execute(config_schema=pizzerias)
             parsed += 1
-        return ParseEditionsResult(parsed=parsed, skipped=skipped)
+        return results.ParseEditionsResult(parsed=parsed, skipped=skipped)

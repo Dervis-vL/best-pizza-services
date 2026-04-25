@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "pizza_api"
 version = "0.1.0"
-description = "The pizza platform API"
+description = "The pizza platform API for managing and scraping data."
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.13"
