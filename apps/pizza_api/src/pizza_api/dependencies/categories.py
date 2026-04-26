@@ -1,5 +1,8 @@
 """Category dependency providers."""
 
+from typing import Annotated
+
+from fastapi import Depends
 from geolocation import GeolocationService
 from geolocation.application import use_cases as geo_use_cases
 from pizza_data_collector import models as collector_models, parsers, scrapers
@@ -7,7 +10,7 @@ from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
 
 from pizza_api.application import use_cases
-from pizza_api.dependencies.dep_types import RankingRepoDep, PizzeriaRepoDep, HtmlRepoDep
+from pizza_api.dependencies.repositories import RankingRepoDep, PizzeriaRepoDep, HtmlRepoDep
 
 
 def get_add_category_uc(
@@ -84,3 +87,6 @@ def get_add_category_uc(
             ),
         ),
     )
+
+
+AddCategoryUCDep = Annotated[use_cases.AddCategoryUseCase, Depends(get_add_category_uc)]

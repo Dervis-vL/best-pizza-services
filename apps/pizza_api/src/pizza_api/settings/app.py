@@ -15,6 +15,7 @@ class ApplicationSettings(pyd_settings.BaseSettings):
         env_prefix="PIZZA_API_",
         env_file=".env",
         env_file_encoding="utf-8",
+        extra="ignore",
     )
 
     title: Annotated[

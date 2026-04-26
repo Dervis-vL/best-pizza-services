@@ -6,8 +6,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 
 from pizza_api.dependencies.engine import create_engine
-from pizza_api.routers import categories
-from pizza_api import settings
+from pizza_api import routers, settings
 
 
 @asynccontextmanager
@@ -25,7 +24,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.include_router(categories.router)
+app.include_router(routers.categories.router)
+app.include_router(routers.maintenance.router)
 
 # # create an app with a title and description
 # if os.getenv("FUNCTIONS_WORKER_RUNTIME"):

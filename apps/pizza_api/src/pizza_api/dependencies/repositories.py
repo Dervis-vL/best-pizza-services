@@ -1,9 +1,12 @@
 """Repository dependencies for the pizza API."""
 
+from typing import Annotated
+
+from fastapi import Depends
 from pizza_data_storage import repositories as storage_repos
 from pizza_data_storage import settings as storage_settings
 
-from pizza_api.dependencies.dep_types import EngineDep
+from pizza_api.dependencies.engine import EngineDep
 
 
 def get_ranking_repo(engine: EngineDep) -> storage_repos.RankingsRepository:
@@ -21,3 +24,8 @@ def get_html_repo() -> storage_repos.HtmlStorageRepository:
     return storage_repos.HtmlStorageRepository.from_settings(
         storage_settings=storage_settings.pizza_storage,
     )
+
+
+RankingRepoDep = Annotated[storage_repos.RankingsRepository, Depends(get_ranking_repo)]
+PizzeriaRepoDep = Annotated[storage_repos.PizzeriaRepository, Depends(get_pizzeria_repo)]
+HtmlRepoDep = Annotated[storage_repos.HtmlStorageRepository, Depends(get_html_repo)]
