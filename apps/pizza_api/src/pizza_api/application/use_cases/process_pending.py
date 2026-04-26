@@ -1,11 +1,6 @@
 """Process all unscraped and unparsed items use case."""
 
-from pizza_api.application.use_cases.parse_editions import ParseEditionsUseCase
-from pizza_api.application.use_cases.parse_webpages import ParseWebpagesUseCase
-from pizza_api.application.use_cases.scrape_editions import ScrapeEditionsUseCase
-from pizza_api.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
-
-from pizza_api.application import results
+from pizza_api.application import use_cases, results
 
 
 class ProcessPendingUseCase:  # pylint: disable=too-few-public-methods
@@ -13,10 +8,10 @@ class ProcessPendingUseCase:  # pylint: disable=too-few-public-methods
 
     def __init__(
         self,
-        scrape_editions_uc: ScrapeEditionsUseCase,
-        parse_editions_uc: ParseEditionsUseCase,
-        scrape_webpages_uc: ScrapeWebpagesUseCase,
-        parse_webpages_uc: ParseWebpagesUseCase,
+        scrape_editions_uc: use_cases.ScrapeEditionsUseCase,
+        parse_editions_uc: use_cases.ParseEditionsUseCase,
+        scrape_webpages_uc: use_cases.ScrapeWebpagesUseCase,
+        parse_webpages_uc: use_cases.ParseWebpagesUseCase,
     ) -> None:
         """Initialize the use case."""
         self._scrape_editions_uc = scrape_editions_uc

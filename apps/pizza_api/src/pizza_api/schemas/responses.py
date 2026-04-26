@@ -30,3 +30,14 @@ class AddCategoryResponse(pyd.BaseModel):
     editions_parsed: ParseResultSchema
     webpages_scraped: ScrapeResultSchema
     webpages_parsed: ParseResultSchema
+
+
+class ProcessPendingResponse(pyd.BaseModel):
+    """Response body for a completed process-pending cycle."""
+
+    model_config = pyd.ConfigDict(from_attributes=True)
+
+    editions_scraped: ScrapeResultSchema
+    editions_parsed: ParseResultSchema
+    webpages_scraped: ScrapeResultSchema
+    webpages_parsed: ParseResultSchema

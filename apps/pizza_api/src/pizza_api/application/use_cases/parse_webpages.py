@@ -32,15 +32,21 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
     def execute(self) -> results.ParseWebpagesResult:
         """Execute the use case."""
         unparsed = self._get_webpages_uc.execute(only_unparsed=True)
+        unscraped_ids = [
+            webpage.id for webpage in self._get_webpages_uc.execute(only_unscraped=True)
+        ]
+        # Tracker for response
         parsed, skipped = 0, 0
         for webpage in unparsed:
-            if not self._html_exists_uc.execute(model_id=webpage.id):
+            if webpage.id not in unscraped_ids:
+                soup = self._get_html_uc.execute(model_id=webpage.id)
+                location = self._parse_pizzeria_uc.execute(
+                    soup=soup, pizzeria_id=webpage.pizzeria_id
+                )
+                enriched = self._enrich_geo_uc.execute(location=location)
+                self._seed_location_uc.execute(location_config=enriched)
+                self._mark_parsed_uc.execute(webpage_id=webpage.id)
+                parsed += 1
+            else:
                 skipped += 1
-                continue
-            soup = self._get_html_uc.execute(model_id=webpage.id)
-            location = self._parse_pizzeria_uc.execute(soup=soup, pizzeria_id=webpage.pizzeria_id)
-            enriched = self._enrich_geo_uc.execute(location=location)
-            self._mark_parsed_uc.execute(webpage_id=webpage.id)
-            self._seed_location_uc.execute(location_config=enriched)
-            parsed += 1
         return results.ParseWebpagesResult(parsed=parsed, skipped=skipped)

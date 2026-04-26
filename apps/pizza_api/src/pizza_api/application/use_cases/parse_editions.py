@@ -29,14 +29,18 @@ class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
     def execute(self) -> results.ParseEditionsResult:
         """Execute the use case."""
         unparsed = self._get_editions_uc.execute(only_unparsed=True)
+        unscraped_ids = [
+            edition.id for edition in self._get_editions_uc.execute(only_unscraped=True)
+        ]
+        # Tracker for response
         parsed, skipped = 0, 0
         for edition in unparsed:
-            if not self._html_exists_uc.execute(model_id=edition.id):
+            if edition.id not in unscraped_ids:
+                soup = self._get_html_uc.execute(model_id=edition.id)
+                pizzerias = self._parse_edition_uc.execute(soup=soup, edition_id=edition.id)
+                self._seed_pizzerias_uc.execute(config_schema=pizzerias)
+                self._mark_parsed_uc.execute(edition_id=edition.id)
+                parsed += 1
+            else:
                 skipped += 1
-                continue
-            soup = self._get_html_uc.execute(model_id=edition.id)
-            pizzerias = self._parse_edition_uc.execute(soup=soup, edition_id=edition.id)
-            self._mark_parsed_uc.execute(edition_id=edition.id)
-            self._seed_pizzerias_uc.execute(config_schema=pizzerias)
-            parsed += 1
         return results.ParseEditionsResult(parsed=parsed, skipped=skipped)

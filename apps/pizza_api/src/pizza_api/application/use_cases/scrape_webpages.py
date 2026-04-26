@@ -24,9 +24,9 @@ class ScrapeWebpagesUseCase:  # pylint: disable=too-few-public-methods
 
     def execute(self) -> results.ScrapeWebpagesResult:
         """Execute the use case."""
-        unscraped = self._get_webpages_uc.execute(only_unscraped=True)
+        unscraped_list = self._get_webpages_uc.execute(only_unscraped=True)
         scraped, failed = 0, 0
-        for webpage in unscraped:
+        for webpage in unscraped_list:
             soup = self._scrape_uc.execute(url=webpage.url)
             if not soup:
                 failed += 1

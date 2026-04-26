@@ -1,16 +1,9 @@
 """Repository dependencies for the pizza API."""
 
-from typing import Annotated
-
-from fastapi import Depends
-from sqlalchemy.engine import Engine
-
 from pizza_data_storage import repositories as storage_repos
 from pizza_data_storage import settings as storage_settings
 
-from pizza_api.dependencies.engine import get_engine
-
-EngineDep = Annotated[Engine, Depends(get_engine)]
+from pizza_api.dependencies.dep_types import EngineDep
 
 
 def get_ranking_repo(engine: EngineDep) -> storage_repos.RankingsRepository:
