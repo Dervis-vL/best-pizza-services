@@ -12,7 +12,6 @@ class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
     def __init__(
         self,
         get_editions_uc: storage_use_cases.GetEditionsUseCase,
-        html_exists_uc: storage_use_cases.EditionHtmlExistsUseCase,
         get_html_uc: storage_use_cases.GetEditionHtmlUseCase,
         parse_edition_uc: collector_use_cases.ParseEditionUseCase,
         mark_parsed_uc: storage_use_cases.MarkEditionAsParsedUseCase,
@@ -20,7 +19,6 @@ class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
     ) -> None:
         """Initialize the use case."""
         self._get_editions_uc = get_editions_uc
-        self._html_exists_uc = html_exists_uc
         self._get_html_uc = get_html_uc
         self._parse_edition_uc = parse_edition_uc
         self._mark_parsed_uc = mark_parsed_uc
