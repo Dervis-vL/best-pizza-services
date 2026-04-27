@@ -21,7 +21,3 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pizza_platform_shared"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-asyncio_mode = "auto"
