@@ -13,7 +13,6 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
     def __init__(
         self,
         get_webpages_uc: storage_use_cases.GetWebpagesUseCase,
-        html_exists_uc: storage_use_cases.WebpageHtmlExistsUseCase,
         get_html_uc: storage_use_cases.GetWebpageHtmlUseCase,
         parse_pizzeria_uc: collector_use_cases.ParsePizzeriaUseCase,
         enrich_geo_uc: geo_use_cases.EnrichGeolocationUseCase,
@@ -22,7 +21,6 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
     ) -> None:
         """Initialize the use case."""
         self._get_webpages_uc = get_webpages_uc
-        self._html_exists_uc = html_exists_uc
         self._get_html_uc = get_html_uc
         self._parse_pizzeria_uc = parse_pizzeria_uc
         self._enrich_geo_uc = enrich_geo_uc
