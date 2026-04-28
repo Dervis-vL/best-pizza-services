@@ -47,13 +47,20 @@ class CardPatterns(BasePattern):
     RankingPositionPatterns or AwarsNamePatterns on each chunk to extract URL and position.
     """
 
-    # Special awards (2022+): must be first pattern since award pages also have id="scheda" anchors
+    # Special awards (2022+): must be first since award pages also have id="scheda" anchors
     testo_card: re.Pattern[str] = re.compile(
         r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
         re.DOTALL,
     )
 
-    # Modern (2022+): <a id="scheda" href="...referenza/...">...</a>
+    # 2022+: <a href="...referenza/recensione/..."> — more specific than scheda_id because
+    # some pages reuse id="scheda" on sponsor/partner cards that don't link to referenza URLs.
+    referenza_href: re.Pattern[str] = re.compile(
+        r'<a\b[^>]*\bhref="https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]*"[^>]*>.*?</a>',
+        re.DOTALL,
+    )
+
+    # Legacy fallback: <a id="scheda"> without a referenza/recensione href
     scheda_id: re.Pattern[str] = re.compile(
         r'<a\b[^>]*id="scheda"[^>]*>.*?</a>',
         re.DOTALL,
