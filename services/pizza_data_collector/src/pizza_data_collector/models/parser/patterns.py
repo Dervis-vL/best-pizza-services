@@ -68,7 +68,7 @@ class CardPatterns(BasePattern):
 
     # Older (2020): <a class="...altezza-NNN-desktop..." href="...recensione/...">...</a>
     altezza_class: re.Pattern[str] = re.compile(
-        r'<a\b[^>]*\baltezza-\d+-desktop\b[^>]*>.*?</a>',
+        r"<a\b[^>]*\baltezza-\d+-desktop\b[^>]*>.*?</a>",
         re.DOTALL,
     )
 
@@ -86,7 +86,7 @@ class URLPatterns(BasePattern):
     Pattern for extracting the raw url string.
     """
 
-    pizzeria_url: re.Pattern[str] =re.compile(
+    pizzeria_url: re.Pattern[str] = re.compile(
         r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"'
     )
 
@@ -214,9 +214,9 @@ class AwardNamePatterns(BasePattern):
     """
 
     grigioscuro_h2: re.Pattern[str] = re.compile(
-        r'<h2\b[^>]*\bgrigioscuro\b[^>]*>'
-        r'\s*(?P<award>.+?)<br\s*/?>'
-        r'(?P<sponsor>.+?)\s*</h2>',
+        r"<h2\b[^>]*\bgrigioscuro\b[^>]*>"
+        r"\s*(?P<award>.+?)<br\s*/?>"
+        r"(?P<sponsor>.+?)\s*</h2>",
         re.DOTALL,
     )
 
