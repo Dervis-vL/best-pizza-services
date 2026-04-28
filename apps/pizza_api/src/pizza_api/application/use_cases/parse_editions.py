@@ -1,9 +1,15 @@
 """Parse all unparsed editions use case."""
 
+import logging
+
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
 
 from pizza_api.application import results
+
+logger = logging.getLogger(__name__)
+
+_MIN_CARDS_THRESHOLD = 30
 
 
 class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
@@ -31,14 +37,28 @@ class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
             edition.id for edition in self._get_editions_uc.execute(only_unscraped=True)
         ]
         # Tracker for response
-        parsed, skipped = 0, 0
+        parsed, skipped, failed = 0, 0, 0
         for edition in unparsed:
-            if edition.id not in unscraped_ids:
-                soup = self._get_html_uc.execute(model_id=edition.id)
-                pizzerias = self._parse_edition_uc.execute(soup=soup, edition_id=edition.id)
-                self._seed_pizzerias_uc.execute(config_schema=pizzerias)
-                self._mark_parsed_uc.execute(edition_id=edition.id)
-                parsed += 1
-            else:
+            if edition.id in unscraped_ids:
                 skipped += 1
-        return results.ParseEditionsResult(parsed=parsed, skipped=skipped)
+                continue
+
+            soup = self._get_html_uc.execute(model_id=edition.id)
+            pizzerias = self._parse_edition_uc.execute(soup=soup, edition_id=edition.id)
+
+            if not pizzerias:
+                logger.warning("No pizzerias parsed for edition %s", edition.id)
+                failed += 1
+                continue
+            elif len(pizzerias) < _MIN_CARDS_THRESHOLD:
+                logger.warning(
+                    "Only %s pizzerias parsed for edition %s", len(pizzerias), edition.id
+                )
+                failed += 1
+                continue
+
+            self._seed_pizzerias_uc.execute(config_schema=pizzerias)
+            self._mark_parsed_uc.execute(edition_id=edition.id)
+            parsed += 1
+
+        return results.ParseEditionsResult(parsed=parsed, skipped=skipped, failed=failed)

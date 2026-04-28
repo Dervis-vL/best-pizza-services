@@ -19,6 +19,7 @@ class ParseResultSchema(pyd.BaseModel):
 
     parsed: int
     skipped: int
+    failed: int
 
 
 class AddCategoryResponse(pyd.BaseModel):
