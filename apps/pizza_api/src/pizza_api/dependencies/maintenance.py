@@ -52,7 +52,6 @@ def get_process_pending_uc(
         ),
         parse_editions_uc=use_cases.ParseEditionsUseCase(
             get_editions_uc=storage_use_cases.GetEditionsUseCase(ranking_repository=ranking_repo),
-            html_exists_uc=storage_use_cases.EditionHtmlExistsUseCase(html_repository=html_repo),
             get_html_uc=storage_use_cases.GetEditionHtmlUseCase(html_repository=html_repo),
             parse_edition_uc=parse_edition_uc,
             mark_parsed_uc=storage_use_cases.MarkEditionAsParsedUseCase(
@@ -72,7 +71,6 @@ def get_process_pending_uc(
         ),
         parse_webpages_uc=use_cases.ParseWebpagesUseCase(
             get_webpages_uc=storage_use_cases.GetWebpagesUseCase(pizza_repository=pizzeria_repo),
-            html_exists_uc=storage_use_cases.WebpageHtmlExistsUseCase(html_repository=html_repo),
             get_html_uc=storage_use_cases.GetWebpageHtmlUseCase(html_repository=html_repo),
             parse_pizzeria_uc=parse_pizzeria_uc,
             enrich_geo_uc=enrich_geo_uc,

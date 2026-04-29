@@ -36,6 +36,7 @@ class ParseWebpagesResult:
 
     parsed: int
     skipped: int  # HTML not in storage yet
+    failed: int = 0
 
 
 @dataclass
