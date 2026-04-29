@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PIZZA_DB_USER_NAME:-best_pizza_user}
+      POSTGRES_PASSWORD: ${PIZZA_DB_PASSWORD:-PizzaMario4321}
+      POSTGRES_DB: ${PIZZA_DB_NAME:-pizza_platform}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PIZZA_DB_USER_NAME:-best_pizza_user}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  pizza_api:
+    build:
+      context: .
+      dockerfile: apps/pizza_api/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Override host to use the compose service name instead of localhost
+      PIZZA_DB_HOST: db
+      MAINTENANCE_DB_HOST: db
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  pizza_app:
+    build:
+      context: .
+      dockerfile: apps/pizza_app/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PIZZA_DB_HOST: db
+    ports:
+      - "8501:8501"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
