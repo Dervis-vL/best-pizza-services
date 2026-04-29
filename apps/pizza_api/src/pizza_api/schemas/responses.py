@@ -43,3 +43,4 @@ class ProcessPendingResponse(pyd.BaseModel):
     editions_parsed: ParseResultSchema
     webpages_scraped: ScrapeResultSchema
     webpages_parsed: ParseResultSchema
+    warnings: list[str] = []

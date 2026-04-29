@@ -1,11 +1,16 @@
 """Routers for maintenance endpoints."""
 
+import logging
+
 from fastapi import APIRouter, status
 
 from pizza_api import dependencies
+from pizza_api.application.logging import WarningCaptureHandler
 from pizza_api.schemas import responses
 
 router = APIRouter(prefix="/maintenance", tags=["maintenance"])
+
+_pizza_api_logger = logging.getLogger("pizza_api")
 
 
 @router.post(
@@ -18,5 +23,13 @@ def process_pending(
     use_case: dependencies.ProcessPendingUCDep,
 ) -> responses.ProcessPendingResponse:
     """Scrape and parse all pending editions and pizzeria webpages."""
-    result = use_case.execute()
-    return responses.ProcessPendingResponse.model_validate(result, from_attributes=True)
+    handler = WarningCaptureHandler()
+    _pizza_api_logger.addHandler(handler)
+    try:
+        result = use_case.execute()
+    finally:
+        _pizza_api_logger.removeHandler(handler)
+
+    response =  responses.ProcessPendingResponse.model_validate(result, from_attributes=True)
+    response.warnings = handler.warnings
+    return response
