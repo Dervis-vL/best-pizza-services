@@ -19,6 +19,7 @@ class ParseResultSchema(pyd.BaseModel):
 
     parsed: int
     skipped: int
+    failed: int
 
 
 class AddCategoryResponse(pyd.BaseModel):
@@ -30,6 +31,7 @@ class AddCategoryResponse(pyd.BaseModel):
     editions_parsed: ParseResultSchema
     webpages_scraped: ScrapeResultSchema
     webpages_parsed: ParseResultSchema
+    warnings: list[str] = []
 
 
 class ProcessPendingResponse(pyd.BaseModel):
@@ -41,3 +43,4 @@ class ProcessPendingResponse(pyd.BaseModel):
     editions_parsed: ParseResultSchema
     webpages_scraped: ScrapeResultSchema
     webpages_parsed: ParseResultSchema
+    warnings: list[str] = []

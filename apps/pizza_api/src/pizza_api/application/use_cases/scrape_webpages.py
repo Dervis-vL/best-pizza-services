@@ -28,7 +28,7 @@ class ScrapeWebpagesUseCase:  # pylint: disable=too-few-public-methods
         scraped, failed = 0, 0
         for webpage in unscraped_list:
             soup = self._scrape_uc.execute(url=webpage.url)
-            if not soup:
+            if soup is None:
                 failed += 1
                 continue
             self._store_html_uc.execute(soup=soup, model_id=webpage.id)

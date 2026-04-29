@@ -19,6 +19,7 @@ class ParseEditionsResult:
 
     parsed: int
     skipped: int  # HTML not in storage yet
+    failed: int = 0  # Parsed but yielded too few results; not marked as parsed
 
 
 @dataclass
@@ -35,6 +36,7 @@ class ParseWebpagesResult:
 
     parsed: int
     skipped: int  # HTML not in storage yet
+    failed: int = 0
 
 
 @dataclass
