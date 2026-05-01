@@ -5,7 +5,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 WORKDIR /app
 
 ENV UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy
+    UV_LINK_MODE=copy \
+    UV_PYTHON_DOWNLOADS=0
 
 # Copy workspace manifests first — this layer is cached unless deps change
 COPY pyproject.toml uv.lock ./
@@ -18,7 +19,7 @@ COPY services/geolocation/pyproject.toml services/geolocation/pyproject.toml
 
 # Install all external dependencies without the workspace packages themselves
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --package pizza_app --no-dev --frozen --no-install-project
+    uv sync --package pizza_app --no-dev --frozen --no-install-workspace
 
 # Copy only the source trees needed by pizza_app and its workspace deps
 COPY apps/pizza_app/src apps/pizza_app/src
@@ -26,7 +27,7 @@ COPY packages/pizza_platform_shared/src packages/pizza_platform_shared/src
 
 # Install workspace packages as non-editable wheels so only .venv is needed at runtime
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --package pizza_app --no-dev --frozen --no-editable
+    uv sync --package pizza_app --no-dev --locked --no-editable
 
 
 FROM python:3.13-slim AS production
@@ -36,7 +37,6 @@ WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 
 ENV PATH="/app/.venv/bin:$PATH" \
-    PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 RUN groupadd --system appgroup && \
