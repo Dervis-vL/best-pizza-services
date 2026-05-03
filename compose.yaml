@@ -1,50 +1,57 @@
 services:
-  db:
-    image: postgres:16
+  minio:
+    image: minio/minio:latest
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${PIZZA_DB_USER_NAME:-best_pizza_user}
-      POSTGRES_PASSWORD: ${PIZZA_DB_PASSWORD:-PizzaMario4321}
-      POSTGRES_DB: ${PIZZA_DB_NAME:-pizza_platform}
+      MINIO_ROOT_USER: ${STORAGE_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET:-minioadmin}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - minio_data:/data
+    ports:
+      - "9000:9000"  # API port
+      - "9001:9001"  # Console port
+    command: server /data --console-address ":9001"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PIZZA_DB_USER_NAME:-best_pizza_user}"]
+      test: ["CMD", "mc", "ready", "local"]
       interval: 5s
       timeout: 5s
       retries: 5
-    ports:
-      - "5432:5432"
 
   pizza_api:
     build:
       context: .
       dockerfile: apps/pizza_api/Dockerfile
     restart: unless-stopped
-    env_file: .env
+    env_file: .env.local
     environment:
       # Override host to use the compose service name instead of localhost
-      PIZZA_DB_HOST: db
-      MAINTENANCE_DB_HOST: db
+      STORAGE_ENDPOINT: http://minio:9000
+      STORAGE_KEY_ID: ${STORAGE_KEY_ID:-minioadmin}
+      STORAGE_SECRET: ${STORAGE_SECRET:-minioadmin}
+      STORAGE_BUCKET: pizza-html
+      STORAGE_REGION: fr-par
+    depends_on:
+      minio:
+        condition: service_healthy
     ports:
       - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
 
   pizza_app:
     build:
       context: .
       dockerfile: apps/pizza_app/Dockerfile
-    restart: unless-stopped
-    env_file: .env
+    env_file: .env.local
     environment:
-      PIZZA_DB_HOST: db
+      SQLITE_DB_PATH: /data/pizza_app.db
+    volumes:
+      - ./data/pizza.db:/app/data/pizza.db:ro
     ports:
       - "8501:8501"
     depends_on:
-      db:
-        condition: service_healthy
+      - pizza_api
 
 volumes:
   pgdata:
+    name: pizza_pgdata
+  minio_data:
+    name: pizza_minio_data
