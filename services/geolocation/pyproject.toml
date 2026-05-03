@@ -17,3 +17,6 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/geolocation"]
+
+[tool.uv.sources]
+pizza-platform-shared = { workspace = true }

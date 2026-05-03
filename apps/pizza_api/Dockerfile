@@ -11,11 +11,17 @@ ENV UV_COMPILE_BYTECODE=1 \
 # Copy workspace first; this layer is cached unless deps change
 COPY pyproject.toml uv.lock ./
 COPY apps/pizza_api/pyproject.toml apps/pizza_api/pyproject.toml
+COPY apps/pizza_api/README.md apps/pizza_api/README.md
 COPY apps/pizza_app/pyproject.toml apps/pizza_app/pyproject.toml
+COPY apps/pizza_app/README.md apps/pizza_app/README.md
 COPY packages/pizza_platform_shared/pyproject.toml packages/pizza_platform_shared/pyproject.toml
+COPY packages/pizza_platform_shared/README.md packages/pizza_platform_shared/README.md
 COPY services/pizza_data_collector/pyproject.toml services/pizza_data_collector/pyproject.toml
+COPY services/pizza_data_collector/README.md services/pizza_data_collector/README.md
 COPY services/pizza_data_storage/pyproject.toml services/pizza_data_storage/pyproject.toml
+COPY services/pizza_data_storage/README.md services/pizza_data_storage/README.md
 COPY services/geolocation/pyproject.toml services/geolocation/pyproject.toml
+COPY services/geolocation/README.md services/geolocation/README.md
 
 # Install external dependencies without the workspace packages themselves
 RUN --mount=type=cache,target=/root/.cache/uv \
