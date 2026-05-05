@@ -1,10 +1,8 @@
 """Pizza platform API."""
 
-from pathlib import Path
-
-import tomllib
+from importlib.metadata import metadata
 
 
-_pyproject = tomllib.loads((Path(__file__).parent.parent.parent / "pyproject.toml").read_text())
-__version__ = _pyproject["project"]["version"]
-__description__ = _pyproject["project"]["description"]
+_metadata = metadata("pizza-api")
+__version__ = _metadata["Version"]
+__description__ = _metadata["Summary"]
