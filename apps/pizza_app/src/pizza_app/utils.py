@@ -45,10 +45,14 @@ def make_on_city_change(
     country_col: str,
 ) -> Callable:
     """Factory to return the on change callback"""
+
     def on_city_change() -> None:
         city = st.session_state[constants.QueryParam.CITY]
         if city != constants.Filters.DEFAULT:
             match = relevant_locations[relevant_locations[city_col] == city]
             if not match.empty:
-                st.session_state[constants.QueryParam.COUNTRY] = match.iloc[0][country_col]
+                st.session_state[constants.QueryParam.COUNTRY] = match.iloc[0][
+                    country_col
+                ]
+
     return on_city_change

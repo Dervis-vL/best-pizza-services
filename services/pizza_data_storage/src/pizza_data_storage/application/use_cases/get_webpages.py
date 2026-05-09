@@ -20,6 +20,9 @@ class GetWebpagesUseCase:  # pylint: disable=too-few-public-methods
             only_unscraped=only_unscraped,
             only_unparsed=only_unparsed,
         )
-        return [shared_schemas.WebpageReadSchema.model_validate(
-            webpage, from_attributes=True
-        ) for webpage in webpages_models]
+        return [
+            shared_schemas.WebpageReadSchema.model_validate(
+                webpage, from_attributes=True
+            )
+            for webpage in webpages_models
+        ]

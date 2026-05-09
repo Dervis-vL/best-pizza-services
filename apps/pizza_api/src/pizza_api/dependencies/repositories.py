@@ -27,5 +27,7 @@ def get_html_repo() -> storage_repos.HtmlStorageRepository:
 
 
 RankingRepoDep = Annotated[storage_repos.RankingsRepository, Depends(get_ranking_repo)]
-PizzeriaRepoDep = Annotated[storage_repos.PizzeriaRepository, Depends(get_pizzeria_repo)]
+PizzeriaRepoDep = Annotated[
+    storage_repos.PizzeriaRepository, Depends(get_pizzeria_repo)
+]
 HtmlRepoDep = Annotated[storage_repos.HtmlStorageRepository, Depends(get_html_repo)]

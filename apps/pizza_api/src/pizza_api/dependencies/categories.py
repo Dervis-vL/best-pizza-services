@@ -10,7 +10,11 @@ from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
 
 from pizza_api.application import use_cases
-from pizza_api.dependencies.repositories import RankingRepoDep, PizzeriaRepoDep, HtmlRepoDep
+from pizza_api.dependencies.repositories import (
+    RankingRepoDep,
+    PizzeriaRepoDep,
+    HtmlRepoDep,
+)
 
 
 def get_add_category_uc(
@@ -46,16 +50,24 @@ def get_add_category_uc(
             ranking_repository=ranking_repo,
         ),
         scrape_editions_uc=use_cases.ScrapeEditionsUseCase(
-            get_editions_uc=storage_use_cases.GetEditionsUseCase(ranking_repository=ranking_repo),
+            get_editions_uc=storage_use_cases.GetEditionsUseCase(
+                ranking_repository=ranking_repo
+            ),
             scrape_uc=scrape_uc,
-            store_html_uc=storage_use_cases.StoreEditionHtmlUseCase(html_repository=html_repo),
+            store_html_uc=storage_use_cases.StoreEditionHtmlUseCase(
+                html_repository=html_repo
+            ),
             mark_scraped_uc=storage_use_cases.MarkEditionAsScrapedUseCase(
                 ranking_repository=ranking_repo
             ),
         ),
         parse_editions_uc=use_cases.ParseEditionsUseCase(
-            get_editions_uc=storage_use_cases.GetEditionsUseCase(ranking_repository=ranking_repo),
-            get_html_uc=storage_use_cases.GetEditionHtmlUseCase(html_repository=html_repo),
+            get_editions_uc=storage_use_cases.GetEditionsUseCase(
+                ranking_repository=ranking_repo
+            ),
+            get_html_uc=storage_use_cases.GetEditionHtmlUseCase(
+                html_repository=html_repo
+            ),
             parse_edition_uc=parse_edition_uc,
             mark_parsed_uc=storage_use_cases.MarkEditionAsParsedUseCase(
                 ranking_repository=ranking_repo
@@ -65,16 +77,24 @@ def get_add_category_uc(
             ),
         ),
         scrape_webpages_uc=use_cases.ScrapeWebpagesUseCase(
-            get_webpages_uc=storage_use_cases.GetWebpagesUseCase(pizza_repository=pizzeria_repo),
+            get_webpages_uc=storage_use_cases.GetWebpagesUseCase(
+                pizza_repository=pizzeria_repo
+            ),
             scrape_uc=scrape_uc,
-            store_html_uc=storage_use_cases.StoreWebpageHtmlUseCase(html_repository=html_repo),
+            store_html_uc=storage_use_cases.StoreWebpageHtmlUseCase(
+                html_repository=html_repo
+            ),
             mark_scraped_uc=storage_use_cases.MarkWebpageAsScrapedUseCase(
                 pizza_repository=pizzeria_repo
             ),
         ),
         parse_webpages_uc=use_cases.ParseWebpagesUseCase(
-            get_webpages_uc=storage_use_cases.GetWebpagesUseCase(pizza_repository=pizzeria_repo),
-            get_html_uc=storage_use_cases.GetWebpageHtmlUseCase(html_repository=html_repo),
+            get_webpages_uc=storage_use_cases.GetWebpagesUseCase(
+                pizza_repository=pizzeria_repo
+            ),
+            get_html_uc=storage_use_cases.GetWebpageHtmlUseCase(
+                html_repository=html_repo
+            ),
             parse_pizzeria_uc=parse_pizzeria_uc,
             enrich_geo_uc=enrich_geo_uc,
             mark_parsed_uc=storage_use_cases.MarkWebpageAsParsedUseCase(

@@ -26,7 +26,7 @@ BucketName = Annotated[
         pattern=r"^[a-z0-9][a-z0-9\-]*[a-z0-9]$",
         min_length=3,
         max_length=63,
-    )
+    ),
 ]
 
 Region = Annotated[
@@ -34,14 +34,14 @@ Region = Annotated[
     pydantic.StringConstraints(
         pattern=r"^[a-z]{2}-[a-z]{3}$",
         max_length=6,
-    )
+    ),
 ]
 
 
 class TableNames(pydantic.BaseModel):
-    """Base model for table names. 
+    """Base model for table names.
 
-    Subclasses should define fields for each table name, 
+    Subclasses should define fields for each table name,
     and validation will ensure at least one is defined.
     """
 
@@ -65,5 +65,7 @@ class TableNames(pydantic.BaseModel):
     def validate_at_least_one_table(self) -> "TableNames":
         """Ensure at least one table is defined."""
         if not self.__class__.model_fields:
-            raise ValueError(f"{self.__class__.__name__} must define at least one table name field.")
+            raise ValueError(
+                f"{self.__class__.__name__} must define at least one table name field."
+            )
         return self

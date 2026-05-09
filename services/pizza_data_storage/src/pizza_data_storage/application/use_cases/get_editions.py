@@ -20,6 +20,9 @@ class GetEditionsUseCase:  # pylint: disable=too-few-public-methods
             only_unscraped=only_unscraped,
             only_unparsed=only_unparsed,
         )
-        return [shared_schemas.EditionReadSchema.model_validate(
-            edition, from_attributes=True
-        ) for edition in editions_models]
+        return [
+            shared_schemas.EditionReadSchema.model_validate(
+                edition, from_attributes=True
+            )
+            for edition in editions_models
+        ]

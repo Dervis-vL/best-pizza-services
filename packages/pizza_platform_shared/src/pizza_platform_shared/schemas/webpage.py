@@ -9,7 +9,9 @@ class WebpageSchema(pyd.BaseModel):
     """Schema for validating pizzeria websites data."""
 
     url: str = pyd.Field(..., max_length=500, description="URL of the resource")
-    slug: str = pyd.Field(..., max_length=200, description="URL-friendly slug for the resource")
+    slug: str = pyd.Field(
+        ..., max_length=200, description="URL-friendly slug for the resource"
+    )
 
     @pyd.field_validator("url")
     @classmethod

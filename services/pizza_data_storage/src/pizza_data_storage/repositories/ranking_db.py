@@ -1,4 +1,4 @@
-"""Database repository. 
+"""Database repository.
 
 Repository for the following models/schemas:
     categories,
@@ -54,12 +54,9 @@ class RankingsRepository(BaseDatabase):
         Relationships are eagerly loaded so objects remain usable after
         the session closes.
         """
-        query = (
-            select(models.Editions)
-            .options(
-                sa_orm.joinedload(models.Editions.category),
-                sa_orm.joinedload(models.Editions.rankings),
-            )
+        query = select(models.Editions).options(
+            sa_orm.joinedload(models.Editions.category),
+            sa_orm.joinedload(models.Editions.rankings),
         )
         if only_unscraped:
             query = query.where(models.Editions.scraped_at.is_(None))
@@ -111,8 +108,7 @@ class RankingsRepository(BaseDatabase):
     ) -> models.Categories:
         """Upsert a category by slug, updating name and description if it already exists."""
         existing = session.scalar(
-            select(models.Categories)
-            .where(models.Categories.slug == cat_config.slug)
+            select(models.Categories).where(models.Categories.slug == cat_config.slug)
         )
         if existing:
             existing.name = cat_config.name
@@ -135,8 +131,7 @@ class RankingsRepository(BaseDatabase):
     ) -> models.Editions:
         """Upsert an edition by category and year, updating url if it already exists."""
         existing = session.scalar(
-            select(models.Editions)
-            .where(
+            select(models.Editions).where(
                 models.Editions.category_id == category.id,
                 models.Editions.year == edition_config.year,
             )

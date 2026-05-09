@@ -14,6 +14,4 @@ class SeedLocationUseCase:  # pylint: disable=too-few-public-methods
 
     def execute(self, location_config: shared_schemas.LocationSchema) -> None:
         """Execute the use case."""
-        self._pizzeria_repository.seed_location(
-            location_config=location_config
-        )
+        self._pizzeria_repository.seed_location(location_config=location_config)

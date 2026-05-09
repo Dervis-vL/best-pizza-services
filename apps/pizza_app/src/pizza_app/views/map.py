@@ -35,7 +35,8 @@ def render_map(
     for _, row in filtered.iterrows():
         row: pa_typing.DataFrame[schemas.PizzeriaSchema]
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
+            rankings_df[schemas.RankingSchema.pizzeria_name]
+            == row[schemas.PizzeriaSchema.slug]
         ]
         table_rows = ""
         for category, group in pizzeria_rankings.groupby(
@@ -56,7 +57,10 @@ def render_map(
                     f"<td>{pos}</td></tr>"
                 )
         folium.Marker(
-            location=[row[schemas.PizzeriaSchema.latitude], row[schemas.PizzeriaSchema.longitude]],
+            location=[
+                row[schemas.PizzeriaSchema.latitude],
+                row[schemas.PizzeriaSchema.longitude],
+            ],
             popup=folium.Popup(f"<table>{table_rows}</table>", max_width=300),
             tooltip=row[schemas.PizzeriaSchema.name],
             icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),

@@ -11,7 +11,9 @@ from pizza_platform_shared.schemas.webpage import WebpageSchema
 class PizzeriaBaseSchema(pyd.BaseModel):
     """Schema for validating pizzeria data."""
 
-    description: str | None = pyd.Field(None, max_length=500, description="Pizzeria description")
+    description: str | None = pyd.Field(
+        None, max_length=500, description="Pizzeria description"
+    )
     rankings: list[RankingSchema] = pyd.Field(
         default_factory=list,
         description="List of rankings linking to this pizzeria",
@@ -37,8 +39,10 @@ class PizzeriaSchema(PizzeriaBaseSchema):
         """Derive the display name from the slug."""
         derived_name = " ".join(word.capitalize() for word in self.slug.split("-"))  # pylint: disable=no-member
         if len(derived_name) > 100:
-            raise ValueError("Derived name exceeds maximum length of 100 characters"
-                                f" (derived from slug '{self.slug}')")
+            raise ValueError(
+                "Derived name exceeds maximum length of 100 characters"
+                f" (derived from slug '{self.slug}')"
+            )
         return derived_name
 
     @pyd.field_validator("slug", mode="before")

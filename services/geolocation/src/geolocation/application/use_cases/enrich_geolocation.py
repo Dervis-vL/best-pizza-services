@@ -12,7 +12,9 @@ class EnrichGeolocationUseCase:  # pylint: disable=too-few-public-methods
         """Initialize the use case."""
         self._geo_service = geolocation_service
 
-    def execute(self, location: shared_schemas.LocationSchema) -> shared_schemas.LocationSchema:
+    def execute(
+        self, location: shared_schemas.LocationSchema
+    ) -> shared_schemas.LocationSchema:
         """GReturn the location schema, enriched with city and country if missing."""
         needs_enrichment = (
             (location.latitude is not None)

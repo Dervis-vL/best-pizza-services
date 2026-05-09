@@ -28,20 +28,26 @@ class RankingEntries(base.BaseModel):
     # foreign key(s)
     edition_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
-        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
-            schema_name=settings.pizza_db.schema_name,
-            table_name=settings.pizza_db.tables.editions,
-        ), ondelete="CASCADE"),
+        sa.ForeignKey(
+            base.BaseModel.create_foreign_key_str(
+                schema_name=settings.pizza_db.schema_name,
+                table_name=settings.pizza_db.tables.editions,
+            ),
+            ondelete="CASCADE",
+        ),
         nullable=False,
         comment="Foreign key to the ranking edition",
     )
     pizzeria_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
-        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
-            schema_name=settings.pizza_db.schema_name,
-            table_name=settings.pizza_db.tables.pizzerias,
-        ), ondelete="CASCADE"),
-        nullable=False, 
+        sa.ForeignKey(
+            base.BaseModel.create_foreign_key_str(
+                schema_name=settings.pizza_db.schema_name,
+                table_name=settings.pizza_db.tables.pizzerias,
+            ),
+            ondelete="CASCADE",
+        ),
+        nullable=False,
         comment="Foreign key to the pizzeria",
     )
 
@@ -51,9 +57,5 @@ class RankingEntries(base.BaseModel):
     )
 
     # relationships
-    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(
-        back_populates="rankings"
-    )
-    edition: orm.Mapped["RankingEditions"] = orm.relationship(
-        back_populates="rankings"
-    )
+    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(back_populates="rankings")
+    edition: orm.Mapped["RankingEditions"] = orm.relationship(back_populates="rankings")

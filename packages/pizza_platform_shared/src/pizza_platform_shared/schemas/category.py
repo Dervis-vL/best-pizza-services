@@ -30,7 +30,8 @@ class CategorySchema(CategoryBaseSchema):
     """Schema for validating category data."""
 
     allow_create: bool = pyd.Field(
-        default=False, description="Whether new entries can be created for this category"
+        default=False,
+        description="Whether new entries can be created for this category",
     )
 
 

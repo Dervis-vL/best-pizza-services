@@ -2,6 +2,7 @@
 
 from typing import Protocol
 
+
 class IHttpClient(Protocol):  # pylint: disable=too-few-public-methods
     """Interface for HTTP client used in pizza data collector service."""
 

@@ -15,7 +15,9 @@ class RankingSchema(pa.DataFrameModel):
         category:      Category name (e.g. 'Top 50 World').
     """
 
-    pizzeria_name: pa_typing.Series[str] = pa.Field(nullable=False, str_length={"min_value": 1})
+    pizzeria_name: pa_typing.Series[str] = pa.Field(
+        nullable=False, str_length={"min_value": 1}
+    )
     position: pa_typing.Series[float] = pa.Field(nullable=True, ge=1)
     year: pa_typing.Series[int] = pa.Field(
         nullable=False, isin=[y.value for y in enums.Year]
@@ -26,6 +28,7 @@ class RankingSchema(pa.DataFrameModel):
 
     class Config:  # pylint: disable=too-few-public-methods
         """Config."""
+
         strict = True
         coerce = True
         name = "RankingSchema"

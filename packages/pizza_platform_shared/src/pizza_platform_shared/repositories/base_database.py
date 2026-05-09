@@ -59,7 +59,7 @@ class BaseDatabase(ABC):
 
     def _read_orm(self, query: sa.Select[Any], single: bool = False) -> list[Any]:
         """Execute an ORM query and return mapped model instances.
-        
+
         Uses a bare session (no commit) since this is read-only.
         Eager-load any relationships in the query if you need them
         after this method returns.
@@ -71,7 +71,7 @@ class BaseDatabase(ABC):
 
     def _read_df(self, query: sa.Select[Any]) -> pd.DataFrame:
         """Execute a query and return a pandas DataFrame.
-        
+
         Bypasses the ORM — use for projections across multiple tables
         or when the result feeds a data pipeline rather than entity logic."""
         try:

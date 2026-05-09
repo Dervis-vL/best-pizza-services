@@ -21,7 +21,7 @@ class Pizzerias(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.pizzerias
     __table_args__ = (
         sa.UniqueConstraint("name", name="uq_pizzeria_name"),
-        {"schema": settings.pizza_db.schema_name}
+        {"schema": settings.pizza_db.schema_name},
     )
 
     # columns
@@ -34,5 +34,9 @@ class Pizzerias(base.BaseModel):
 
     # relationships
     webpages: orm.Mapped[list["Webpages"]] = orm.relationship(back_populates="pizzeria")
-    locations: orm.Mapped[list["Locations"]] = orm.relationship(back_populates="pizzeria")
-    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(back_populates="pizzeria")
+    locations: orm.Mapped[list["Locations"]] = orm.relationship(
+        back_populates="pizzeria"
+    )
+    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(
+        back_populates="pizzeria"
+    )

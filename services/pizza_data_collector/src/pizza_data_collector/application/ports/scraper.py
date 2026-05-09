@@ -5,6 +5,7 @@ import pathlib
 from typing import Protocol
 from bs4 import BeautifulSoup
 
+
 class IScraper(Protocol):  # pylint: disable=too-few-public-methods
     """Interface for scraper used in pizza data collector service."""
 

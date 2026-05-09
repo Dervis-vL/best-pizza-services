@@ -59,4 +59,6 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
             self._mark_parsed_uc.execute(webpage_id=webpage.id)
             parsed += 1
 
-        return results.ParseWebpagesResult(parsed=parsed, skipped=skipped, failed=failed)
+        return results.ParseWebpagesResult(
+            parsed=parsed, skipped=skipped, failed=failed
+        )

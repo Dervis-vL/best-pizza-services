@@ -17,7 +17,9 @@ class PizzeriaSchema(pa.DataFrameModel):
     slug: pa_typing.Series[str] = pa.Field(nullable=False, str_length={"min_value": 1})
     latitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-90, le=90)
     longitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-180, le=180)
-    country: pa_typing.Series[str] = pa.Field(nullable=False, str_length={"min_value": 1})
+    country: pa_typing.Series[str] = pa.Field(
+        nullable=False, str_length={"min_value": 1}
+    )
     city: pa_typing.Series[str] = pa.Field(nullable=False)
 
     @pa.dataframe_parser
@@ -32,6 +34,7 @@ class PizzeriaSchema(pa.DataFrameModel):
 
     class Config:
         """Config."""
+
         strict = True
         coerce = True
         name = "PizzeriaSchema"

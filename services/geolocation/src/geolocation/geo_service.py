@@ -60,14 +60,20 @@ class GeolocationService:
         params = urllib.parse.urlencode({"lat": lat, "lon": lon, "format": "json"})
         url_str = f"{self._BASE_URL}?{params}"
         req = urllib.request.Request(
-            url_str, 
+            url_str,
             headers={"User-Agent": self._user_agent, "Accept-Language": "en"},
         )
         try:
             with urllib.request.urlopen(req, timeout=10) as resp:
                 return json.loads(resp.read())
         except HTTPError as e:
-            raise HTTPError(e.url, e.code, f"Nominatim error for ({lat}, {lon}): {e.reason}", e.headers, e.fp)
+            raise HTTPError(
+                e.url,
+                e.code,
+                f"Nominatim error for ({lat}, {lon}): {e.reason}",
+                e.headers,
+                e.fp,
+            )
         except URLError as e:
             raise URLError(f"Failed to reach Nominatim for ({lat}, {lon}): {e.reason}")
 
@@ -78,12 +84,18 @@ class GeolocationService:
 
         addr = data.get("address", {})
         city = (
-            addr.get("city")
-            or addr.get("town")
-            or addr.get("village")
-            or addr.get("municipality")
-            or ""
-        ).split(",")[0].strip().split("-")[0].strip()
+            (
+                addr.get("city")
+                or addr.get("town")
+                or addr.get("village")
+                or addr.get("municipality")
+                or ""
+            )
+            .split(",")[0]
+            .strip()
+            .split("-")[0]
+            .strip()
+        )
         return models.LocationResult(
             country=addr.get("country", ""),
             city=city,

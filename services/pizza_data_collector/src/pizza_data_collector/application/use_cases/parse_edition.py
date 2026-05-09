@@ -13,6 +13,8 @@ class ParseEditionUseCase:  # pylint: disable=too-few-public-methods
         """Initialize the use case."""
         self._parser = parser
 
-    def execute(self, soup: BeautifulSoup, edition_id: str) -> list[shared_schemas.PizzeriaSchema]:
+    def execute(
+        self, soup: BeautifulSoup, edition_id: str
+    ) -> list[shared_schemas.PizzeriaSchema]:
         """Execute the use case."""
         return self._parser.parse(soup=soup, edition_id=edition_id)

@@ -5,10 +5,10 @@ from pizza_platform_shared import enums as shared_enums
 
 def standardize_award_name(raw_award_name: str) -> str:
     """Standardize award name by:
-        - Stripping "-" and everything after it (e.g. "Best Pizza - Italy" -> "Best Pizza")
-        - Stripping leading and trailing whitespace
-        - Removing trailing year (e.g. "Best Pizza 2023" -> "Best Pizza")
-        - Uppercasing first letter of each word (e.g. "best pizza" -> "Best Pizza")
+    - Stripping "-" and everything after it (e.g. "Best Pizza - Italy" -> "Best Pizza")
+    - Stripping leading and trailing whitespace
+    - Removing trailing year (e.g. "Best Pizza 2023" -> "Best Pizza")
+    - Uppercasing first letter of each word (e.g. "best pizza" -> "Best Pizza")
     """
     # Strip "-" and everything after it
     award_name = raw_award_name.split("-")[0]
@@ -44,43 +44,51 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
     # Last two values >= 2022, third-to-last between 1-11  ->  strip last 3
     if (
         len(parts) > 3
-        and parts[-1].isdigit() and int(parts[-1]) >= 2022
-        and parts[-2].isdigit() and int(parts[-2]) >= 2022
-        and parts[-3].isdigit() and 0 < int(parts[-3]) <= 11
+        and parts[-1].isdigit()
+        and int(parts[-1]) >= 2022
+        and parts[-2].isdigit()
+        and int(parts[-2]) >= 2022
+        and parts[-3].isdigit()
+        and 0 < int(parts[-3]) <= 11
     ):
         parts = parts[:-3]
     # last two values >= 2022, 2+ parts  ->  strip both
     elif (
         len(parts) >= 2
-        and parts[-1].isdigit() and int(parts[-1]) >= 2022
-        and parts[-2].isdigit() and int(parts[-2]) >= 2022
+        and parts[-1].isdigit()
+        and int(parts[-1]) >= 2022
+        and parts[-2].isdigit()
+        and int(parts[-2]) >= 2022
     ):
         parts = parts[:-2]
     # Last value >= 2022, second-to-last 1-5  ->  strip last 2
     elif (
         len(parts) > 2
-        and parts[-1].isdigit() and int(parts[-1]) >= 2022
-        and parts[-2].isdigit() and 0 < int(parts[-2]) <= 5
+        and parts[-1].isdigit()
+        and int(parts[-1]) >= 2022
+        and parts[-2].isdigit()
+        and 0 < int(parts[-2]) <= 5
     ):
         parts = parts[:-2]
     # Last value >= 2022, 2+ parts  ->  strip last
-    elif (
-        len(parts) >= 2
-        and parts[-1].isdigit() and int(parts[-1]) >= 2022
-    ):
+    elif len(parts) >= 2 and parts[-1].isdigit() and int(parts[-1]) >= 2022:
         parts = parts[:-1]
     # Last value between 1-14, second-to-last >= 2022  -> strip last 2
     elif (
         len(parts) > 2
-        and parts[-1].isdigit() and 0 < int(parts[-1]) < 14
-        and parts[-2].isdigit() and int(parts[-2]) >= 2022
+        and parts[-1].isdigit()
+        and 0 < int(parts[-1]) < 14
+        and parts[-2].isdigit()
+        and int(parts[-2]) >= 2022
     ):
         parts = parts[:-2]
     # last two values between 1-10  ->  strip last 2
     elif (
         len(parts) > 2
-        and parts[-1].isdigit() and 0 < int(parts[-1]) < 11
-        and parts[-2].isdigit() and 0 < int(parts[-2]) < 11
+        and parts[-1].isdigit()
+        and 0 < int(parts[-1]) < 11
+        and parts[-2].isdigit()
+        and 0 < int(parts[-2]) < 11
     ):
         parts = parts[:-2]
     # last value between 1-14  ->  strip last 1

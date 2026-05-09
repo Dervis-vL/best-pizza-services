@@ -21,7 +21,8 @@ def render_list(
 
     for _, row in filtered.iterrows():
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
+            rankings_df[schemas.RankingSchema.pizzeria_name]
+            == row[schemas.PizzeriaSchema.slug]
         ]
 
         with st.container(border=True):
@@ -40,7 +41,11 @@ def render_list(
                 ):
                     entries = list(group.itertuples())
                     for i, entry in enumerate(entries):
-                        pos = f"<b>#{int(entry.position)}</b>" if not pd.isna(entry.position) else "—"
+                        pos = (
+                            f"<b>#{int(entry.position)}</b>"
+                            if not pd.isna(entry.position)
+                            else "—"
+                        )
                         category_cell = (
                             f'<td rowspan="{len(entries)}" style="padding-right:1rem;vertical-align:top">'
                             f"{category}:</td>"

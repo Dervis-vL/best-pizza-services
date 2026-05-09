@@ -19,18 +19,15 @@ class ApplicationSettings(pyd_settings.BaseSettings):
     )
 
     title: Annotated[
-        str,
-        pyd.Field(description="The title of the API.", default="Best Pizza API")
+        str, pyd.Field(description="The title of the API.", default="Best Pizza API")
     ]
     description: Annotated[
         str,
-        pyd.Field(description="The description of the API.", default=__description__)
+        pyd.Field(description="The description of the API.", default=__description__),
     ]
     version: Annotated[
-        str,
-        pyd.Field(description="The version of the API.", default=__version__)
+        str, pyd.Field(description="The version of the API.", default=__version__)
     ]
     debug: Annotated[
-        bool,
-        pyd.Field(description="Whether to enable debug mode.", default=False)
+        bool, pyd.Field(description="Whether to enable debug mode.", default=False)
     ]

@@ -1,4 +1,4 @@
-"""Database repository. 
+"""Database repository.
 
 Repository for the following models/schemas:
     pizzerias,
@@ -27,8 +27,7 @@ class PizzeriaRepository(BaseDatabase):
     """Repository for seeding and querying pizzerias, webpages, rankings, and locations."""
 
     def seed_pizzerias_webpages_and_rating(
-        self,
-        config_schemas: list[shared_schemas.PizzeriaSchema]
+        self, config_schemas: list[shared_schemas.PizzeriaSchema]
     ) -> None:
         """Write pizzerias, their webpages, and rating from config, inserting or updating."""
         with self._session() as session:
@@ -69,11 +68,8 @@ class PizzeriaRepository(BaseDatabase):
         Relationships are eagerly loaded so objects remain usable after
         the session closes.
         """
-        query = (
-            select(models.Webpages)
-            .options(
-                sa_orm.joinedload(models.Webpages.pizzeria)
-            )
+        query = select(models.Webpages).options(
+            sa_orm.joinedload(models.Webpages.pizzeria)
         )
         if only_unscraped:
             query = query.where(models.Webpages.scraped_at.is_(None))
@@ -84,14 +80,11 @@ class PizzeriaRepository(BaseDatabase):
 
     def get_pizzerias(self, *, only_with_locations: bool) -> list[models.Pizzerias]:
         """Return all pizzerias, optionally filtering to only those with locations."""
-        query = (
-            select(models.Pizzerias)
-            .options(
-                sa_orm.joinedload(models.Pizzerias.webpages),
-                sa_orm.joinedload(models.Pizzerias.rankings),
-                sa_orm.joinedload(models.Pizzerias.awards),
-                sa_orm.joinedload(models.Pizzerias.locations),
-            )
+        query = select(models.Pizzerias).options(
+            sa_orm.joinedload(models.Pizzerias.webpages),
+            sa_orm.joinedload(models.Pizzerias.rankings),
+            sa_orm.joinedload(models.Pizzerias.awards),
+            sa_orm.joinedload(models.Pizzerias.locations),
         )
         if only_with_locations:
             # Where locations list is not empty
@@ -121,8 +114,9 @@ class PizzeriaRepository(BaseDatabase):
     ) -> models.Pizzerias:
         """Upsert pizzeria, skipping if name already exists."""
         existing = session.scalar(
-            select(models.Pizzerias)
-            .where(models.Pizzerias.name == pizzeria_config.name)
+            select(models.Pizzerias).where(
+                models.Pizzerias.name == pizzeria_config.name
+            )
         )
         if existing:
             existing.description = pizzeria_config.description
@@ -143,8 +137,7 @@ class PizzeriaRepository(BaseDatabase):
     ) -> models.Webpages:
         """Upsert webpage for the pizzeria, skipping if the url already exists."""
         existing = session.scalar(
-            select(models.Webpages)
-            .where(
+            select(models.Webpages).where(
                 models.Webpages.pizzeria_id == pizzeria_id,
                 models.Webpages.url == webpage_config.url,
             )
@@ -169,8 +162,7 @@ class PizzeriaRepository(BaseDatabase):
     ) -> models.Rankings:
         """Upsert rank for top pizzerias, skipping if position already exists."""
         existing = session.scalar(
-            select(models.Rankings)
-            .where(
+            select(models.Rankings).where(
                 models.Rankings.edition_id == ranking_config.edition_id,
                 models.Rankings.pizzeria_id == pizzeria_id,
             )
@@ -195,8 +187,7 @@ class PizzeriaRepository(BaseDatabase):
     ) -> models.Awards:
         """Upsert awards for special pizzerias, skipping if award already exists."""
         existing = session.scalar(
-            select(models.Awards)
-            .where(
+            select(models.Awards).where(
                 models.Awards.edition_id == award_config.edition_id,
                 models.Awards.pizzeria_id == pizzeria_id,
             )
@@ -223,14 +214,18 @@ class PizzeriaRepository(BaseDatabase):
             existing = session.scalar(
                 select(models.Locations)
                 .where(models.Locations.pizzeria_id == location_config.pizzaria_id)
-                .where(models.Locations.latitude.between(
-                    location_config.latitude - constants.Coordinate.LOC_DELTA,
-                    location_config.latitude + constants.Coordinate.LOC_DELTA,
-                ))
-                .where(models.Locations.longitude.between(
-                    location_config.longitude - constants.Coordinate.LOC_DELTA,
-                    location_config.longitude + constants.Coordinate.LOC_DELTA,
-                ))
+                .where(
+                    models.Locations.latitude.between(
+                        location_config.latitude - constants.Coordinate.LOC_DELTA,
+                        location_config.latitude + constants.Coordinate.LOC_DELTA,
+                    )
+                )
+                .where(
+                    models.Locations.longitude.between(
+                        location_config.longitude - constants.Coordinate.LOC_DELTA,
+                        location_config.longitude + constants.Coordinate.LOC_DELTA,
+                    )
+                )
             )
             if existing:
                 existing.adress = location_config.adress

@@ -22,7 +22,7 @@ class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
     __tablename__ = settings.pizza_db.tables.pizzerias
     __table_args__ = (
         sa.UniqueConstraint("name", name="uq_pizzeria_name"),
-        {"schema": settings.pizza_db.schema_name}
+        {"schema": settings.pizza_db.schema_name},
     )
 
     # columns
@@ -35,6 +35,8 @@ class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
 
     # relationships
     webpages: orm.Mapped[list["Webpages"]] = orm.relationship(back_populates="pizzeria")
-    locations: orm.Mapped[list["Locations"]] = orm.relationship(back_populates="pizzeria")
+    locations: orm.Mapped[list["Locations"]] = orm.relationship(
+        back_populates="pizzeria"
+    )
     rankings: orm.Mapped[list["Rankings"]] = orm.relationship(back_populates="pizzeria")
     awards: orm.Mapped[list["Awards"]] = orm.relationship(back_populates="pizzeria")

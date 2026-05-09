@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from pizza_api.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
 
 
-
 class AddCategoryUseCase:  # pylint: disable=too-few-public-methods
     """Seed a new category and run the full scrape + parse cycle."""
 

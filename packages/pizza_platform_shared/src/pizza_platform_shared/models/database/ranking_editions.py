@@ -26,35 +26,45 @@ class RankingEditions(base.BaseModel):
         sa.UniqueConstraint(
             "category_id", "year", name="uq_ranking_edition_category_year"
         ),
-        sa.UniqueConstraint(
-            "url", name="uq_ranking_edition_url"
-        ), 
-        {"schema": settings.pizza_db.schema_name}
+        sa.UniqueConstraint("url", name="uq_ranking_edition_url"),
+        {"schema": settings.pizza_db.schema_name},
     )
 
     # foreign key(s)
     category_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
-        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
-            schema_name=settings.pizza_db.schema_name,
-            table_name=settings.pizza_db.tables.categories,
-        ), ondelete="CASCADE"),
+        sa.ForeignKey(
+            base.BaseModel.create_foreign_key_str(
+                schema_name=settings.pizza_db.schema_name,
+                table_name=settings.pizza_db.tables.categories,
+            ),
+            ondelete="CASCADE",
+        ),
         nullable=False,
         comment="Foreign key to the categories table",
     )
 
     # columns
-    year: orm.Mapped[int] = orm.mapped_column(sa.SmallInteger, nullable=False, comment="Year of the ranking edition")
-    url: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=False, comment="Endpoint URL for the ranking edition data")
+    year: orm.Mapped[int] = orm.mapped_column(
+        sa.SmallInteger, nullable=False, comment="Year of the ranking edition"
+    )
+    url: orm.Mapped[str] = orm.mapped_column(
+        sa.String(500),
+        nullable=False,
+        comment="Endpoint URL for the ranking edition data",
+    )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
-            sa.DateTime(timezone=True),
-            "sqlite"
+            sa.DateTime(timezone=True), "sqlite"
         ),
         nullable=True,
-        comment="Timestamp when the data was scraped"
+        comment="Timestamp when the data was scraped",
     )
 
     # relationships
-    category: orm.Mapped["Categories"] = orm.relationship(back_populates="ranked_editions")
-    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(back_populates="edition")
+    category: orm.Mapped["Categories"] = orm.relationship(
+        back_populates="ranked_editions"
+    )
+    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(
+        back_populates="edition"
+    )

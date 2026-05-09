@@ -9,12 +9,16 @@ from pizza_platform_shared import schemas as shared_schemas
 class IEditionParser(Protocol):  # pylint: disable=too-few-public-methods
     """Interface for parser used in pizza data collector service."""
 
-    def parse(self, soup: BeautifulSoup, edition_id: str) -> list[shared_schemas.PizzeriaSchema]:
+    def parse(
+        self, soup: BeautifulSoup, edition_id: str
+    ) -> list[shared_schemas.PizzeriaSchema]:
         """Parses the given BeautifulSoup object and returns a list of pizzeria schemas."""
 
 
 class IPizzaParser(Protocol):  # pylint: disable=too-few-public-methods
     """Interface for parser used in pizza data collector service."""
 
-    def parse(self, soup: BeautifulSoup, pizzeria_id: str) -> shared_schemas.LocationSchema:
+    def parse(
+        self, soup: BeautifulSoup, pizzeria_id: str
+    ) -> shared_schemas.LocationSchema:
         """Parses the given BeautifulSoup object and returns a list of location schemas."""

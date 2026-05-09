@@ -10,7 +10,9 @@ from sqlalchemy.engine import Engine
 
 def create_engine() -> Engine:
     """Create a SQLAlchemy engine using the configured database URL."""
-    return sa.create_engine(shared_settings.pizza_db.connection_string, pool_pre_ping=True)
+    return sa.create_engine(
+        shared_settings.pizza_db.connection_string, pool_pre_ping=True
+    )
 
 
 def get_engine(request: Request) -> Engine:
