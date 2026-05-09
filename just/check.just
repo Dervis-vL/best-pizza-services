@@ -1,9 +1,10 @@
 # Auto-fix formatting and safe lint fixes
 fmt:
-    @echo "{{bold}}{{green}}🔍 Ruff check...{{nc}}"
+    @echo "{{bold}}{{green}}🔍 Ruff format...{{nc}}"
     {{run}} ruff format .
-    # @echo "{{bold}}{{green}}🔍 Ruff format...{{nc}}"
-    # {{run}} ruff check . --fix
+    @echo "{{bold}}{{green}}🔍 Ruff check fix...{{nc}}"
+    {{run}} ruff check . --fix
+
 
 # Type check all workspace members
 typecheck:

@@ -1,7 +1,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # --- IMPORTS --------------------------------------------
-import '.just/check.just'
+import 'just/check.just'
 
 # --- VARIABLES ------------------------------------------
 run  := "uv run"
@@ -13,4 +13,6 @@ default:
     @just --list
 
 lint: fmt typecheck
+    @echo "{{bold}}{{green}}🔍 Ruff check...{{nc}}"
+    {{run}} ruff check .
     @echo "{{bold}}{{green}}✓ All lint checks passed.{{nc}}"
