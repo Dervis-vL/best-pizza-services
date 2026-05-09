@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
-    """Parse stored HTML for every unparsed webpage, enrich with geolocation, seed location."""
+    """Parse stored HTML for unparsed webpage, enrich with geoloc, seed location."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         get_webpages_uc: storage_use_cases.GetWebpagesUseCase,
         get_html_uc: storage_use_cases.GetWebpageHtmlUseCase,

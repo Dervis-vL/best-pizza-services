@@ -68,7 +68,7 @@ def main() -> None:
     """Entry point; exists so the pyproject script works, but Streamlit
     must be invoked via `streamlit run`, not as a plain Python script."""
 
-    subprocess.run(
-        ["streamlit", "run", __file__, *sys.argv[1:]],
+    subprocess.run(  # noqa: S603
+        [sys.executable, "-m", "streamlit", "run", __file__, *sys.argv[1:]],
         check=True,
     )

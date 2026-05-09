@@ -21,6 +21,7 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pizza_data_collector"]
+include = ["py.typed"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }

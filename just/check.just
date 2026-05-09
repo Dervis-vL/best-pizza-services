@@ -9,9 +9,9 @@ fmt:
 # Type check all workspace members
 typecheck:
     @echo "{{bold}}{{green}}🔍 Type checking...{{nc}}"
-    {{run}} mypy --package pizza_app
-    {{run}} mypy --package pizza_api
     {{run}} mypy --package pizza_data_collector
     {{run}} mypy --package pizza_data_storage
     {{run}} mypy --package geolocation
     {{run}} mypy --package pizza_platform_shared
+    {{run}} mypy --package pizza_app
+    {{run}} mypy --package pizza_api

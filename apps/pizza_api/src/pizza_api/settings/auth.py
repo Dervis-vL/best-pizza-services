@@ -44,11 +44,11 @@ class AuthSettings(pyd_settings.BaseSettings):
     @computed_field
     @property
     def scope_name(self) -> str:
-        """Return the scope name for the API, which is used in the documentation and validation."""
+        """Return the scope name for the API, which is used in documentation."""
         return f"api://{self.app_client_id}/{self.scope_description}"
 
     @computed_field
     @property
     def scopes(self) -> dict:
-        """Return the scopes dict for the API, which is used in the documentation and validation."""
+        """Return the scopes dict for the API, which is used in documentation."""
         return {self.scope_name: self.scope_description}

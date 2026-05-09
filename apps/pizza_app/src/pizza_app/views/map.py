@@ -45,8 +45,9 @@ def render_map(
             entries = list(group.itertuples())
             for i, entry in enumerate(entries):
                 pos = f"#{int(entry.position)}" if not pd.isna(entry.position) else "—"
+                style = "padding-right:8px;vertical-align:top"
                 category_cell = (
-                    f'<td rowspan="{len(entries)}" style="padding-right:8px;vertical-align:top">'
+                    f'<td rowspan="{len(entries)}" style="{style}">'
                     f"<b>{category}:</b></td>"
                     if i == 0
                     else ""

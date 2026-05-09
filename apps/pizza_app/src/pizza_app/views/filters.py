@@ -72,7 +72,7 @@ def render_filters(  # noqa: PLR0912
         )
         selected_country = st.selectbox(
             "Search by country",
-            options=[constants.Filters.DEFAULT] + countries,
+            options=[constants.Filters.DEFAULT, *countries],
             key=constants.QueryParam.COUNTRY,
             on_change=utils.on_country_change,
             bind=constants.QueryParam.BIND,
@@ -91,7 +91,7 @@ def render_filters(  # noqa: PLR0912
         )
         selected_city = st.selectbox(
             "Search by city",
-            options=[constants.Filters.DEFAULT] + cities,
+            options=[constants.Filters.DEFAULT, *cities],
             key=constants.QueryParam.CITY,
             on_change=utils.make_on_city_change(
                 relevant_locations=relevant_locations,

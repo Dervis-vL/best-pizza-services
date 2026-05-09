@@ -23,7 +23,7 @@ def add_category(
     body: requests.CategoryCreateRequest,
     use_case: dependencies.AddCategoryUCDep,
 ) -> responses.AddCategoryResponse:
-    """Seed a new category, scrape all its editions and pizzeria webpages, and parse the results."""
+    """Seed a new category, scrape all its editions/pizzeria/webpages, and parse."""
     handler = WarningCaptureHandler()
     _pizza_api_logger.addHandler(handler)
     try:
