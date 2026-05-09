@@ -102,7 +102,7 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
         and parts[-1].isdigit()
         and parts[-2].isdigit()
     ):
-        parts = parts[:-2] + [f"{parts[-2]}.{parts[-1]}"]
+        parts = [*parts[:-2], f"{parts[-2]}.{parts[-1]}"]
 
     parsed_slug = "-".join(parts)
     return parsed_slug.lower().replace(" ", "-").strip()

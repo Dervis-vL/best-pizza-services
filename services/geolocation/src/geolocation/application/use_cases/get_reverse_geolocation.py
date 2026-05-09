@@ -12,5 +12,5 @@ class GetReverseGeolocationUseCase:  # pylint: disable=too-few-public-methods
         self._geo_service = geolocation_service
 
     def execute(self, latitude: float, longitude: float) -> models.LocationResult:
-        """Get reverse geolocation data for a location with lat/lon but missing city/country."""
+        """Get reverse geolocation for a location using lat/lon."""
         return self._geo_service.reverse_geocode(lat=latitude, lon=longitude)

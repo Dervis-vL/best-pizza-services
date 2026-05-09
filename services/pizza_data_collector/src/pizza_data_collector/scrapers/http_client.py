@@ -2,6 +2,7 @@
 
 import logging
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
 from urllib.request import urlopen
 
 from pizza_data_collector.exceptions import URLExtractionError
@@ -19,7 +20,10 @@ class HttpClient:  # pylint: disable=too-few-public-methods
     def fetch(self, url: str) -> bytes | None:
         """Fetches the content of the given URL."""
         try:
-            with urlopen(url, timeout=self._timeout) as response:
+            parsed_url = urlsplit(url)
+            if parsed_url.scheme not in ("http", "https"):
+                raise ValueError(f"Unsupported URL schema: {parsed_url.scheme!r}")
+            with urlopen(url, timeout=self._timeout) as response:  # noqa: S310
                 return response.read()
         except HTTPError as e:
             logger.warning("HTTP %s fetching %s", e.code, url)

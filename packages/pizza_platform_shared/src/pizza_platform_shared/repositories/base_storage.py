@@ -36,7 +36,8 @@ class BaseStorage:  # pylint: disable=too-few-public-methods
     @staticmethod
     def _build_key(*, model_name: enums.HtmlModelName, model_id: int) -> str:
         """Build the canonical object key for an edition HTML file."""
-        return f"{constants.StorageKeys.SCRAPES_PREFIX}/{model_name.value}/id_{model_id}.html"
+        prefix = constants.StorageKeys.SCRAPES_PREFIX
+        return f"{prefix}/{model_name.value}/id_{model_id}.html"
 
     @staticmethod
     def _build_prefix(

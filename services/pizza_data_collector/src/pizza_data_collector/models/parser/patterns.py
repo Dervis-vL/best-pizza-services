@@ -40,21 +40,21 @@ class BasePattern(BaseModel, ABC):
 
 class CardPatterns(BasePattern):
     """
-    Patterns for extracting individual ranking card HTML chunks from a full ranking page.
+    Patterns for extracting individual ranking card HTML chunks from full ranking page.
     Each pattern targets the outer <a> wrapping a single ranking entry.
 
     Use extract() to get all card chunks, then run URLPattern and
-    RankingPositionPatterns or AwarsNamePatterns on each chunk to extract URL and position.
+    RankingPositionPatterns or AwarsNamePatterns on each chunk to extract URL/position.
     """
 
-    # Special awards (2022+): must be first since award pages also have id="scheda" anchors
+    # Special awards (2022+): must be first since award sites also have "scheda" anchors
     testo_card: re.Pattern[str] = re.compile(
         r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
         re.DOTALL,
     )
 
-    # 2022+: <a href="...referenza/recensione/..."> — more specific than scheda_id because
-    # some pages reuse id="scheda" on sponsor/partner cards that don't link to referenza URLs.
+    # 2022+: <a href="...referenza/recensione/...">:more specific than scheda_id because
+    # because some pages reuse id="scheda" on sponsor cards that don't link referenza.
     referenza_href: re.Pattern[str] = re.compile(
         r'<a\b[^>]*\bhref="https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]*"[^>]*>.*?</a>',
         re.DOTALL,
@@ -66,7 +66,7 @@ class CardPatterns(BasePattern):
         re.DOTALL,
     )
 
-    # Older (2020): <a class="...altezza-NNN-desktop..." href="...recensione/...">...</a>
+    # Older (2020): <a class="...altezza-NNN-desktop..." href="..recensione/..">...</a>
     altezza_class: re.Pattern[str] = re.compile(
         r"<a\b[^>]*\baltezza-\d+-desktop\b[^>]*>.*?</a>",
         re.DOTALL,
@@ -100,7 +100,7 @@ class URLPatterns(BasePattern):
 
 class RankingPositionPatterns(BasePattern):
     """
-    Patterns for extracting a ranked position (1–100) from a ranking-list card's HTML.
+    Patterns for extracting a ranked position (1-100) from a ranking-list card's HTML.
     Run on each individual card/entry's HTML extracted from a ranking page.
     Each pattern must contain a (?P<position>...) named group.
 

@@ -19,3 +19,20 @@ class PizzaTableNames(types.TableNames):
     rankings: types.TableName = "rankings"
     webpages: types.TableName = "webpages"
     locations: types.TableName = "locations"
+
+
+class ModelColumnLengths:
+    """Constants for model column lengths."""
+
+    NAME: Final[int] = 100
+    DESCRIPTION: Final[int] = 500
+    URL: Final[int] = 500
+    SLUG: Final[int] = 100
+    PHONE: Final[int] = 20
+
+
+class YearRange:
+    """Constants for year range validation."""
+
+    MIN: Final[int] = 2017
+    MAX: Final[int] = 2030

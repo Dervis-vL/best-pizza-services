@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from abc import ABC
 from collections.abc import Generator
 from contextlib import contextmanager
 from typing import Any
@@ -14,7 +13,7 @@ from sqlalchemy import orm as sa_orm
 from pizza_platform_shared import settings
 
 
-class BaseDatabase(ABC):
+class BaseDatabase:
     """Base database repository.
 
     Owns the engine and exposes a session in context manager.
@@ -30,7 +29,7 @@ class BaseDatabase(ABC):
 
     @classmethod
     def from_engine(cls, engine: sa.Engine) -> BaseDatabase:
-        """Create a database instance directly from an existing engine, without db settings.
+        """Create a database instance from an existing engine, without db settings.
 
         schema_name will be None — queries must not rely on it.
         """

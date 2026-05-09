@@ -2,6 +2,7 @@
 
 import pydantic as pyd
 
+from pizza_platform_shared import constants
 from pizza_platform_shared import schemas as shared_schemas
 from pizza_platform_shared.schemas.base import BaseReadSchema
 from pizza_platform_shared.schemas.ranking import RankingSchema
@@ -31,17 +32,20 @@ class PizzeriaBaseSchema(pyd.BaseModel):
 class PizzeriaSchema(PizzeriaBaseSchema):
     """Schema for validating pizzeria data."""
 
-    slug: str = pyd.Field(..., max_length=100, description="Slug for the pizzeria")
+    slug: str = pyd.Field(
+        ...,
+        max_length=constants.ModelColumnLengths.SLUG,
+        description="Slug for the pizzeria",
+    )
 
     @pyd.computed_field
     @property
     def name(self) -> str:
         """Derive the display name from the slug."""
         derived_name = " ".join(word.capitalize() for word in self.slug.split("-"))  # pylint: disable=no-member
-        if len(derived_name) > 100:
+        if len(derived_name) > constants.ModelColumnLengths.NAME:
             raise ValueError(
-                "Derived name exceeds maximum length of 100 characters"
-                f" (derived from slug '{self.slug}')"
+                f"Derived name exceeds maximum length (derived from slug '{self.slug}')"
             )
         return derived_name
 
@@ -55,4 +59,8 @@ class PizzeriaSchema(PizzeriaBaseSchema):
 class PizzeriaReadSchema(PizzeriaBaseSchema, BaseReadSchema):
     """Schema for validating pizzeria data."""
 
-    name: str = pyd.Field(..., max_length=100, description="Name for pizzeria")
+    name: str = pyd.Field(
+        ...,
+        max_length=constants.ModelColumnLengths.NAME,
+        description="Name for pizzeria",
+    )

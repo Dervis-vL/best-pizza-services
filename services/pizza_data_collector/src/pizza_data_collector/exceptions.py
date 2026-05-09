@@ -6,7 +6,7 @@ class PizzaDataScraperError(Exception):
 
     message: str
 
-    def __init__(self, message: str = None):
+    def __init__(self, message: str):
         if message is not None:
             self.message = message
         super().__init__(self.message)

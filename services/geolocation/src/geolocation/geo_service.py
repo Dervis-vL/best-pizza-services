@@ -1,8 +1,9 @@
 """Geolocation service: reverse-geocodes lat/lon via Nominatim (OpenStreetMap).
 
 Nominatim is completely free with no API token required.
-Hard rate limit: 1 request/second — enforced here to stay compliant.
-Attribution requirement: must display "© OpenStreetMap contributors" where results are shown.
+Hard rate limit: 1 request/second; enforced here to stay compliant.
+Attribution requirement: must display "© OpenStreetMap contributors"
+where results are shown.
 
 Docs: https://nominatim.org/release-docs/latest/api/Reverse/
 """
@@ -34,7 +35,7 @@ class GeolocationService:
     def __init__(self, user_agent: str) -> None:
         """
         :param user_agent: Identifies your app to Nominatim (required by their policy).
-                           Use something like "best-pizza-services/1.0 contact@example.com".
+                    Use something like "best-pizza-services/1.0 contact@example.com".
         """
         self._user_agent = user_agent
         self._last_request_at: float = 0.0
@@ -59,12 +60,14 @@ class GeolocationService:
     def _fetch(self, lat: float, lon: float) -> dict:
         params = urllib.parse.urlencode({"lat": lat, "lon": lon, "format": "json"})
         url_str = f"{self._BASE_URL}?{params}"
-        req = urllib.request.Request(
+        req = urllib.request.Request(  # noqa: S310
             url_str,
             headers={"User-Agent": self._user_agent, "Accept-Language": "en"},
         )
         try:
-            with urllib.request.urlopen(req, timeout=10) as resp:
+            if urllib.parse.urlsplit(url_str).scheme not in ("http", "https"):
+                raise ValueError("Invalid URL scheme")
+            with urllib.request.urlopen(req, timeout=10) as resp:  # noqa: S310
                 return json.loads(resp.read())
         except HTTPError as e:
             raise HTTPError(
@@ -73,9 +76,10 @@ class GeolocationService:
                 f"Nominatim error for ({lat}, {lon}): {e.reason}",
                 e.headers,
                 e.fp,
-            )
+            ) from e
         except URLError as e:
-            raise URLError(f"Failed to reach Nominatim for ({lat}, {lon}): {e.reason}")
+            msg = f"Failed to reach Nominatim for ({lat}, {lon}): {e.reason}"
+            raise URLError(msg) from e
 
     @staticmethod
     def _parse(data: dict) -> models.LocationResult:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pydantic as pyd
 
+from pizza_platform_shared import constants
 from pizza_platform_shared.schemas.base import BaseReadSchema
 
 
@@ -23,7 +24,9 @@ class LocationSchema(pyd.BaseModel):
     latitude: float | None = pyd.Field(..., description="Lat of the pizzeria")
     longitude: float | None = pyd.Field(..., description="Lng of the pizzeria")
     phone: str | None = pyd.Field(
-        default=None, max_length=20, description="Phone of the pizzeria"
+        default=None,
+        max_length=constants.ModelColumnLengths.PHONE,
+        description="Phone of the pizzeria",
     )
 
     @property
@@ -35,7 +38,7 @@ class LocationSchema(pyd.BaseModel):
     @classmethod
     def phone_check(cls, v: str | None) -> str | None:
         """Checks if phone is correct, otherwise split."""
-        if not v or len(v) <= 20:
+        if not v or len(v) <= constants.ModelColumnLengths.PHONE:
             return v
 
         return None

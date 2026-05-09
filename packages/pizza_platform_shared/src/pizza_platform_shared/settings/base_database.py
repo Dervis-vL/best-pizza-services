@@ -53,10 +53,12 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
 
     @pydantic.model_validator(mode="after")
     def validate_tables_defined(self) -> DatabaseSettings:
-        """Validate that if 'requires_tables' is True in the config, then 'tables' ClassVar is defined in the subclass.
+        """Validate that if 'requires_tables' is True in the config,
+        then 'tables' ClassVar is defined in the subclass.
 
         This allows us to enforce that subclasses that need to define tables do so,
-        while still allowing the base class to be used without tables for cases like alembic settings.
+        while still allowing the base class to be used without tables for cases
+        like alembic settings.
         """
         config = self.model_config
         requires_tables: bool = config.get("requires_tables", True)  # type: ignore[assignment]
@@ -67,7 +69,7 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
 
         if not hasattr(self.__class__, "tables") or self.__class__.tables is None:
             raise ValueError(
-                f"{self.__class__.__name__} must define 'tables' ClassVar when 'requires_tables' is True."
+                f"{self.__class__.__name__} must have 'tables' when 'requires_tables'."
             )
         return self
 
