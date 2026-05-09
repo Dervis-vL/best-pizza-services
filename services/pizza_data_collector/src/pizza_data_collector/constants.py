@@ -45,3 +45,13 @@ class PizzaTableNames(types.TableNames):
     ranking_entries: types.TableName = "ranking_entries"
     webpages: types.TableName = "webpages"
     locations: types.TableName = "locations"
+
+
+class PizzaNameRules:
+    """Constants for pizza name rules."""
+
+    HAS_TWO_PARTS: Final[int] = 2
+    HAS_THREE_PARTS: Final[int] = 3
+    PART_FIVE: Final[int] = 5
+    PART_ELEVEN: Final[int] = 11
+    PART_FOURTEEN: Final[int] = 14

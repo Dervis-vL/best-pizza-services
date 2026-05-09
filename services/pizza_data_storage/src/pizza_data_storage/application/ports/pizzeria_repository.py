@@ -20,7 +20,7 @@ class IPizzeriaRepository(Protocol):
     def get_webpages(
         self, *, only_unscraped: bool = False, only_unparsed: bool = False
     ) -> list[models.Webpages]:
-        """Return all pizzeria webpages, optional that have not been scraped or parsed yet."""
+        """Return all pizzeria webpages, optional if not been scraped or parsed yet."""
 
     def get_pizzerias(self, *, only_with_locations: bool) -> list[models.Pizzerias]:
         """Return all pizzerias, optionally filtering on presence of location."""

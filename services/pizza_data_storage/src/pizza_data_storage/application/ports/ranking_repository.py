@@ -17,7 +17,7 @@ class IRankingsRepository(Protocol):
     def get_editions(
         self, *, only_unscraped: bool = False, only_unparsed: bool = False
     ) -> list[models.Editions]:
-        """Return all ranking editions, optional that have not been scraped or parsed yet."""
+        """Return all ranking editions, optional if not been scraped or parsed yet."""
 
     def get_edition(self, edition_id: int) -> models.Editions | None:
         """Return a single edition by id."""

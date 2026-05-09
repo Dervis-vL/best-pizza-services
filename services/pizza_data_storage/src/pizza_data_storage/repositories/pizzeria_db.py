@@ -24,12 +24,12 @@ logger = logging.getLogger(__name__)
 
 
 class PizzeriaRepository(BaseDatabase):
-    """Repository for seeding and querying pizzerias, webpages, rankings, and locations."""
+    """Repo for seeding and querying pizzerias, webpages, rankings, and locations."""
 
     def seed_pizzerias_webpages_and_rating(
         self, config_schemas: list[shared_schemas.PizzeriaSchema]
     ) -> None:
-        """Write pizzerias, their webpages, and rating from config, inserting or updating."""
+        """Write pizzerias, webpages, and rating from config, inserting or updating."""
         with self._session() as session:
             for pizzeria in config_schemas:
                 pizzeria_model = self._upsert_pizzeria(session, pizzeria)
@@ -63,7 +63,7 @@ class PizzeriaRepository(BaseDatabase):
     def get_webpages(
         self, *, only_unscraped: bool = False, only_unparsed: bool = False
     ) -> list[models.Webpages]:
-        """Return all webpages of pizzerias, optionally filtering on scraped and parsed status.
+        """Return all webpages of pizzerias, optionally filtering scraped/parsed status.
 
         Relationships are eagerly loaded so objects remain usable after
         the session closes.

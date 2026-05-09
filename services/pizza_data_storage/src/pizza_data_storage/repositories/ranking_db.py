@@ -37,7 +37,7 @@ class RankingsRepository(BaseDatabase):
             for category in category_schemas:
                 if category.slug not in existing_slugs and not category.allow_create:
                     logger.warning(
-                        "Skipping category '%s', it doesn't exist and not allowed to create.",
+                        "Skip category '%s', doesn't exist and create is not allowed.",
                         category.slug,
                     )
                     continue
@@ -106,7 +106,7 @@ class RankingsRepository(BaseDatabase):
     def _upsert_category(
         session: sa_orm.Session, cat_config: shared_schemas.CategorySchema
     ) -> models.Categories:
-        """Upsert a category by slug, updating name and description if it already exists."""
+        """Upsert a category by slug, updating name, description if already exists."""
         existing = session.scalar(
             select(models.Categories).where(models.Categories.slug == cat_config.slug)
         )

@@ -65,7 +65,7 @@ def ensure_database_exists() -> None:
             logger.debug("Database '%s' already exists.", target_db_name)
         elif isinstance(err.orig, pg_errors.InsufficientPrivilege):  # pylint: disable=no-member
             logger.debug(
-                "No CREATEDB privilege — assuming database '%s' already exists (managed host).",
+                "No CREATEDB privilege, assuming database '%s' already exists.",
                 target_db_name,
             )
         else:
