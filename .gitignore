@@ -14,6 +14,9 @@ wheels/
 .venv
 .vscode
 .python-version
+.just
+.pytest_cache
+.ruff_cache
 
 # local
 dev/
