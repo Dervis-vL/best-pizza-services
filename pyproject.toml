@@ -79,7 +79,6 @@ select = [
     "B",        # bugbear
     "C4",       # comprehensions
     "SIM",      # simplify
-    "TCH",      # type-checking imports (TCH001/002 ignored below)
     "PL",       # pylint rules  ← replaces pylint
     "PT",       # pytest style
     "S",        # security      ← replaces bandit
@@ -87,8 +86,6 @@ select = [
     "ASYNC",    # async anti-patterns
     "RUF",      # ruff-specific
 ]
-# TCH001/TCH002 fire false positives across the codebase; TCH003 (stdlib) is still useful.
-ignore = ["TCH001", "TCH002"]
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**/*.py" = ["S101", "S106", "PLR2004"]
@@ -102,6 +99,9 @@ known-first-party = [
     "pizza_data_storage",
     "geolocation",
 ]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 99
 
 [tool.ruff.format]
 quote-style = "double"
