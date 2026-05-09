@@ -29,9 +29,7 @@ def render_filters(  # noqa: PLR0912
         pre_years = [
             year.value
             for year in shared_enums.Year
-            if st.session_state.get(
-                f"{constants.QueryParam.YEAR}{year.value!s}", True
-            )
+            if st.session_state.get(f"{constants.QueryParam.YEAR}{year.value!s}", True)
         ]
         pre_categories = (
             [

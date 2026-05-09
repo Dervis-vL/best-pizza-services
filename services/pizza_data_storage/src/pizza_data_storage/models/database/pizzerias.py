@@ -35,8 +35,6 @@ class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
 
     # relationships
     webpages: orm.Mapped[list[Webpages]] = orm.relationship(back_populates="pizzeria")
-    locations: orm.Mapped[list[Locations]] = orm.relationship(
-        back_populates="pizzeria"
-    )
+    locations: orm.Mapped[list[Locations]] = orm.relationship(back_populates="pizzeria")
     rankings: orm.Mapped[list[Rankings]] = orm.relationship(back_populates="pizzeria")
     awards: orm.Mapped[list[Awards]] = orm.relationship(back_populates="pizzeria")

@@ -34,9 +34,7 @@ class Pizzerias(base.BaseModel):
 
     # relationships
     webpages: orm.Mapped[list[Webpages]] = orm.relationship(back_populates="pizzeria")
-    locations: orm.Mapped[list[Locations]] = orm.relationship(
-        back_populates="pizzeria"
-    )
+    locations: orm.Mapped[list[Locations]] = orm.relationship(back_populates="pizzeria")
     rankings: orm.Mapped[list[RankingEntries]] = orm.relationship(
         back_populates="pizzeria"
     )
