@@ -2,10 +2,11 @@
 
 from typing import Annotated
 
-from fastapi import Depends, Request
 import sqlalchemy as sa
-from pizza_platform_shared import settings as shared_settings
+from fastapi import Depends, Request
 from sqlalchemy.engine import Engine
+
+from pizza_platform_shared import settings as shared_settings
 
 
 def create_engine() -> Engine:

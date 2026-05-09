@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from abc import ABC
+from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Generator, Any
+from typing import Any
 
 import pandas as pd
 import sqlalchemy as sa
@@ -28,7 +29,7 @@ class BaseDatabase(ABC):
         self._schema = schema_name
 
     @classmethod
-    def from_engine(cls, engine: sa.Engine) -> "BaseDatabase":
+    def from_engine(cls, engine: sa.Engine) -> BaseDatabase:
         """Create a database instance directly from an existing engine, without db settings.
 
         schema_name will be None — queries must not rely on it.
@@ -39,7 +40,7 @@ class BaseDatabase(ABC):
         return instance
 
     @classmethod
-    def from_settings(cls, db_settings: settings.DatabaseSettings) -> "BaseDatabase":
+    def from_settings(cls, db_settings: settings.DatabaseSettings) -> BaseDatabase:
         """Create a database repo instance from settings."""
         return cls(
             connection_string=db_settings.connection_string,
@@ -47,7 +48,7 @@ class BaseDatabase(ABC):
         )
 
     @contextmanager
-    def _session(self) -> Generator[sa_orm.Session, None, None]:
+    def _session(self) -> Generator[sa_orm.Session]:
         """ORM session with commit/rollback. Use for writes and ORM reads."""
         with sa_orm.Session(self._engine) as session:
             try:

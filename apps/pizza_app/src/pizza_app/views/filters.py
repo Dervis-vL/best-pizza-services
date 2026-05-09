@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import streamlit as st
 from pandera import typing as pa_typing
-from pizza_platform_shared import enums as shared_enums
 
 from pizza_app import constants, schemas, utils
+from pizza_platform_shared import enums as shared_enums
 
 
-def render_filters(
+def render_filters(  # noqa: PLR0912
     locations_df: pa_typing.DataFrame[schemas.PizzeriaSchema],
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
@@ -30,7 +30,7 @@ def render_filters(
             year.value
             for year in shared_enums.Year
             if st.session_state.get(
-                f"{constants.QueryParam.YEAR}{str(year.value)}", True
+                f"{constants.QueryParam.YEAR}{year.value!s}", True
             )
         ]
         pre_categories = (
@@ -109,7 +109,7 @@ def render_filters(
             if st.checkbox(
                 label=str(year.value),
                 value=True,
-                key=f"{constants.QueryParam.YEAR}{str(year.value)}",
+                key=f"{constants.QueryParam.YEAR}{year.value!s}",
                 bind=constants.QueryParam.BIND,
             ):
                 selected_years.append(year.value)

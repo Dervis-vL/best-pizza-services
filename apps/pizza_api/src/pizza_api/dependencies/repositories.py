@@ -3,10 +3,10 @@
 from typing import Annotated
 
 from fastapi import Depends
-from pizza_data_storage import repositories as storage_repos
-from pizza_data_storage import settings as storage_settings
 
 from pizza_api.dependencies.engine import EngineDep
+from pizza_data_storage import repositories as storage_repos
+from pizza_data_storage import settings as storage_settings
 
 
 def get_ranking_repo(engine: EngineDep) -> storage_repos.RankingsRepository:

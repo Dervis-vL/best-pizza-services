@@ -4,7 +4,6 @@ from typing import Annotated
 
 import pydantic
 
-
 PostgresName = Annotated[
     str,
     pydantic.StringConstraints(
@@ -62,7 +61,7 @@ class TableNames(pydantic.BaseModel):
         ]
 
     @pydantic.model_validator(mode="after")
-    def validate_at_least_one_table(self) -> "TableNames":
+    def validate_at_least_one_table(self) -> TableNames:
         """Ensure at least one table is defined."""
         if not self.__class__.model_fields:
             raise ValueError(

@@ -1,9 +1,9 @@
 """Edition parser implementation for pizza data collector service."""
 
 from bs4 import BeautifulSoup
-from pizza_platform_shared import schemas
 
 from pizza_data_collector import models, utils
+from pizza_platform_shared import schemas
 
 
 class EditionParser:  # pylint: disable=too-few-public-methods
@@ -67,13 +67,12 @@ class EditionParser:  # pylint: disable=too-few-public-methods
                 else:
                     pizzerias[slug].rankings.append(ranking_schema)
                     pizzerias[slug].webpages.append(webpage_schema)
+            elif slug not in pizzerias:
+                pizzerias[slug] = schemas.PizzeriaSchema(
+                    slug=slug,
+                    webpages=[webpage_schema],
+                )
             else:
-                if slug not in pizzerias:
-                    pizzerias[slug] = schemas.PizzeriaSchema(
-                        slug=slug,
-                        webpages=[webpage_schema],
-                    )
-                else:
-                    pizzerias[slug].webpages.append(webpage_schema)
+                pizzerias[slug].webpages.append(webpage_schema)
 
         return list(pizzerias.values())

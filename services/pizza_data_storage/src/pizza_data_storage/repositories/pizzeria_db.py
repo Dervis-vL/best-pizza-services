@@ -13,12 +13,12 @@ from __future__ import annotations
 import logging
 
 import sqlalchemy as sa
-from sqlalchemy import orm as sa_orm, select
-
-from pizza_platform_shared.repositories.base_database import BaseDatabase
-from pizza_platform_shared import schemas as shared_schemas
+from sqlalchemy import orm as sa_orm
+from sqlalchemy import select
 
 from pizza_data_storage import constants, models
+from pizza_platform_shared import schemas as shared_schemas
+from pizza_platform_shared.repositories.base_database import BaseDatabase
 
 logger = logging.getLogger(__name__)
 

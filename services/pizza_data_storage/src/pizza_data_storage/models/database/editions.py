@@ -6,8 +6,8 @@ import datetime
 from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
+from sqlalchemy.dialects import postgresql
 
 from pizza_data_storage import settings
 from pizza_data_storage.models.database import base
@@ -70,6 +70,6 @@ class Editions(base.BaseModel):
     )
 
     # relationships
-    category: orm.Mapped["Categories"] = orm.relationship(back_populates="editions")
-    rankings: orm.Mapped[list["Rankings"]] = orm.relationship(back_populates="edition")
-    awards: orm.Mapped[list["Awards"]] = orm.relationship(back_populates="edition")
+    category: orm.Mapped[Categories] = orm.relationship(back_populates="editions")
+    rankings: orm.Mapped[list[Rankings]] = orm.relationship(back_populates="edition")
+    awards: orm.Mapped[list[Awards]] = orm.relationship(back_populates="edition")

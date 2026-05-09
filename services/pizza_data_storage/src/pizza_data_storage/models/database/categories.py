@@ -36,4 +36,4 @@ class Categories(base.BaseModel):
     )
 
     # relationships
-    editions: orm.Mapped[list["Editions"]] = orm.relationship(back_populates="category")
+    editions: orm.Mapped[list[Editions]] = orm.relationship(back_populates="category")

@@ -2,6 +2,7 @@
 
 import pandera.pandas as pa
 from pandera import typing as pa_typing
+
 from pizza_platform_shared import enums
 
 

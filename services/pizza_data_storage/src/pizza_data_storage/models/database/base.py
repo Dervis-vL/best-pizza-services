@@ -5,8 +5,8 @@ from __future__ import annotations
 import datetime
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
+from sqlalchemy.dialects import postgresql
 
 
 class BaseModel(orm.DeclarativeBase):

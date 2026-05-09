@@ -22,7 +22,7 @@ class BaseStorage:  # pylint: disable=too-few-public-methods
     @classmethod
     def from_settings(
         cls, storage_settings: settings.PizzaStorageSettings
-    ) -> "BaseStorage":
+    ) -> BaseStorage:
         """Create a storage repo instance from settings."""
         client = boto3.client(
             constants.StorageKeys.STORAGE_TYPE,

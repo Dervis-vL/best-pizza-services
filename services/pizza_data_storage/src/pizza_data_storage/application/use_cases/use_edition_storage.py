@@ -4,8 +4,8 @@ import logging
 
 import bs4
 
-from pizza_data_storage.application import ports
 from pizza_data_storage import enums
+from pizza_data_storage.application import ports
 
 logger = logging.getLogger(__name__)
 

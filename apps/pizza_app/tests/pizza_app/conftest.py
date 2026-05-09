@@ -1,8 +1,9 @@
 """Shared test fixtures for pizza_app tests."""
 
+from unittest.mock import MagicMock
+
 import pandas as pd
 import pytest
-from unittest.mock import MagicMock
 
 from pizza_app import repositories, schemas
 from pizza_app.infrastructure import PizzaDataAdapter

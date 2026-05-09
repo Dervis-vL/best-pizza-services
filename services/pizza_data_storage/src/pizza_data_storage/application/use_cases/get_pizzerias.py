@@ -1,8 +1,7 @@
 """Get all, with or without location, pizzerias use case."""
 
-from pizza_platform_shared import schemas as shared_schemas
-
 from pizza_data_storage.application import ports
+from pizza_platform_shared import schemas as shared_schemas
 
 
 class GetPizzeriasUseCase:  # pylint: disable=too-few-public-methods

@@ -3,18 +3,19 @@
 from typing import Annotated
 
 from fastapi import Depends
+
 from geolocation import GeolocationService
 from geolocation.application import use_cases as geo_use_cases
-from pizza_data_collector import models as collector_models, parsers, scrapers
-from pizza_data_collector.application import use_cases as collector_use_cases
-from pizza_data_storage.application import use_cases as storage_use_cases
-
 from pizza_api.application import use_cases
 from pizza_api.dependencies.repositories import (
-    RankingRepoDep,
-    PizzeriaRepoDep,
     HtmlRepoDep,
+    PizzeriaRepoDep,
+    RankingRepoDep,
 )
+from pizza_data_collector import models as collector_models
+from pizza_data_collector import parsers, scrapers
+from pizza_data_collector.application import use_cases as collector_use_cases
+from pizza_data_storage.application import use_cases as storage_use_cases
 
 
 def get_process_pending_uc(

@@ -2,8 +2,8 @@
 
 import pydantic as pyd
 
-from pizza_platform_shared.schemas.edition import EditionSchema
 from pizza_platform_shared.schemas.base import BaseReadSchema
+from pizza_platform_shared.schemas.edition import EditionSchema
 
 
 class CategoryBaseSchema(pyd.BaseModel):

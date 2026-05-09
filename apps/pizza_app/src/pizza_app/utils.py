@@ -1,14 +1,17 @@
 """Utility functions for the pizza app."""
 
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
 import streamlit as st
-from pizza_platform_shared import enums as shared_enums
 from pandera import typing as pa_typing
 
 from pizza_app import constants, repositories, schemas, settings
+from pizza_platform_shared import enums as shared_enums
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 # create repo

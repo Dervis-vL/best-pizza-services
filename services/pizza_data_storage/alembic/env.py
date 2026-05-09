@@ -2,14 +2,14 @@
 
 import logging
 from logging.config import fileConfig
-from pizza_platform_shared import settings
 
 import psycopg2.errors as pg_errors
-from sqlalchemy import exc as sa_exc
-from sqlalchemy import create_engine, pool, text, Connection, engine_from_config
 from alembic import context
+from sqlalchemy import Connection, create_engine, engine_from_config, pool, text
+from sqlalchemy import exc as sa_exc
 
 from pizza_data_storage import models
+from pizza_platform_shared import settings
 
 logger = logging.getLogger(__name__)
 

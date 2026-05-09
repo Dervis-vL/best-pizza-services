@@ -11,7 +11,7 @@ def standardize_award_name(raw_award_name: str) -> str:
     - Uppercasing first letter of each word (e.g. "best pizza" -> "Best Pizza")
     """
     # Strip "-" and everything after it
-    award_name = raw_award_name.split("-")[0]
+    award_name = raw_award_name.split("-", maxsplit=1)[0]
     # Strip whitespace
     award_name = award_name.strip()
     # Remove trailing year
@@ -59,10 +59,7 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
         and int(parts[-1]) >= 2022
         and parts[-2].isdigit()
         and int(parts[-2]) >= 2022
-    ):
-        parts = parts[:-2]
-    # Last value >= 2022, second-to-last 1-5  ->  strip last 2
-    elif (
+    ) or (
         len(parts) > 2
         and parts[-1].isdigit()
         and int(parts[-1]) >= 2022
@@ -80,10 +77,7 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
         and 0 < int(parts[-1]) < 14
         and parts[-2].isdigit()
         and int(parts[-2]) >= 2022
-    ):
-        parts = parts[:-2]
-    # last two values between 1-10  ->  strip last 2
-    elif (
+    ) or (
         len(parts) > 2
         and parts[-1].isdigit()
         and 0 < int(parts[-1]) < 11

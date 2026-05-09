@@ -3,6 +3,7 @@
 import pathlib
 
 from bs4 import BeautifulSoup
+
 from pizza_data_collector.application.ports.http_client import IHttpClient
 
 

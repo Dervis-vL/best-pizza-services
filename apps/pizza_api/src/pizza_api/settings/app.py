@@ -5,7 +5,7 @@ from typing import Annotated
 import pydantic as pyd
 import pydantic_settings as pyd_settings
 
-from pizza_api import __version__, __description__
+from pizza_api import __description__, __version__
 
 
 class ApplicationSettings(pyd_settings.BaseSettings):

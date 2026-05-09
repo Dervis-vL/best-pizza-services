@@ -9,18 +9,18 @@ from pizza_platform_shared.schemas.ranking import RankingReadSchema, RankingSche
 from pizza_platform_shared.schemas.webpage import WebpageReadSchema, WebpageSchema
 
 __all__ = [
-    "AwardSchema",
     "AwardReadSchema",
-    "CategorySchema",
+    "AwardSchema",
     "CategoryReadSchema",
-    "LocationSchema",
-    "LocationReadSchema",
-    "EditionSchema",
+    "CategorySchema",
     "EditionReadSchema",
-    "RankingSchema",
-    "RankingReadSchema",
-    "PizzeriaSchema",
+    "EditionSchema",
+    "LocationReadSchema",
+    "LocationSchema",
     "PizzeriaReadSchema",
-    "WebpageSchema",
+    "PizzeriaSchema",
+    "RankingReadSchema",
+    "RankingSchema",
     "WebpageReadSchema",
+    "WebpageSchema",
 ]

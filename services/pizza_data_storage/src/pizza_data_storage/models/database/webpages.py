@@ -4,8 +4,8 @@ import datetime
 from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
+from sqlalchemy.dialects import postgresql
 
 from pizza_data_storage import settings
 from pizza_data_storage.models.database import base
@@ -63,6 +63,6 @@ class Webpages(base.BaseModel):
     )
 
     # relationships
-    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(
+    pizzeria: orm.Mapped[Pizzerias] = orm.relationship(
         back_populates=settings.pizza_db.tables.webpages
     )

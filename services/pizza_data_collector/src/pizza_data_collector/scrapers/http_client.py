@@ -1,8 +1,9 @@
 """HTTP client implementation for pizza data collector service."""
 
 import logging
-from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
+
 from pizza_data_collector.exceptions import URLExtractionError
 
 logger = logging.getLogger(__name__)

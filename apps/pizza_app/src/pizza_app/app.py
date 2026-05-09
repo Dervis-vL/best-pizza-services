@@ -8,14 +8,13 @@ import sys
 import streamlit as st
 
 from pizza_app import (
-    infrastructure,
     constants,
     dataclasses,
     enums,
+    infrastructure,
     utils,
     views,
 )
-
 
 # Page CONFIG
 st.set_page_config(

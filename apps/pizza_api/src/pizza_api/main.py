@@ -1,16 +1,16 @@
 """Main entry point for the pizza API."""
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI
 
-from pizza_api.dependencies.engine import create_engine
 from pizza_api import routers, settings
+from pizza_api.dependencies.engine import create_engine
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(application: FastAPI) -> AsyncGenerator[None]:
     """Create the shared DB engine on startup and dispose it on shutdown."""
     application.state.engine = create_engine()
     yield

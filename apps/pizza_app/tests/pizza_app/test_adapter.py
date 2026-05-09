@@ -1,9 +1,11 @@
 """Tests for the PizzaDataAdapter."""
 
-import pandas as pd
 from unittest.mock import MagicMock
 
-from pizza_app import dataclasses as pizza_dataclasses, schemas
+import pandas as pd
+
+from pizza_app import dataclasses as pizza_dataclasses
+from pizza_app import schemas
 from pizza_app.infrastructure import PizzaDataAdapter
 
 

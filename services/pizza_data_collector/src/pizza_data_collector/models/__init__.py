@@ -20,11 +20,11 @@ url_pattern = URLPatterns()
 
 
 __all__ = [
+    "URLPatterns",
     "adress_patterns",
     "award_name_patterns",
     "card_patterns",
     "coordinate_patterns",
     "phone_patterns",
     "ranking_position_patterns",
-    "URLPatterns",
 ]

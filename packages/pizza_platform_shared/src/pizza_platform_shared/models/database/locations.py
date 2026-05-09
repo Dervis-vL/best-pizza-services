@@ -53,6 +53,6 @@ class Locations(base.BaseModel):
     phone: orm.Mapped[str] = orm.mapped_column(sa.String(20), nullable=True, comment="")
 
     # relationships
-    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(
+    pizzeria: orm.Mapped[Pizzerias] = orm.relationship(
         back_populates=settings.pizza_db.tables.locations
     )

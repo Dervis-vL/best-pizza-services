@@ -1,10 +1,10 @@
 """Constants for the scraper."""
 
 from typing import Final
+
 import yarl
 
 from pizza_data_storage import types
-
 
 URL_HOME: Final = yarl.URL("https://www.50toppizza.it/")
 

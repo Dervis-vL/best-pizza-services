@@ -1,7 +1,7 @@
 """Settings for maintenance database (used for Alembic migrations)."""
 
-from pizza_platform_shared.settings.base_database import DatabaseSettings
 from pizza_platform_shared import config
+from pizza_platform_shared.settings.base_database import DatabaseSettings
 
 
 class MaintenanceDatabaseSettings(DatabaseSettings):

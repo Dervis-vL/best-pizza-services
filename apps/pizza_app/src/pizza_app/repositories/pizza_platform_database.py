@@ -7,9 +7,9 @@ from typing import Any
 import sqlalchemy as sa
 from pandera import typing as pa_typing
 
-from pizza_platform_shared.repositories.base_database import BaseDatabase
-from pizza_platform_shared import models
 from pizza_app import schemas
+from pizza_platform_shared import models
+from pizza_platform_shared.repositories.base_database import BaseDatabase
 
 
 class PizzaPlatformDatabase(BaseDatabase):

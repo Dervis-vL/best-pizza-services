@@ -52,7 +52,7 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
     tables: ClassVar[types.TableNames | None]
 
     @pydantic.model_validator(mode="after")
-    def validate_tables_defined(self) -> "DatabaseSettings":
+    def validate_tables_defined(self) -> DatabaseSettings:
         """Validate that if 'requires_tables' is True in the config, then 'tables' ClassVar is defined in the subclass.
 
         This allows us to enforce that subclasses that need to define tables do so,

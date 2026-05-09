@@ -57,5 +57,5 @@ class RankingEntries(base.BaseModel):
     )
 
     # relationships
-    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(back_populates="rankings")
-    edition: orm.Mapped["RankingEditions"] = orm.relationship(back_populates="rankings")
+    pizzeria: orm.Mapped[Pizzerias] = orm.relationship(back_populates="rankings")
+    edition: orm.Mapped[RankingEditions] = orm.relationship(back_populates="rankings")

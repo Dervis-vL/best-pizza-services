@@ -2,9 +2,8 @@
 
 from typing import Protocol
 
-from pizza_platform_shared import schemas as shared_schemas
-
 from pizza_data_storage import models
+from pizza_platform_shared import schemas as shared_schemas
 
 
 class IRankingsRepository(Protocol):

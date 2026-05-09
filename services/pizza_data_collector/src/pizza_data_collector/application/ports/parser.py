@@ -3,6 +3,7 @@
 from typing import Protocol
 
 from bs4 import BeautifulSoup
+
 from pizza_platform_shared import schemas as shared_schemas
 
 

@@ -6,8 +6,8 @@ import logging
 
 from botocore.exceptions import ClientError
 
-from pizza_platform_shared import repositories as shared_repos
 from pizza_data_storage import constants, enums
+from pizza_platform_shared import repositories as shared_repos
 
 logger = logging.getLogger(__name__)
 

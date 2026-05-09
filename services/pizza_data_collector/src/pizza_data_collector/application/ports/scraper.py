@@ -1,8 +1,8 @@
 """Edition scraper interface for pizza data collector service."""
 
 import pathlib
-
 from typing import Protocol
+
 from bs4 import BeautifulSoup
 
 

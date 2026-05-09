@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from typing import Iterator
+from collections.abc import Iterator
 
 from pydantic import BaseModel, ConfigDict
 

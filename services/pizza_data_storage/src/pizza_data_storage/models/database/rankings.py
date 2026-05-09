@@ -9,8 +9,8 @@ from pizza_data_storage import settings
 from pizza_data_storage.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.database.pizzerias import Pizzerias
     from pizza_data_storage.models.database.editions import Editions
+    from pizza_data_storage.models.database.pizzerias import Pizzerias
 
 
 class Rankings(base.BaseModel):  # pylint: disable=too-few-public-methods
@@ -57,5 +57,5 @@ class Rankings(base.BaseModel):  # pylint: disable=too-few-public-methods
     )
 
     # relationships
-    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(back_populates="rankings")
-    edition: orm.Mapped["Editions"] = orm.relationship(back_populates="rankings")
+    pizzeria: orm.Mapped[Pizzerias] = orm.relationship(back_populates="rankings")
+    edition: orm.Mapped[Editions] = orm.relationship(back_populates="rankings")

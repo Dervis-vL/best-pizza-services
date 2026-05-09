@@ -41,6 +41,6 @@ def __getattr__(name: str):
 
 __all__ = [
     "DatabaseSettings",
-    "pizza_db",
     "maintenance_db",
+    "pizza_db",
 ]

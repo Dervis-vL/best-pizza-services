@@ -9,9 +9,9 @@ from pizza_platform_shared import settings
 from pizza_platform_shared.models.database import base
 
 if TYPE_CHECKING:
-    from pizza_platform_shared.models.database.webpages import Webpages
     from pizza_platform_shared.models.database.locations import Locations
     from pizza_platform_shared.models.database.ranking_entries import RankingEntries
+    from pizza_platform_shared.models.database.webpages import Webpages
 
 
 class Pizzerias(base.BaseModel):
@@ -33,10 +33,10 @@ class Pizzerias(base.BaseModel):
     )
 
     # relationships
-    webpages: orm.Mapped[list["Webpages"]] = orm.relationship(back_populates="pizzeria")
-    locations: orm.Mapped[list["Locations"]] = orm.relationship(
+    webpages: orm.Mapped[list[Webpages]] = orm.relationship(back_populates="pizzeria")
+    locations: orm.Mapped[list[Locations]] = orm.relationship(
         back_populates="pizzeria"
     )
-    rankings: orm.Mapped[list["RankingEntries"]] = orm.relationship(
+    rankings: orm.Mapped[list[RankingEntries]] = orm.relationship(
         back_populates="pizzeria"
     )

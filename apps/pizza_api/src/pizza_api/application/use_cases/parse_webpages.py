@@ -3,10 +3,9 @@
 import logging
 
 from geolocation.application import use_cases as geo_use_cases
+from pizza_api.application import results
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
-
-from pizza_api.application import results
 
 logger = logging.getLogger(__name__)
 
