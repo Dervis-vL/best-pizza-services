@@ -1,6 +1,7 @@
 """HTTP client implementation for pizza data collector service."""
 
 import logging
+from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import urlopen
@@ -17,7 +18,7 @@ class HttpClient:  # pylint: disable=too-few-public-methods
         """Initializes the HTTP client with an optional timeout."""
         self._timeout = timeout
 
-    def fetch(self, url: str) -> bytes | None:
+    def fetch(self, url: str) -> Any | None:
         """Fetches the content of the given URL."""
         try:
             parsed_url = urlsplit(url)

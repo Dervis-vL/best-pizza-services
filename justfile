@@ -2,6 +2,7 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # --- IMPORTS --------------------------------------------
 import 'just/check.just'
+import 'just/test.just'
 
 # --- VARIABLES ------------------------------------------
 run  := "uv run"
@@ -12,7 +13,7 @@ green := `tput setaf 2 2>/dev/null || true`
 default:
     @just --list
 
-lint: fmt typecheck
-    @echo "{{bold}}{{green}}🔍 Ruff check...{{nc}}"
-    {{run}} ruff check .
-    @echo "{{bold}}{{green}}✓ All lint checks passed.{{nc}}"
+
+# Run all checks: fmt, test, typecheck, lint, deps-check
+check: fmt typecheck lint deps-check
+    @echo "{{bold}}{{green}}✓ All checks passed.{{nc}}"
