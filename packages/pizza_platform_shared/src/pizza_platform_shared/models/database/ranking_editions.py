@@ -24,7 +24,9 @@ class RankingEditions(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.editions
     __table_args__ = (
         sa.UniqueConstraint(
-            "category_id", "year", name="uq_ranking_edition_category_year"
+            "category_id",
+            "year",
+            name="uq_ranking_edition_category_year",
         ),
         sa.UniqueConstraint("url", name="uq_ranking_edition_url"),
         {"schema": settings.pizza_db.schema_name},
@@ -46,7 +48,9 @@ class RankingEditions(base.BaseModel):
 
     # columns
     year: orm.Mapped[int] = orm.mapped_column(
-        sa.SmallInteger, nullable=False, comment="Year of the ranking edition"
+        sa.SmallInteger,
+        nullable=False,
+        comment="Year of the ranking edition",
     )
     url: orm.Mapped[str] = orm.mapped_column(
         sa.String(500),
@@ -55,7 +59,8 @@ class RankingEditions(base.BaseModel):
     )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
-            sa.DateTime(timezone=True), "sqlite"
+            sa.DateTime(timezone=True),
+            "sqlite",
         ),
         nullable=True,
         comment="Timestamp when the data was scraped",
@@ -63,8 +68,8 @@ class RankingEditions(base.BaseModel):
 
     # relationships
     category: orm.Mapped[Categories] = orm.relationship(
-        back_populates="ranked_editions"
+        back_populates="ranked_editions",
     )
     rankings: orm.Mapped[list[RankingEntries]] = orm.relationship(
-        back_populates="edition"
+        back_populates="edition",
     )

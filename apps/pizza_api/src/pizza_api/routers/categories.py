@@ -32,7 +32,8 @@ def add_category(
         _pizza_api_logger.removeHandler(handler)
 
     response = responses.AddCategoryResponse.model_validate(
-        result, from_attributes=True
+        result,
+        from_attributes=True,
     )
     response.warnings = handler.warnings
     return response

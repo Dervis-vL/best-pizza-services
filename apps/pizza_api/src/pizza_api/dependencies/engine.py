@@ -12,7 +12,8 @@ from pizza_platform_shared import settings as shared_settings
 def create_engine() -> Engine:
     """Create a SQLAlchemy engine using the configured database URL."""
     return sa.create_engine(
-        shared_settings.pizza_db.connection_string, pool_pre_ping=True
+        shared_settings.pizza_db.connection_string,
+        pool_pre_ping=True,
     )
 
 

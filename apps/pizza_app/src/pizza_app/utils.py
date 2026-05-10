@@ -19,7 +19,7 @@ def create_repo() -> repositories.PizzaPlatformDatabase:
     """Create repo instance."""
     if settings.app_settings.database_type == shared_enums.DatabaseType.POSTGRESQL:
         pizza_repo = repositories.PizzaPlatformDatabase.from_settings(
-            db_settings=settings.pizza_db
+            db_settings=settings.pizza_db,
         )
     elif settings.app_settings.database_type == shared_enums.DatabaseType.SQLITE:
         root_path = Path(__file__).parent.parent.parent

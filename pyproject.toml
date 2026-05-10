@@ -67,25 +67,21 @@ exclude_lines = [
 
 [tool.ruff]
 line-length = 88
+indent-width = 4
 target-version = "py314"
 
 [tool.ruff.lint]
-select = [
-    "E", "W",   # pycodestyle
-    "F",        # pyflakes
-    "I",        # isort
-    "N",        # pep8-naming
-    "UP",       # pyupgrade
-    "B",        # bugbear
-    "C4",       # comprehensions
-    "SIM",      # simplify
-    "PL",       # pylint rules  ← replaces pylint
-    "PT",       # pytest style
-    "S",        # security      ← replaces bandit
-    "DTZ",      # no naive datetimes
-    "ASYNC",    # async anti-patterns
-    "RUF",      # ruff-specific
+select = ["ALL"]
+exclude = ["D"]
+ignore = [
+    "D",      # pydocstyle rules
+    "FIX002", # Line contains to-do, consider resolving the issue
+    "CPY001", # Missing copyright notice at top of file
+    "TC001",  # Type checking imports
+    "TC002",  # Type checking imports
+    "TC003",  # Type checking imports
 ]
+
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**/*.py" = ["S101", "S106", "PLR2004"]
@@ -101,11 +97,12 @@ known-first-party = [
 ]
 
 [tool.ruff.lint.pycodestyle]
-max-doc-length = 99
+max-doc-length = 100
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+skip-magic-trailing-comma = false
 docstring-code-format = true
 
 [tool.mypy]

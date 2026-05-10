@@ -12,7 +12,10 @@ class GetWebpagesUseCase:  # pylint: disable=too-few-public-methods
         self._pizza_repository = pizza_repository
 
     def execute(
-        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+        self,
+        *,
+        only_unscraped: bool = False,
+        only_unparsed: bool = False,
     ) -> list[shared_schemas.WebpageReadSchema]:
         """Execute the use case."""
         webpages_models = self._pizza_repository.get_webpages(
@@ -21,7 +24,8 @@ class GetWebpagesUseCase:  # pylint: disable=too-few-public-methods
         )
         return [
             shared_schemas.WebpageReadSchema.model_validate(
-                webpage, from_attributes=True
+                webpage,
+                from_attributes=True,
             )
             for webpage in webpages_models
         ]

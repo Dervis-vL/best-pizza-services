@@ -20,7 +20,8 @@ class BaseModel(orm.DeclarativeBase):
     Provides:
         - Auto-incrementing ID (BigInt for Postgres, Int for SQLite)
         - created_at timestamp with timezone
-        - updated_at timestamp with timezone (auto-updates)"""
+        - updated_at timestamp with timezone (auto-updates)
+    """
 
     __abstract__ = True
 

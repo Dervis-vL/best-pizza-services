@@ -45,11 +45,14 @@ class Webpages(base.BaseModel):
         comment="URL of the pizzeria's page on 50 Top Pizza",
     )
     slug: orm.Mapped[str] = orm.mapped_column(
-        sa.String(200), nullable=False, comment="URL-friendly slug for the pizzeria"
+        sa.String(200),
+        nullable=False,
+        comment="URL-friendly slug for the pizzeria",
     )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
-            sa.DateTime(timezone=True), "sqlite"
+            sa.DateTime(timezone=True),
+            "sqlite",
         ),
         nullable=True,
         comment="Timestamp when the data was scraped",
@@ -57,5 +60,5 @@ class Webpages(base.BaseModel):
 
     # relationships
     pizzeria: orm.Mapped[Pizzerias] = orm.relationship(
-        back_populates=settings.pizza_db.tables.webpages
+        back_populates=settings.pizza_db.tables.webpages,
     )

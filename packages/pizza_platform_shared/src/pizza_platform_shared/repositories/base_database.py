@@ -20,6 +20,7 @@ class BaseDatabase:
 
     Args:
         db_settings: Database settings.
+
     """
 
     def __init__(self, connection_string: str, schema_name: str | None = None) -> None:
@@ -73,7 +74,8 @@ class BaseDatabase:
         """Execute a query and return a pandas DataFrame.
 
         Bypasses the ORM — use for projections across multiple tables
-        or when the result feeds a data pipeline rather than entity logic."""
+        or when the result feeds a data pipeline rather than entity logic.
+        """
         try:
             with self._engine.connect() as conn:
                 df = pd.read_sql(query, conn)

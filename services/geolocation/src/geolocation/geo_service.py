@@ -33,9 +33,8 @@ class GeolocationService:
     _MIN_INTERVAL: float = constants.GeoLocationConstants.MIN_INTERVAL
 
     def __init__(self, user_agent: str) -> None:
-        """
-        :param user_agent: Identifies your app to Nominatim (required by their policy).
-                    Use something like "best-pizza-services/1.0 contact@example.com".
+        """:param user_agent: Identifies your app to Nominatim (required by their policy).
+        Use something like "best-pizza-services/1.0 contact@example.com".
         """
         self._user_agent = user_agent
         self._last_request_at: float = 0.0

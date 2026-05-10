@@ -34,7 +34,8 @@ class AddCategoryUseCase:  # pylint: disable=too-few-public-methods
         self._parse_webpages_uc = parse_webpages_uc
 
     def execute(
-        self, category_schemas: list[shared_schemas.CategorySchema]
+        self,
+        category_schemas: list[shared_schemas.CategorySchema],
     ) -> results.AddCategoryResult:
         """Seed categories and editions, then run the full scrape + parse cycle."""
         self._seed_uc.execute(category_schemas=category_schemas)

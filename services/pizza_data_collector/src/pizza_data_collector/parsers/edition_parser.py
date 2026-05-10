@@ -23,7 +23,9 @@ class EditionParser:  # pylint: disable=too-few-public-methods
         self._awards = awards_patterns
 
     def parse(
-        self, soup: BeautifulSoup, edition_id: int
+        self,
+        soup: BeautifulSoup,
+        edition_id: int,
     ) -> list[schemas.PizzeriaSchema]:
         """Parses the edition page soup and returns structured data."""
         html_cards_list = self._cards.extract(html=str(soup))
@@ -43,7 +45,9 @@ class EditionParser:  # pylint: disable=too-few-public-methods
 
             if award is not None:
                 award_schema = schemas.AwardSchema(
-                    award=award, sponsor=sponsor, edition_id=edition_id
+                    award=award,
+                    sponsor=sponsor,
+                    edition_id=edition_id,
                 )
                 if slug not in pizzerias:
                     pizzerias[slug] = schemas.PizzeriaSchema(
@@ -56,7 +60,8 @@ class EditionParser:  # pylint: disable=too-few-public-methods
                     pizzerias[slug].webpages.append(webpage_schema)
             elif position is not None:
                 ranking_schema = schemas.RankingSchema(
-                    position=position, edition_id=edition_id
+                    position=position,
+                    edition_id=edition_id,
                 )
                 if slug not in pizzerias:
                     pizzerias[slug] = schemas.PizzeriaSchema(

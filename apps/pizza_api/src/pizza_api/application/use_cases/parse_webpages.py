@@ -45,7 +45,8 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
 
             soup = self._get_html_uc.execute(model_id=webpage.id)
             location = self._parse_pizzeria_uc.execute(
-                soup=soup, pizzeria_id=webpage.pizzeria_id
+                soup=soup,
+                pizzeria_id=webpage.pizzeria_id,
             )
 
             if not location:
@@ -59,5 +60,7 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
             parsed += 1
 
         return results.ParseWebpagesResult(
-            parsed=parsed, skipped=skipped, failed=failed
+            parsed=parsed,
+            skipped=skipped,
+            failed=failed,
         )

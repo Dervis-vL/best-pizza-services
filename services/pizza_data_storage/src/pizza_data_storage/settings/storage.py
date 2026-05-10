@@ -17,10 +17,13 @@ class PizzaStorageSettings(pyd_settings.BaseSettings):
     )
 
     endpoint: pyd.AnyHttpUrl = pyd.Field(
-        ..., description="Scaleway object storage endpoint"
+        ...,
+        description="Scaleway object storage endpoint",
     )
     key_id: str = pyd.Field(
-        min_length=20, pattern=r"^SCW[A-Z0-9]+$", description="Access key"
+        min_length=20,
+        pattern=r"^SCW[A-Z0-9]+$",
+        description="Access key",
     )
     secret: pyd.SecretStr = pyd.Field(min_length=32, description="Scaleway secret key")
     bucket: types.BucketName = pyd.Field(..., description="Storage bucket name")

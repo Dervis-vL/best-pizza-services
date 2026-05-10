@@ -27,10 +27,14 @@ class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
 
     # columns
     name: orm.Mapped[str] = orm.mapped_column(
-        sa.String(100), nullable=False, comment="Name of the pizzeria"
+        sa.String(100),
+        nullable=False,
+        comment="Name of the pizzeria",
     )
     description: orm.Mapped[str] = orm.mapped_column(
-        sa.String(500), nullable=True, comment="Description of the pizzeria"
+        sa.String(500),
+        nullable=True,
+        comment="Description of the pizzeria",
     )
 
     # relationships

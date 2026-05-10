@@ -9,7 +9,8 @@ class AwardSchema(pyd.BaseModel):
     """Schema for validating special awards data."""
 
     award: str = pyd.Field(
-        max_length=255, description="Awards or specials for the pizzeria"
+        max_length=255,
+        description="Awards or specials for the pizzeria",
     )
     sponsor: str = pyd.Field(max_length=200, description="Sponsor of the award")
     edition_id: int = pyd.Field(..., description="Foreign key to the editions table")

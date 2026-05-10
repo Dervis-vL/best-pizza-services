@@ -25,7 +25,9 @@ class Editions(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.editions
     __table_args__ = (
         sa.UniqueConstraint(
-            "category_id", "year", name="uq_ranking_edition_category_year"
+            "category_id",
+            "year",
+            name="uq_ranking_edition_category_year",
         ),
         sa.UniqueConstraint("url", name="uq_ranking_edition_url"),
         {"schema": settings.pizza_db.schema_name},
@@ -47,7 +49,9 @@ class Editions(base.BaseModel):
 
     # columns
     year: orm.Mapped[int] = orm.mapped_column(
-        sa.SmallInteger, nullable=False, comment="Year of the ranked edition"
+        sa.SmallInteger,
+        nullable=False,
+        comment="Year of the ranked edition",
     )
     url: orm.Mapped[str] = orm.mapped_column(
         sa.String(500),
@@ -56,14 +60,16 @@ class Editions(base.BaseModel):
     )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
-            sa.DateTime(timezone=True), "sqlite"
+            sa.DateTime(timezone=True),
+            "sqlite",
         ),
         nullable=True,
         comment="Timestamp when the data was scraped",
     )
     parsed_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
-            sa.DateTime(timezone=True), "sqlite"
+            sa.DateTime(timezone=True),
+            "sqlite",
         ),
         nullable=True,
         comment="Timestamp when the data was parsed",

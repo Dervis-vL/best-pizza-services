@@ -59,7 +59,8 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -67,7 +68,8 @@ def upgrade() -> None:
         sa.Column(
             "updated_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -107,7 +109,8 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -115,7 +118,8 @@ def upgrade() -> None:
         sa.Column(
             "updated_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -147,7 +151,8 @@ def upgrade() -> None:
         sa.Column(
             "scraped_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             nullable=True,
             comment="Timestamp when the data was scraped",
@@ -155,7 +160,8 @@ def upgrade() -> None:
         sa.Column(
             "parsed_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             nullable=True,
             comment="Timestamp when the data was parsed",
@@ -177,7 +183,8 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -185,17 +192,22 @@ def upgrade() -> None:
         sa.Column(
             "updated_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ["category_id"], ["api_v1.categories.id"], ondelete="CASCADE"
+            ["category_id"],
+            ["api_v1.categories.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint(
-            "category_id", "year", name="uq_ranking_edition_category_year"
+            "category_id",
+            "year",
+            name="uq_ranking_edition_category_year",
         ),
         sa.UniqueConstraint("url", name="uq_ranking_edition_url"),
         schema="api_v1",
@@ -231,7 +243,8 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -239,13 +252,16 @@ def upgrade() -> None:
         sa.Column(
             "updated_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ["pizzeria_id"], ["api_v1.pizzerias.id"], ondelete="CASCADE"
+            ["pizzeria_id"],
+            ["api_v1.pizzerias.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint(
@@ -279,7 +295,8 @@ def upgrade() -> None:
         sa.Column(
             "scraped_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             nullable=True,
             comment="Timestamp when the data was scraped",
@@ -287,7 +304,8 @@ def upgrade() -> None:
         sa.Column(
             "parsed_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             nullable=True,
             comment="Timestamp when the data was parsed",
@@ -309,7 +327,8 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -317,13 +336,16 @@ def upgrade() -> None:
         sa.Column(
             "updated_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ["pizzeria_id"], ["api_v1.pizzerias.id"], ondelete="CASCADE"
+            ["pizzeria_id"],
+            ["api_v1.pizzerias.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("pizzeria_id", "url", name="uq_webpage_pizzeria_url"),
@@ -372,7 +394,8 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -380,20 +403,27 @@ def upgrade() -> None:
         sa.Column(
             "updated_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ["edition_id"], ["api_v1.editions.id"], ondelete="CASCADE"
+            ["edition_id"],
+            ["api_v1.editions.id"],
+            ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
-            ["pizzeria_id"], ["api_v1.pizzerias.id"], ondelete="CASCADE"
+            ["pizzeria_id"],
+            ["api_v1.pizzerias.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint(
-            "edition_id", "pizzeria_id", name="uq_award_edition_pizzeria"
+            "edition_id",
+            "pizzeria_id",
+            name="uq_award_edition_pizzeria",
         ),
         schema="api_v1",
     )
@@ -434,7 +464,8 @@ def upgrade() -> None:
         sa.Column(
             "created_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
@@ -442,20 +473,27 @@ def upgrade() -> None:
         sa.Column(
             "updated_at",
             postgresql.TIMESTAMP(timezone=True, precision=0).with_variant(
-                sa.DateTime(timezone=True), "sqlite"
+                sa.DateTime(timezone=True),
+                "sqlite",
             ),
             server_default=sa.text("now()"),
             nullable=False,
         ),
         sa.ForeignKeyConstraint(
-            ["edition_id"], ["api_v1.editions.id"], ondelete="CASCADE"
+            ["edition_id"],
+            ["api_v1.editions.id"],
+            ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
-            ["pizzeria_id"], ["api_v1.pizzerias.id"], ondelete="CASCADE"
+            ["pizzeria_id"],
+            ["api_v1.pizzerias.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint(
-            "edition_id", "pizzeria_id", name="uq_ranking_entry_edition_pizzeria"
+            "edition_id",
+            "pizzeria_id",
+            name="uq_ranking_entry_edition_pizzeria",
         ),
         schema="api_v1",
     )

@@ -18,7 +18,7 @@ class EditionSchema(pyd.BaseModel):
         """Validates that the year is within a reasonable range."""
         if v < constants.YearRange.MIN or v > constants.YearRange.MAX:
             raise ValueError(
-                f"Year {v} is outside reasonable range ({constants.YearRange.MAX})"
+                f"Year {v} is outside reasonable range ({constants.YearRange.MAX})",
             )
         return v
 

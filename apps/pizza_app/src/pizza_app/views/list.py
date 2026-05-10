@@ -14,7 +14,6 @@ def render_list(
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> None:
     """Render each pizzeria as a card with location and ranking details."""
-
     if filtered.empty:
         st.info("No pizzerias match the current filters.")
         return
@@ -37,7 +36,8 @@ def render_list(
             with rankings_col:
                 table_rows = ""
                 for category, group in pizzeria_rankings.groupby(
-                    schemas.RankingSchema.category, sort=False
+                    schemas.RankingSchema.category,
+                    sort=False,
                 ):
                     entries = list(group.itertuples())
                     for i, entry in enumerate(entries):

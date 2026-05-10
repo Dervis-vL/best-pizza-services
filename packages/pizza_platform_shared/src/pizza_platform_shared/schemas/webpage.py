@@ -10,7 +10,9 @@ class WebpageSchema(pyd.BaseModel):
 
     url: str = pyd.Field(..., max_length=500, description="URL of the resource")
     slug: str = pyd.Field(
-        ..., max_length=200, description="URL-friendly slug for the resource"
+        ...,
+        max_length=200,
+        description="URL-friendly slug for the resource",
     )
 
     @pyd.field_validator("url")

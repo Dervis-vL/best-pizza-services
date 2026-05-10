@@ -4,7 +4,7 @@ from enum import StrEnum
 
 
 class SegmentedControl(StrEnum):
-    "Enums controlling the segmented view toggle."
+    """Enums controlling the segmented view toggle."""
 
     MAP = "Map"
     LIST = "List"

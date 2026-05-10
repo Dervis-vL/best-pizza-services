@@ -27,7 +27,8 @@ class PizzeriaRepository(BaseDatabase):
     """Repo for seeding and querying pizzerias, webpages, rankings, and locations."""
 
     def seed_pizzerias_webpages_and_rating(
-        self, config_schemas: list[shared_schemas.PizzeriaSchema]
+        self,
+        config_schemas: list[shared_schemas.PizzeriaSchema],
     ) -> None:
         """Write pizzerias, webpages, and rating from config, inserting or updating."""
         with self._session() as session:
@@ -61,7 +62,10 @@ class PizzeriaRepository(BaseDatabase):
             self._upsert_location(session, location_config)
 
     def get_webpages(
-        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+        self,
+        *,
+        only_unscraped: bool = False,
+        only_unparsed: bool = False,
     ) -> list[models.Webpages]:
         """Return all webpages of pizzerias, optionally filtering scraped/parsed status.
 
@@ -69,7 +73,7 @@ class PizzeriaRepository(BaseDatabase):
         the session closes.
         """
         query = select(models.Webpages).options(
-            sa_orm.joinedload(models.Webpages.pizzeria)
+            sa_orm.joinedload(models.Webpages.pizzeria),
         )
         if only_unscraped:
             query = query.where(models.Webpages.scraped_at.is_(None))
@@ -110,13 +114,14 @@ class PizzeriaRepository(BaseDatabase):
 
     @staticmethod
     def _upsert_pizzeria(
-        session: sa_orm.Session, pizzeria_config: shared_schemas.PizzeriaSchema
+        session: sa_orm.Session,
+        pizzeria_config: shared_schemas.PizzeriaSchema,
     ) -> models.Pizzerias:
         """Upsert pizzeria, skipping if name already exists."""
         existing = session.scalar(
             select(models.Pizzerias).where(
-                models.Pizzerias.name == pizzeria_config.name
-            )
+                models.Pizzerias.name == pizzeria_config.name,
+            ),
         )
         if existing:
             existing.description = pizzeria_config.description
@@ -140,7 +145,7 @@ class PizzeriaRepository(BaseDatabase):
             select(models.Webpages).where(
                 models.Webpages.pizzeria_id == pizzeria_id,
                 models.Webpages.url == webpage_config.url,
-            )
+            ),
         )
         if existing:
             existing.slug = webpage_config.slug
@@ -165,7 +170,7 @@ class PizzeriaRepository(BaseDatabase):
             select(models.Rankings).where(
                 models.Rankings.edition_id == ranking_config.edition_id,
                 models.Rankings.pizzeria_id == pizzeria_id,
-            )
+            ),
         )
         if existing:
             existing.position = ranking_config.position
@@ -190,7 +195,7 @@ class PizzeriaRepository(BaseDatabase):
             select(models.Awards).where(
                 models.Awards.edition_id == award_config.edition_id,
                 models.Awards.pizzeria_id == pizzeria_id,
-            )
+            ),
         )
         if existing:
             existing.award = award_config.award
@@ -207,7 +212,8 @@ class PizzeriaRepository(BaseDatabase):
 
     @staticmethod
     def _upsert_location(
-        session: sa_orm.Session, location_config: shared_schemas.LocationSchema
+        session: sa_orm.Session,
+        location_config: shared_schemas.LocationSchema,
     ) -> models.Locations:
         """Upsert a pizzeria location, skipping if coordinates already exist nearby."""
         if location_config.has_coordinates:
@@ -218,14 +224,14 @@ class PizzeriaRepository(BaseDatabase):
                     models.Locations.latitude.between(
                         location_config.latitude - constants.Coordinate.LOC_DELTA,
                         location_config.latitude + constants.Coordinate.LOC_DELTA,
-                    )
+                    ),
                 )
                 .where(
                     models.Locations.longitude.between(
                         location_config.longitude - constants.Coordinate.LOC_DELTA,
                         location_config.longitude + constants.Coordinate.LOC_DELTA,
-                    )
-                )
+                    ),
+                ),
             )
             if existing:
                 existing.adress = location_config.adress

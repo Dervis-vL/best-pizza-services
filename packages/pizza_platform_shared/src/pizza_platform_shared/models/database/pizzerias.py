@@ -26,15 +26,19 @@ class Pizzerias(base.BaseModel):
 
     # columns
     name: orm.Mapped[str] = orm.mapped_column(
-        sa.String(100), nullable=False, comment="Name of the pizzeria"
+        sa.String(100),
+        nullable=False,
+        comment="Name of the pizzeria",
     )
     description: orm.Mapped[str] = orm.mapped_column(
-        sa.String(500), nullable=True, comment="Description of the pizzeria"
+        sa.String(500),
+        nullable=True,
+        comment="Description of the pizzeria",
     )
 
     # relationships
     webpages: orm.Mapped[list[Webpages]] = orm.relationship(back_populates="pizzeria")
     locations: orm.Mapped[list[Locations]] = orm.relationship(back_populates="pizzeria")
     rankings: orm.Mapped[list[RankingEntries]] = orm.relationship(
-        back_populates="pizzeria"
+        back_populates="pizzeria",
     )

@@ -20,7 +20,9 @@ class Rankings(base.BaseModel):  # pylint: disable=too-few-public-methods
     __tablename__ = settings.pizza_db.tables.rankings
     __table_args__ = (
         sa.UniqueConstraint(
-            "edition_id", "pizzeria_id", name="uq_ranking_entry_edition_pizzeria"
+            "edition_id",
+            "pizzeria_id",
+            name="uq_ranking_entry_edition_pizzeria",
         ),
         {"schema": settings.pizza_db.schema_name},
     )
@@ -53,7 +55,9 @@ class Rankings(base.BaseModel):  # pylint: disable=too-few-public-methods
 
     # columns
     position: orm.Mapped[int] = orm.mapped_column(
-        sa.Integer, nullable=False, comment="Position of the pizza in the ranking"
+        sa.Integer,
+        nullable=False,
+        comment="Position of the pizza in the ranking",
     )
 
     # relationships

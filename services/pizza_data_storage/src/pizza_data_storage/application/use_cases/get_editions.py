@@ -12,7 +12,10 @@ class GetEditionsUseCase:  # pylint: disable=too-few-public-methods
         self._ranking_repository = ranking_repository
 
     def execute(
-        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+        self,
+        *,
+        only_unscraped: bool = False,
+        only_unparsed: bool = False,
     ) -> list[shared_schemas.EditionReadSchema]:
         """Execute the use case."""
         editions_models = self._ranking_repository.get_editions(
@@ -21,7 +24,8 @@ class GetEditionsUseCase:  # pylint: disable=too-few-public-methods
         )
         return [
             shared_schemas.EditionReadSchema.model_validate(
-                edition, from_attributes=True
+                edition,
+                from_attributes=True,
             )
             for edition in editions_models
         ]

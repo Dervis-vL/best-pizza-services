@@ -64,5 +64,7 @@ class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
             parsed += 1
 
         return results.ParseEditionsResult(
-            parsed=parsed, skipped=skipped, failed=failed
+            parsed=parsed,
+            skipped=skipped,
+            failed=failed,
         )

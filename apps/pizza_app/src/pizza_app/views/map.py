@@ -16,7 +16,6 @@ def render_map(
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> None:
     """Build and render the Folium pizzeria map."""
-
     if filtered.empty:
         avg_lat, avg_lng = 0, 0
     else:
@@ -40,7 +39,8 @@ def render_map(
         ]
         table_rows = ""
         for category, group in pizzeria_rankings.groupby(
-            schemas.RankingSchema.category, sort=False
+            schemas.RankingSchema.category,
+            sort=False,
         ):
             entries = list(group.itertuples())
             for i, entry in enumerate(entries):

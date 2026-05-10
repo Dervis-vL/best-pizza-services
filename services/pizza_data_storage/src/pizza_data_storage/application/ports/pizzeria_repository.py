@@ -10,7 +10,8 @@ class IPizzeriaRepository(Protocol):
     """Interface for a repository handling pizzerias and their webpages."""
 
     def seed_pizzerias_webpages_and_rating(
-        self, config_schemas: list[shared_schemas.PizzeriaSchema]
+        self,
+        config_schemas: list[shared_schemas.PizzeriaSchema],
     ) -> None:
         """Write pizzerias and webpages from config, inserting or updating."""
 
@@ -18,7 +19,10 @@ class IPizzeriaRepository(Protocol):
         """Write a pizzeria location from config, inserting or updating."""
 
     def get_webpages(
-        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+        self,
+        *,
+        only_unscraped: bool = False,
+        only_unparsed: bool = False,
     ) -> list[models.Webpages]:
         """Return all pizzeria webpages, optional if not been scraped or parsed yet."""
 

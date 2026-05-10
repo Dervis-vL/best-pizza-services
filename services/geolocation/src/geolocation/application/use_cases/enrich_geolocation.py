@@ -12,7 +12,8 @@ class EnrichGeolocationUseCase:  # pylint: disable=too-few-public-methods
         self._geo_service = geolocation_service
 
     def execute(
-        self, location: shared_schemas.LocationSchema
+        self,
+        location: shared_schemas.LocationSchema,
     ) -> shared_schemas.LocationSchema:
         """GReturn the location schema, enriched with city and country if missing."""
         needs_enrichment = (

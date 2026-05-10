@@ -19,7 +19,9 @@ class Locations(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.locations
     __table_args__ = (
         sa.UniqueConstraint(
-            "latitude", "longitude", name="uq_location_latitude_longitude"
+            "latitude",
+            "longitude",
+            name="uq_location_latitude_longitude",
         ),
         {"schema": settings.pizza_db.schema_name},
     )
@@ -40,19 +42,25 @@ class Locations(base.BaseModel):
 
     # columns
     adress: orm.Mapped[str] = orm.mapped_column(
-        sa.String(250), nullable=True, comment=""
+        sa.String(250),
+        nullable=True,
+        comment="",
     )
     city: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=True, comment="")
     country: orm.Mapped[str] = orm.mapped_column(
-        sa.String(50), nullable=True, comment=""
+        sa.String(50),
+        nullable=True,
+        comment="",
     )
     latitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True, comment="")
     longitude: orm.Mapped[float] = orm.mapped_column(
-        sa.Float, nullable=True, comment=""
+        sa.Float,
+        nullable=True,
+        comment="",
     )
     phone: orm.Mapped[str] = orm.mapped_column(sa.String(20), nullable=True, comment="")
 
     # relationships
     pizzeria: orm.Mapped[Pizzerias] = orm.relationship(
-        back_populates=settings.pizza_db.tables.locations
+        back_populates=settings.pizza_db.tables.locations,
     )

@@ -18,7 +18,8 @@ class PizzeriaSchema(pa.DataFrameModel):
     latitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-90, le=90)
     longitude: pa_typing.Series[float] = pa.Field(nullable=False, ge=-180, le=180)
     country: pa_typing.Series[str] = pa.Field(
-        nullable=False, str_length={"min_value": 1}
+        nullable=False,
+        str_length={"min_value": 1},
     )
     city: pa_typing.Series[str] = pa.Field(nullable=False)
 
@@ -28,7 +29,7 @@ class PizzeriaSchema(pa.DataFrameModel):
         """Derive name from slug"""
         df = df.copy()
         df["name"] = df["slug"].apply(
-            lambda val: " ".join(word.capitalize() for word in val.split("-"))
+            lambda val: " ".join(word.capitalize() for word in val.split("-")),
         )
         return df
 

@@ -20,7 +20,9 @@ class Awards(base.BaseModel):  # pylint: disable=too-few-public-methods
     __tablename__ = settings.pizza_db.tables.awards
     __table_args__ = (
         sa.UniqueConstraint(
-            "edition_id", "pizzeria_id", name="uq_award_edition_pizzeria"
+            "edition_id",
+            "pizzeria_id",
+            name="uq_award_edition_pizzeria",
         ),
         {"schema": settings.pizza_db.schema_name},
     )
@@ -53,10 +55,14 @@ class Awards(base.BaseModel):  # pylint: disable=too-few-public-methods
 
     # columns
     award: orm.Mapped[str] = orm.mapped_column(
-        sa.String(255), nullable=False, comment="The award received by the pizzeria"
+        sa.String(255),
+        nullable=False,
+        comment="The award received by the pizzeria",
     )
     sponsor: orm.Mapped[str] = orm.mapped_column(
-        sa.String(200), nullable=False, comment="Sponsor of the award"
+        sa.String(200),
+        nullable=False,
+        comment="Sponsor of the award",
     )
 
     # relationships

@@ -25,7 +25,7 @@ def get_process_pending_uc(
 ) -> use_cases.ProcessPendingUseCase:
     """Build and wire the ProcessPendingUseCase with all its dependencies."""
     scrape_uc = collector_use_cases.ScrapeUseCase(
-        scraper=scrapers.Scraper(http_client=scrapers.HttpClient())
+        scraper=scrapers.Scraper(http_client=scrapers.HttpClient()),
     )
     parse_edition_uc = collector_use_cases.ParseEditionUseCase(
         parser=parsers.EditionParser(
@@ -33,42 +33,42 @@ def get_process_pending_uc(
             card_patterns=collector_models.card_patterns,
             url_pattern=collector_models.url_pattern,
             position_patterns=collector_models.ranking_position_patterns,
-        )
+        ),
     )
     parse_pizzeria_uc = collector_use_cases.ParsePizzeriaUseCase(
         parser=parsers.PizzeriaParser(
             coord_patterns=collector_models.coordinate_patterns,
             address_patterns=collector_models.adress_patterns,
             phone_patterns=collector_models.phone_patterns,
-        )
+        ),
     )
     enrich_geo_uc = geo_use_cases.EnrichGeolocationUseCase(
-        geolocation_service=GeolocationService(user_agent="best-pizza-services/1.0")
+        geolocation_service=GeolocationService(user_agent="best-pizza-services/1.0"),
     )
 
     return use_cases.ProcessPendingUseCase(
         scrape_editions_uc=use_cases.ScrapeEditionsUseCase(
             get_editions_uc=storage_use_cases.GetEditionsUseCase(
-                ranking_repository=ranking_repo
+                ranking_repository=ranking_repo,
             ),
             scrape_uc=scrape_uc,
             store_html_uc=storage_use_cases.StoreEditionHtmlUseCase(
-                html_repository=html_repo
+                html_repository=html_repo,
             ),
             mark_scraped_uc=storage_use_cases.MarkEditionAsScrapedUseCase(
-                ranking_repository=ranking_repo
+                ranking_repository=ranking_repo,
             ),
         ),
         parse_editions_uc=use_cases.ParseEditionsUseCase(
             get_editions_uc=storage_use_cases.GetEditionsUseCase(
-                ranking_repository=ranking_repo
+                ranking_repository=ranking_repo,
             ),
             get_html_uc=storage_use_cases.GetEditionHtmlUseCase(
-                html_repository=html_repo
+                html_repository=html_repo,
             ),
             parse_edition_uc=parse_edition_uc,
             mark_parsed_uc=storage_use_cases.MarkEditionAsParsedUseCase(
-                ranking_repository=ranking_repo
+                ranking_repository=ranking_repo,
             ),
             seed_pizzerias_uc=storage_use_cases.SeedPizzeriasWebpagesRatingsUseCase(
                 pizzeria_repository=pizzeria_repo,
@@ -76,35 +76,36 @@ def get_process_pending_uc(
         ),
         scrape_webpages_uc=use_cases.ScrapeWebpagesUseCase(
             get_webpages_uc=storage_use_cases.GetWebpagesUseCase(
-                pizza_repository=pizzeria_repo
+                pizza_repository=pizzeria_repo,
             ),
             scrape_uc=scrape_uc,
             store_html_uc=storage_use_cases.StoreWebpageHtmlUseCase(
-                html_repository=html_repo
+                html_repository=html_repo,
             ),
             mark_scraped_uc=storage_use_cases.MarkWebpageAsScrapedUseCase(
-                pizza_repository=pizzeria_repo
+                pizza_repository=pizzeria_repo,
             ),
         ),
         parse_webpages_uc=use_cases.ParseWebpagesUseCase(
             get_webpages_uc=storage_use_cases.GetWebpagesUseCase(
-                pizza_repository=pizzeria_repo
+                pizza_repository=pizzeria_repo,
             ),
             get_html_uc=storage_use_cases.GetWebpageHtmlUseCase(
-                html_repository=html_repo
+                html_repository=html_repo,
             ),
             parse_pizzeria_uc=parse_pizzeria_uc,
             enrich_geo_uc=enrich_geo_uc,
             mark_parsed_uc=storage_use_cases.MarkWebpageAsParsedUseCase(
-                pizza_repository=pizzeria_repo
+                pizza_repository=pizzeria_repo,
             ),
             seed_location_uc=storage_use_cases.SeedLocationUseCase(
-                pizzeria_repository=pizzeria_repo
+                pizzeria_repository=pizzeria_repo,
             ),
         ),
     )
 
 
 ProcessPendingUCDep = Annotated[
-    use_cases.ProcessPendingUseCase, Depends(get_process_pending_uc)
+    use_cases.ProcessPendingUseCase,
+    Depends(get_process_pending_uc),
 ]

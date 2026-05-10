@@ -13,7 +13,9 @@ class PizzeriaBaseSchema(pyd.BaseModel):
     """Schema for validating pizzeria data."""
 
     description: str | None = pyd.Field(
-        None, max_length=500, description="Pizzeria description"
+        None,
+        max_length=500,
+        description="Pizzeria description",
     )
     rankings: list[RankingSchema] = pyd.Field(
         default_factory=list,
@@ -45,7 +47,7 @@ class PizzeriaSchema(PizzeriaBaseSchema):
         derived_name = " ".join(word.capitalize() for word in self.slug.split("-"))  # pylint: disable=no-member
         if len(derived_name) > constants.ModelColumnLengths.NAME:
             raise ValueError(
-                f"Derived name exceeds maximum length (derived from slug '{self.slug}')"
+                f"Derived name exceeds maximum length (derived from slug '{self.slug}')",
             )
         return derived_name
 

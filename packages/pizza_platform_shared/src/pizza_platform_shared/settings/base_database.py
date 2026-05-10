@@ -27,6 +27,7 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
         database_name: Name of the database to connect to.
         schema_name: Name of the schema to use within the database.
         tables: ClassVar containing table names relevant to the settings, if required.
+
     """
 
     model_config = pydantic_settings.SettingsConfigDict(
@@ -38,14 +39,17 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
     port: int = pydantic.Field(..., description="Database port")
     user_name: str = pydantic.Field(..., description="Database username")
     name: types.PostgresName = pydantic.Field(
-        ..., description="Name of the database to connect to"
+        ...,
+        description="Name of the database to connect to",
     )
     schema_name: types.SchemaName = pydantic.Field(
-        ..., description="Name of the schema to use within the database"
+        ...,
+        description="Name of the schema to use within the database",
     )
     password: pydantic.SecretStr = pydantic.Field(..., description="Database password")
     ssl_enabled: bool = pydantic.Field(
-        ..., description="Whether SSL is enabled for the database connection"
+        ...,
+        description="Whether SSL is enabled for the database connection",
     )
 
     # Database tables if required. Must be defined in subclasses, and is not an env var.
@@ -69,7 +73,7 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
 
         if not hasattr(self.__class__, "tables") or self.__class__.tables is None:
             raise ValueError(
-                f"{self.__class__.__name__} must have 'tables' when 'requires_tables'."
+                f"{self.__class__.__name__} must have 'tables' when 'requires_tables'.",
             )
         return self
 

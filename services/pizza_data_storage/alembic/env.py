@@ -19,7 +19,8 @@ config = context.config  # pylint: disable=no-member
 config.set_main_option(
     "sqlalchemy.url",
     settings.pizza_db.connection_string.render_as_string(hide_password=False).replace(
-        "%", "%%"
+        "%",
+        "%%",
     ),
 )
 

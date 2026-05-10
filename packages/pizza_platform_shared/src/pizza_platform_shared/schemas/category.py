@@ -12,7 +12,9 @@ class CategoryBaseSchema(pyd.BaseModel):
     slug: str = pyd.Field(..., max_length=50, description="URL-friendly slug")
     name: str = pyd.Field(..., max_length=50, description="Name of the pizza category")
     description: str | None = pyd.Field(
-        None, max_length=500, description="Description of the category"
+        None,
+        max_length=500,
+        description="Description of the category",
     )
     editions: list[EditionSchema] = pyd.Field(
         default_factory=list,

@@ -17,6 +17,7 @@ class PizzaPlatformDatabase(BaseDatabase):
 
     Args:
         db_settings: Resolved database settings
+
     """
 
     def _get_read_query(self) -> sa.Select[Any]:
@@ -35,7 +36,7 @@ class PizzaPlatformDatabase(BaseDatabase):
             )
             .where(
                 models.Locations.latitude.is_not(None)
-                & models.Locations.longitude.is_not(None)
+                & models.Locations.longitude.is_not(None),
             )
             .order_by(models.Pizzerias.name)
         )

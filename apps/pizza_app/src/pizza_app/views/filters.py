@@ -14,7 +14,6 @@ def render_filters(  # noqa: PLR0912
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
     """Render the sidebar filters and return the filtered pizzerias dataframe."""
-
     if constants.QueryParam.COUNTRY not in st.session_state:
         st.session_state[constants.QueryParam.COUNTRY] = constants.Filters.DEFAULT
     if constants.QueryParam.CITY not in st.session_state:
@@ -23,7 +22,8 @@ def render_filters(  # noqa: PLR0912
     with st.sidebar:
         st.header(constants.Filters.HEADER)
         search = st.text_input(
-            "Search by name", placeholder=constants.Filters.PLACEHOLDER
+            "Search by name",
+            placeholder=constants.Filters.PLACEHOLDER,
         )
 
         pre_years = [
@@ -36,21 +36,24 @@ def render_filters(  # noqa: PLR0912
                 cat.value
                 for cat in shared_enums.Categories
                 if st.session_state.get(
-                    f"{constants.QueryParam.CATEGORY}{cat.name}", True
+                    f"{constants.QueryParam.CATEGORY}{cat.name}",
+                    True,
                 )
             ]
             + [
                 cat.value
                 for cat in shared_enums.CategoriesExcellent
                 if st.session_state.get(
-                    f"{constants.QueryParam.CATEGORY}{cat.name}", False
+                    f"{constants.QueryParam.CATEGORY}{cat.name}",
+                    False,
                 )
             ]
             + [
                 cat.value
                 for cat in shared_enums.CategoriesSpecial
                 if st.session_state.get(
-                    f"{constants.QueryParam.CATEGORY}{cat.name}", False
+                    f"{constants.QueryParam.CATEGORY}{cat.name}",
+                    False,
                 )
             ]
         )
@@ -58,7 +61,7 @@ def render_filters(  # noqa: PLR0912
             rankings_df[
                 rankings_df[schemas.RankingSchema.year].isin(pre_years)
                 & rankings_df[schemas.RankingSchema.category].isin(pre_categories)
-            ][schemas.RankingSchema.pizzeria_name]
+            ][schemas.RankingSchema.pizzeria_name],
         )
         relevant_locations = locations_df[
             locations_df[schemas.PizzeriaSchema.slug].isin(pre_valid_names)
@@ -68,7 +71,7 @@ def render_filters(  # noqa: PLR0912
             relevant_locations[schemas.PizzeriaSchema.country]
             .dropna()
             .unique()
-            .tolist()
+            .tolist(),
         )
         selected_country = st.selectbox(
             "Search by country",
@@ -87,7 +90,7 @@ def render_filters(  # noqa: PLR0912
             city_pool = relevant_locations
 
         cities = sorted(
-            city_pool[schemas.PizzeriaSchema.city].dropna().unique().tolist()
+            city_pool[schemas.PizzeriaSchema.city].dropna().unique().tolist(),
         )
         selected_city = st.selectbox(
             "Search by city",
@@ -165,7 +168,9 @@ def render_filters(  # noqa: PLR0912
         filtered = locations_df[
             locations_df[schemas.PizzeriaSchema.slug].isin(valid_names)
             & locations_df[schemas.PizzeriaSchema.slug].str.contains(
-                search, case=False, na=False
+                search,
+                case=False,
+                na=False,
             )
             & country_mask
             & city_mask

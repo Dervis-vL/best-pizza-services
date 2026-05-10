@@ -65,6 +65,6 @@ class TableNames(pydantic.BaseModel):
         """Ensure at least one table is defined."""
         if not self.__class__.model_fields:
             raise ValueError(
-                f"{self.__class__.__name__} must define at least one table name field."
+                f"{self.__class__.__name__} must define at least one table name field.",
             )
         return self

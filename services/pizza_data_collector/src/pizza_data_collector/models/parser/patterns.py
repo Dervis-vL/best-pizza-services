@@ -39,8 +39,7 @@ class BasePattern(BaseModel, ABC):
 
 
 class CardPatterns(BasePattern):
-    """
-    Patterns for extracting individual ranking card HTML chunks from full ranking page.
+    """Patterns for extracting individual ranking card HTML chunks from full ranking page.
     Each pattern targets the outer <a> wrapping a single ranking entry.
 
     Use extract() to get all card chunks, then run URLPattern and
@@ -82,12 +81,10 @@ class CardPatterns(BasePattern):
 
 
 class URLPatterns(BasePattern):
-    """
-    Pattern for extracting the raw url string.
-    """
+    """Pattern for extracting the raw url string."""
 
     pizzeria_url: re.Pattern[str] = re.compile(
-        r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"'
+        r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"',
     )
 
     def extract(self, html: str) -> str:
@@ -99,8 +96,7 @@ class URLPatterns(BasePattern):
 
 
 class RankingPositionPatterns(BasePattern):
-    """
-    Patterns for extracting a ranked position (1-100) from a ranking-list card's HTML.
+    """Patterns for extracting a ranked position (1-100) from a ranking-list card's HTML.
     Run on each individual card/entry's HTML extracted from a ranking page.
     Each pattern must contain a (?P<position>...) named group.
 
@@ -128,8 +124,7 @@ class RankingPositionPatterns(BasePattern):
 
 
 class CoordPatterns(BasePattern):
-    """
-    Compiled regex patterns for coordinate extraction.
+    """Compiled regex patterns for coordinate extraction.
     Each attribute targets a specific HTML structure observed in the wild.
     Both (?P<lat>...) and (?P<lng>...) named groups are required in every pattern.
     """
@@ -162,8 +157,7 @@ class CoordPatterns(BasePattern):
 
 
 class AddressPatterns(BasePattern):
-    """
-    Patterns for extracting the raw address string.
+    """Patterns for extracting the raw address string.
     Each pattern must contain an (?P<address>...) named group.
     """
 
@@ -180,8 +174,7 @@ class AddressPatterns(BasePattern):
 
 
 class PhonePatterns(BasePattern):
-    """
-    Patterns for extracting the phone number.
+    """Patterns for extracting the phone number.
     Each pattern must contain a (?P<phone>...) named group.
     """
 
@@ -198,8 +191,7 @@ class PhonePatterns(BasePattern):
 
 
 class AwardNamePatterns(BasePattern):
-    """
-    Pattern for extracting the award name and sponsor from a special awards card.
+    """Pattern for extracting the award name and sponsor from a special awards card.
     Run on each individual card HTML chunk extracted by AwardCardPatterns.
 
     The source element looks like:

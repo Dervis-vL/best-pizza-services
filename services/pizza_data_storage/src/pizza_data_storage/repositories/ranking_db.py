@@ -47,7 +47,10 @@ class RankingsRepository(BaseDatabase):
                     self._upsert_edition(session, edition, category_model)
 
     def get_editions(
-        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+        self,
+        *,
+        only_unscraped: bool = False,
+        only_unparsed: bool = False,
     ) -> list[models.Editions]:
         """Return all editions, optionally filtering on scraped and parsed status.
 
@@ -104,11 +107,12 @@ class RankingsRepository(BaseDatabase):
 
     @staticmethod
     def _upsert_category(
-        session: sa_orm.Session, cat_config: shared_schemas.CategorySchema
+        session: sa_orm.Session,
+        cat_config: shared_schemas.CategorySchema,
     ) -> models.Categories:
         """Upsert a category by slug, updating name, description if already exists."""
         existing = session.scalar(
-            select(models.Categories).where(models.Categories.slug == cat_config.slug)
+            select(models.Categories).where(models.Categories.slug == cat_config.slug),
         )
         if existing:
             existing.name = cat_config.name
@@ -134,7 +138,7 @@ class RankingsRepository(BaseDatabase):
             select(models.Editions).where(
                 models.Editions.category_id == category.id,
                 models.Editions.year == edition_config.year,
-            )
+            ),
         )
         if existing:
             existing.url = edition_config.url

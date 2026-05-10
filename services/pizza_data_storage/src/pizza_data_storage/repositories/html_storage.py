@@ -73,7 +73,10 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
         try:
             self._client.head_object(Bucket=self._bucket, Key=key)
             logger.info(
-                "HTML exists for %s with id=%s at key=%s", model_name, model_id, key
+                "HTML exists for %s with id=%s at key=%s",
+                model_name,
+                model_id,
+                key,
             )
             return True
         except ClientError as e:
