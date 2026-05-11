@@ -7,7 +7,7 @@ from pizza_platform_shared import schemas as shared_schemas
 class GetWebpagesUseCase:  # pylint: disable=too-few-public-methods
     """Get (unscraped/unparsed) webpages use case."""
 
-    def __init__(self, pizza_repository: ports.IPizzeriaRepository):
+    def __init__(self, pizza_repository: ports.IPizzeriaRepository) -> None:
         """Initialize the use case."""
         self._pizza_repository = pizza_repository
 

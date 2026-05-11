@@ -69,6 +69,7 @@ exclude_lines = [
 line-length    = 88
 indent-width   = 4
 target-version = "py314"
+exclude        = ["**/alembic/**"]
 
 [tool.ruff.lint]
 select  = ["ALL"]

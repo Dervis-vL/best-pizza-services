@@ -20,8 +20,7 @@ def standardize_award_name(raw_award_name: str) -> str:
     if words and words[-1] in map(str, shared_enums.Year):
         award_name = " ".join(words[:-1])
     # Uppercase first letter of each word
-    award_name = award_name.title()
-    return award_name
+    return award_name.title()
 
 
 def extract_pizzeria_name(endpoint_path: str) -> str:
@@ -38,7 +37,8 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
     """
     slug = endpoint_path.rstrip("/").split("/")[-1]
     if not slug:
-        raise ValueError(f"Invalid pizzeria endpoint path: {endpoint_path}")
+        msg = f"Invalid pizzeria endpoint path: {endpoint_path}"
+        raise ValueError(msg)
 
     parts = slug.split("-")
     # Last two values >= 2022, third-to-last between 1-11  ->  strip last 3

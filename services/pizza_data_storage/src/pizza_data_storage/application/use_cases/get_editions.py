@@ -7,7 +7,7 @@ from pizza_platform_shared import schemas as shared_schemas
 class GetEditionsUseCase:  # pylint: disable=too-few-public-methods
     """Get (unscraped/unparsed) editions use case."""
 
-    def __init__(self, ranking_repository: ports.IRankingsRepository):
+    def __init__(self, ranking_repository: ports.IRankingsRepository) -> None:
         """Initialize the use case."""
         self._ranking_repository = ranking_repository
 

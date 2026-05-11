@@ -49,12 +49,12 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
             response = self._client.get_object(Bucket=self._bucket, Key=key)
             html = response["Body"].read().decode("utf-8")
             logger.info("Retrieved %s HTML from key=%s", model_name, key)
-            return html
         except ClientError as e:
             if e.response["Error"]["Code"] == "NoSuchKey":
                 msg = f"No HTML found at key: {key}"
                 raise KeyError(msg) from e
             raise
+        return html
 
     def list_keys(self, *, model_name: enums.HtmlModelName | None = None) -> list[str]:
         """List stored edition HTML keys, optionally filtered by category or year."""
@@ -79,8 +79,8 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
                 model_id,
                 key,
             )
-            return True
         except ClientError as e:
             if e.response["Error"]["Code"] == "404":
                 return False
             raise
+        return True
