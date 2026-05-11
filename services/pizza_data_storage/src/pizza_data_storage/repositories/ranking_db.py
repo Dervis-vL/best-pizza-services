@@ -94,7 +94,8 @@ class RankingsRepository(BaseDatabase):
         with self._session() as session:
             edition = session.get(models.Editions, edition_id)
             if not edition:
-                raise ValueError(f"Edition with id {edition_id} not found.")
+                msg = f"Edition with id {edition_id} not found."
+                raise ValueError(msg)
             edition.scraped_at = sa.func.now()  # pylint: disable=not-callable
 
     def mark_edition_parsed(self, edition_id: int) -> None:
@@ -102,7 +103,8 @@ class RankingsRepository(BaseDatabase):
         with self._session() as session:
             edition = session.get(models.Editions, edition_id)
             if not edition:
-                raise ValueError(f"Edition with id {edition_id} not found.")
+                msg = f"Edition with id {edition_id} not found."
+                raise ValueError(msg)
             edition.parsed_at = sa.func.now()  # pylint: disable=not-callable
 
     @staticmethod

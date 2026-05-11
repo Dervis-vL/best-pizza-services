@@ -52,7 +52,8 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
             return html
         except ClientError as e:
             if e.response["Error"]["Code"] == "NoSuchKey":
-                raise KeyError(f"No HTML found at key: {key}") from e
+                msg = f"No HTML found at key: {key}"
+                raise KeyError(msg) from e
             raise
 
     def list_keys(self, *, model_name: enums.HtmlModelName | None = None) -> list[str]:

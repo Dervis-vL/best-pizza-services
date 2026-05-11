@@ -30,10 +30,10 @@ testpaths = [
 ]
 
 # Naming conventions
-python_files = "test_*.py"
-python_classes = "Test*"
+python_files     = "test_*.py"
+python_classes   = "Test*"
 python_functions = "test_*"
-asyncio_mode = "auto"
+asyncio_mode     = "auto"
 
 # Coverage
 addopts = """
@@ -54,8 +54,8 @@ branch   = true
 parallel = true
 
 [tool.coverage.report]
-fail_under   = 100
-show_missing = true
+fail_under    = 100
+show_missing  = true
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
@@ -66,14 +66,14 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-line-length = 88
-indent-width = 4
+line-length    = 88
+indent-width   = 4
 target-version = "py314"
 
 [tool.ruff.lint]
-select = ["ALL"]
+select  = ["ALL"]
 exclude = ["D"]
-ignore = [
+ignore  = [
     "D",      # pydocstyle rules
     "FIX002", # Line contains to-do, consider resolving the issue
     "CPY001", # Missing copyright notice at top of file
@@ -100,10 +100,10 @@ known-first-party = [
 max-doc-length = 100
 
 [tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
+quote-style               = "double"
+indent-style              = "space"
 skip-magic-trailing-comma = false
-docstring-code-format = true
+docstring-code-format     = true
 
 [tool.mypy]
 python_version = "3.14"
@@ -133,3 +133,8 @@ commit_args     = "--no-verify"   # skip pre-commit hooks on version bump commit
 filename = "pyproject.toml"
 search   = 'current_version = "{current_version}"'
 replace  = 'current_version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search   = "[Unreleased]"
+replace  = "## [{new_version}] - {now:%Y-%m-%d}"

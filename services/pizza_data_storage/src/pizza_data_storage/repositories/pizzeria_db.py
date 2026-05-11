@@ -101,7 +101,8 @@ class PizzeriaRepository(BaseDatabase):
         with self._session() as session:
             webpage = session.get(models.Webpages, webpage_id)
             if not webpage:
-                raise ValueError(f"Webpage with id {webpage_id} not found.")
+                msg = f"Webpage with id {webpage_id} not found."
+                raise ValueError(msg)
             webpage.scraped_at = sa.func.now()  # pylint: disable=not-callable
 
     def mark_webpage_parsed(self, webpage_id: int) -> None:
@@ -109,7 +110,8 @@ class PizzeriaRepository(BaseDatabase):
         with self._session() as session:
             webpage = session.get(models.Webpages, webpage_id)
             if not webpage:
-                raise ValueError(f"Webpage with id {webpage_id} not found.")
+                msg = f"Webpage with id {webpage_id} not found."
+                raise ValueError(msg)
             webpage.parsed_at = sa.func.now()  # pylint: disable=not-callable
 
     @staticmethod
