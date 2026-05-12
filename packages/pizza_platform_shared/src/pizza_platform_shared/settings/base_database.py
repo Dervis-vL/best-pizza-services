@@ -72,9 +72,8 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
             return self
 
         if not hasattr(self.__class__, "tables") or self.__class__.tables is None:
-            raise ValueError(
-                f"{self.__class__.__name__} must have 'tables' when 'requires_tables'.",
-            )
+            msg = f"{self.__class__.__name__} must have 'tables' when 'requires_tables'."
+            raise ValueError(msg)
         return self
 
     @property

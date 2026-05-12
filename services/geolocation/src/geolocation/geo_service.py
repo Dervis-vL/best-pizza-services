@@ -65,7 +65,8 @@ class GeolocationService:
         )
         try:
             if urllib.parse.urlsplit(url_str).scheme not in ("http", "https"):
-                raise ValueError("Invalid URL scheme")
+                msg = "Invalid URL scheme"
+                raise ValueError(msg)
             with urllib.request.urlopen(req, timeout=10) as resp:  # noqa: S310
                 return json.loads(resp.read())
         except HTTPError as e:
@@ -83,7 +84,8 @@ class GeolocationService:
     @staticmethod
     def _parse(data: dict) -> models.LocationResult:
         if "error" in data:
-            raise RuntimeError(f"Nominatim returned an error: {data['error']}")
+            msg = f"Nominatim returned an error: {data['error']}"
+            raise RuntimeError(msg)
 
         addr = data.get("address", {})
         city = (

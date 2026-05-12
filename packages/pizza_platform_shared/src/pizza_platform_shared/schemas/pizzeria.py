@@ -46,9 +46,8 @@ class PizzeriaSchema(PizzeriaBaseSchema):
         """Derive the display name from the slug."""
         derived_name = " ".join(word.capitalize() for word in self.slug.split("-"))  # pylint: disable=no-member
         if len(derived_name) > constants.ModelColumnLengths.NAME:
-            raise ValueError(
-                f"Derived name exceeds maximum length (derived from slug '{self.slug}')",
-            )
+            msg = f"Derived name exceeds maximum length (derived from slug '{self.slug}')"
+            raise ValueError(msg)
         return derived_name
 
     @pyd.field_validator("slug", mode="before")

@@ -7,7 +7,7 @@ from geolocation.application import ports
 class GetReverseGeolocationUseCase:  # pylint: disable=too-few-public-methods
     """Use case for getting reverse geolocation data with lat/lon."""
 
-    def __init__(self, geolocation_service: ports.IGeolocationService):
+    def __init__(self, geolocation_service: ports.IGeolocationService) -> None:
         """Initialize the use case."""
         self._geo_service = geolocation_service
 

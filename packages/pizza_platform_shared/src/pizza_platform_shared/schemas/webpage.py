@@ -26,7 +26,8 @@ class WebpageSchema(pyd.BaseModel):
             v = v.replace("http://", "https://", 1)
         # Ensure URL starts with https://
         if not v.startswith("https://"):
-            raise ValueError(f"URL is not valid: {v}")
+            msg = f"URL is not valid: {v}"
+            raise ValueError(msg)
         return v
 
     @pyd.field_validator("slug")

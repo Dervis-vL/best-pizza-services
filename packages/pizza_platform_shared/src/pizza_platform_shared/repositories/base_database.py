@@ -35,8 +35,8 @@ class BaseDatabase:
         schema_name will be None — queries must not rely on it.
         """
         instance = cls.__new__(cls)
-        instance._engine = engine
-        instance._schema = None
+        instance._engine = engine  # noqa: SLF001
+        instance._schema = None  # noqa: SLF001
         return instance
 
     @classmethod
@@ -58,7 +58,7 @@ class BaseDatabase:
                 session.rollback()
                 raise
 
-    def _read_orm(self, query: sa.Select[Any], single: bool = False) -> list[Any]:
+    def _read_orm(self, query: sa.Select[Any], *, single: bool = False) -> list[Any]:
         """Execute an ORM query and return mapped model instances.
 
         Uses a bare session (no commit) since this is read-only.
@@ -80,6 +80,7 @@ class BaseDatabase:
             with self._engine.connect() as conn:
                 df = pd.read_sql(query, conn)
         except Exception as e:
-            raise RuntimeError(f"Failed to read data from the database: {e}") from e
+            msg = f"Failed to read data from the database: {e}"
+            raise RuntimeError(msg) from e
 
         return df

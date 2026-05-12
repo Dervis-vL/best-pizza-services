@@ -7,7 +7,7 @@ from pizza_platform_shared import schemas as shared_schemas
 class EnrichGeolocationUseCase:  # pylint: disable=too-few-public-methods
     """Enrich a parsed location schema with reverse geolocation data."""
 
-    def __init__(self, geolocation_service: ports.IGeolocationService):
+    def __init__(self, geolocation_service: ports.IGeolocationService) -> None:
         """Initialize the use case."""
         self._geo_service = geolocation_service
 
@@ -15,7 +15,7 @@ class EnrichGeolocationUseCase:  # pylint: disable=too-few-public-methods
         self,
         location: shared_schemas.LocationSchema,
     ) -> shared_schemas.LocationSchema:
-        """GReturn the location schema, enriched with city and country if missing."""
+        """Return the location schema, enriched with city and country if missing."""
         needs_enrichment = (
             (location.latitude is not None)
             and (location.longitude is not None)

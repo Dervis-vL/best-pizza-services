@@ -18,7 +18,8 @@ class RankingSchema(pyd.BaseModel):
         if v is None:
             return v
         if v < 1:
-            raise ValueError(f"Ranking position {v} is not a positive integer")
+            msg = f"Ranking position {v} is not a positive integer"
+            raise ValueError(msg)
         return v
 
 
