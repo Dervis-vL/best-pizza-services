@@ -11,7 +11,7 @@ from collections.abc import Iterator
 from pydantic import BaseModel, ConfigDict
 
 
-class BasePattern(BaseModel, ABC):
+class BasePattern[T](BaseModel, ABC):
     """Base pattern model."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -34,12 +34,12 @@ class BasePattern(BaseModel, ABC):
         return None
 
     @abstractmethod
-    def extract(self, html: str):
+    def extract(self, html: str) -> T:
         """Abstract base method"""
 
 
-class CardPatterns(BasePattern):
-    """Patterns for extracting individual ranking card HTML chunks from full ranking page.
+class CardPatterns(BasePattern[list[str]]):
+    """Patterns for extracting ranking card HTML chunks from full ranking page.
     Each pattern targets the outer <a> wrapping a single ranking entry.
 
     Use extract() to get all card chunks, then run URLPattern and
@@ -80,14 +80,14 @@ class CardPatterns(BasePattern):
         return []
 
 
-class URLPatterns(BasePattern):
+class URLPatterns(BasePattern[str | None]):
     """Pattern for extracting the raw url string."""
 
     pizzeria_url: re.Pattern[str] = re.compile(
         r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"',
     )
 
-    def extract(self, html: str) -> str:
+    def extract(self, html: str) -> str | None:
         """Return the raw url string from each cards html, or None."""
         match = self.search(html)
         if match:
@@ -95,8 +95,8 @@ class URLPatterns(BasePattern):
         return None
 
 
-class RankingPositionPatterns(BasePattern):
-    """Patterns for extracting a ranked position (1-100) from a ranking-list card's HTML.
+class RankingPositionPatterns(BasePattern[int | None]):
+    """Patterns for extracting a ranked position from a ranking-list card's HTML.
     Run on each individual card/entry's HTML extracted from a ranking page.
     Each pattern must contain a (?P<position>...) named group.
 
@@ -123,7 +123,7 @@ class RankingPositionPatterns(BasePattern):
         return None
 
 
-class CoordPatterns(BasePattern):
+class CoordPatterns(BasePattern[tuple[float, float] | tuple[None, None]]):
     """Compiled regex patterns for coordinate extraction.
     Each attribute targets a specific HTML structure observed in the wild.
     Both (?P<lat>...) and (?P<lng>...) named groups are required in every pattern.
@@ -156,7 +156,7 @@ class CoordPatterns(BasePattern):
         return None, None
 
 
-class AddressPatterns(BasePattern):
+class AddressPatterns(BasePattern[str | None]):
     """Patterns for extracting the raw address string.
     Each pattern must contain an (?P<address>...) named group.
     """
@@ -173,7 +173,7 @@ class AddressPatterns(BasePattern):
         return None
 
 
-class PhonePatterns(BasePattern):
+class PhonePatterns(BasePattern[str | None]):
     """Patterns for extracting the phone number.
     Each pattern must contain a (?P<phone>...) named group.
     """
@@ -190,7 +190,7 @@ class PhonePatterns(BasePattern):
         return None
 
 
-class AwardNamePatterns(BasePattern):
+class AwardNamePatterns(BasePattern[tuple[str, str] | tuple[None, None]]):
     """Pattern for extracting the award name and sponsor from a special awards card.
     Run on each individual card HTML chunk extracted by AwardCardPatterns.
 

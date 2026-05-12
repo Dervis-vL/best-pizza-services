@@ -29,9 +29,7 @@ class RankingsRepository(BaseDatabase):
     ) -> None:
         """Write categories and editions from config, inserting or updating."""
         # read all existing slugs from db using self._read_orm()
-        existing_slugs = {
-            category.slug for category in self._read_orm(select(models.Categories))
-        }
+        existing_slugs = {category.slug for category in self._read_orm(select(models.Categories))}
 
         with self._session() as session:
             for category in category_schemas:

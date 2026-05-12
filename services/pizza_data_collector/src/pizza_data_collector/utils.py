@@ -90,10 +90,7 @@ def extract_pizzeria_name(endpoint_path: str) -> str:
     ):
         parts = parts[:-2]
     # last value between 1-14  ->  strip last 1
-    elif (
-        parts[-1].isdigit()
-        and 0 < int(parts[-1]) < constants.PizzaNameRules.PART_FOURTEEN
-    ):
+    elif parts[-1].isdigit() and 0 < int(parts[-1]) < constants.PizzaNameRules.PART_FOURTEEN:
         parts = parts[:-1]
 
     # Post-pass: When last two parts are digits  ->  merge with dot separator

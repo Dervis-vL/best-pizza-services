@@ -54,8 +54,6 @@ def make_on_city_change(
         if city != constants.Filters.DEFAULT:
             match = relevant_locations[relevant_locations[city_col] == city]
             if not match.empty:
-                st.session_state[constants.QueryParam.COUNTRY] = match.iloc[0][
-                    country_col
-                ]
+                st.session_state[constants.QueryParam.COUNTRY] = match.iloc[0][country_col]
 
     return on_city_change

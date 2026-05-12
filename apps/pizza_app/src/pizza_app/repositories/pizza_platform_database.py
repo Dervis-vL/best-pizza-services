@@ -35,8 +35,7 @@ class PizzaPlatformDatabase(BaseDatabase):
                 models.Locations.pizzeria_id == models.Pizzerias.id,
             )
             .where(
-                models.Locations.latitude.is_not(None)
-                & models.Locations.longitude.is_not(None),
+                models.Locations.latitude.is_not(None) & models.Locations.longitude.is_not(None),
             )
             .order_by(models.Pizzerias.name)
         )

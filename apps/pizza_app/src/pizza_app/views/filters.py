@@ -68,10 +68,7 @@ def render_filters(  # noqa: PLR0912
         ]
 
         countries = sorted(
-            relevant_locations[schemas.PizzeriaSchema.country]
-            .dropna()
-            .unique()
-            .tolist(),
+            relevant_locations[schemas.PizzeriaSchema.country].dropna().unique().tolist(),
         )
         selected_country = st.selectbox(
             "Search by country",
@@ -177,9 +174,7 @@ def render_filters(  # noqa: PLR0912
         ]
     else:
         filtered = locations_df[
-            locations_df[schemas.PizzeriaSchema.slug].isin(valid_names)
-            & country_mask
-            & city_mask
+            locations_df[schemas.PizzeriaSchema.slug].isin(valid_names) & country_mask & city_mask
         ]
 
     st.sidebar.metric("Showing", f"{len(filtered)} / {len(locations_df)} pizzerias")

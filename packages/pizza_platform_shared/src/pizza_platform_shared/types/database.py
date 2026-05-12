@@ -56,9 +56,7 @@ class TableNames(pydantic.BaseModel):
 
     def values(self) -> list[TableName]:
         """Get all table names."""
-        return [
-            field_info.default for field_info in self.__class__.model_fields.values()
-        ]
+        return [field_info.default for field_info in self.__class__.model_fields.values()]
 
     @pydantic.model_validator(mode="after")
     def validate_at_least_one_table(self) -> TableNames:

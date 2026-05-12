@@ -34,8 +34,7 @@ def render_map(
     for _, row in filtered.iterrows():
         row: pa_typing.DataFrame[schemas.PizzeriaSchema]
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name]
-            == row[schemas.PizzeriaSchema.slug]
+            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
         ]
         table_rows = ""
         for category, group in pizzeria_rankings.groupby(
@@ -47,8 +46,7 @@ def render_map(
                 pos = f"#{int(entry.position)}" if not pd.isna(entry.position) else "—"
                 style = "padding-right:8px;vertical-align:top"
                 category_cell = (
-                    f'<td rowspan="{len(entries)}" style="{style}">'
-                    f"<b>{category}:</b></td>"
+                    f'<td rowspan="{len(entries)}" style="{style}"><b>{category}:</b></td>'
                     if i == 0
                     else ""
                 )
