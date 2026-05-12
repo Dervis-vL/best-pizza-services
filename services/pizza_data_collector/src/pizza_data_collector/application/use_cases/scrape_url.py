@@ -10,7 +10,7 @@ from pizza_data_collector.application import ports
 class ScrapeUseCase:  # pylint: disable=too-few-public-methods
     """Scrape url use case."""
 
-    def __init__(self, scraper: ports.IScraper):
+    def __init__(self, scraper: ports.IScraper) -> None:
         """Initialize the use case."""
         self._scraper = scraper
 

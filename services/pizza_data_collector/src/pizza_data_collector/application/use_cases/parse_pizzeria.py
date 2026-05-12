@@ -9,7 +9,7 @@ from pizza_platform_shared import schemas as shared_schemas
 class ParsePizzeriaUseCase:  # pylint: disable=too-few-public-methods
     """Parse pizzeria data use case."""
 
-    def __init__(self, parser: ports.IPizzaParser):
+    def __init__(self, parser: ports.IPizzaParser) -> None:
         """Initialize the use case."""
         self._parser = parser
 
