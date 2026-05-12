@@ -3,7 +3,7 @@
 from geolocation import GeolocationService, models
 
 
-def test_reverse_geocode():
+def test_reverse_geocode() -> None:
     """Test reverse geocoding for a known coordinate."""
     # GIVEN a geolocation service object
     service = GeolocationService(user_agent="test-agent")

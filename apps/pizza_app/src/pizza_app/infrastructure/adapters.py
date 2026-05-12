@@ -8,7 +8,7 @@ from pizza_app import dataclasses, repositories
 class PizzaDataAdapter:  # pylint: disable=too-few-public-methods
     """Pizza data adapter class."""
 
-    def __init__(self, repo: repositories.PizzaPlatformDatabase):
+    def __init__(self, repo: repositories.PizzaPlatformDatabase) -> None:
         """Class initialization."""
         self._repo = repo
 
