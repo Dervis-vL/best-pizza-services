@@ -27,3 +27,43 @@ packages = ["src/pizza_data_storage"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }
+
+[tool.alembic]
+script_location  = "services/pizza_data_storage/alembic"
+prepend_sys_path = "."
+path_separator   = "os"
+
+[tool.alembic.loggers]
+keys = "root,sqlalchemy,alembic"
+
+[tool.alembic.handlers]
+keys = "console"
+
+[tool.alembic.formatters]
+keys = "generic"
+
+[tool.alembic.logger_root]
+level    = "WARNING"
+handlers = "console"
+qualname = ""
+
+[tool.alembic.logger_sqlalchemy]
+level    = "WARNING"
+handlers = ""
+qualname = "sqlalchemy.engine"
+
+[tool.alembic.logger_alembic]
+level    = "INFO"
+handlers = ""
+qualname = "alembic"
+
+[tool.alembic.handler_console]
+class     = "StreamHandler"
+args      = "(sys.stderr,)"
+level     = "NOTSET"
+formatter = "generic"
+
+[tool.alembic.formatter_generic]
+format  = "%(levelname)-5.5s [%(name)s] %(message)s"
+datefmt = "%H:%M:%S"
+

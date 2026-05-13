@@ -32,7 +32,8 @@ def create_repo() -> repositories.PizzaPlatformDatabase:
             ),
         )
     else:
-        raise ValueError("Unsupported database type.")
+        msg = "Unsupported database type."
+        raise ValueError(msg)
 
     return pizza_repo
 

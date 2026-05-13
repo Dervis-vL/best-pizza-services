@@ -32,7 +32,7 @@ st.write(constants.AppContext.HEADER)
 try:
     pizza_adapter = infrastructure.PizzaDataAdapter(repo=utils.create_repo())
     pizza_data: dataclasses.PizzaData = pizza_adapter.load_pizza_data()
-except Exception as e:  # pylint: disable=broad-exception-caught
+except Exception as e:  # pylint: disable=broad-exception-caught  # noqa: BLE001
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()
 

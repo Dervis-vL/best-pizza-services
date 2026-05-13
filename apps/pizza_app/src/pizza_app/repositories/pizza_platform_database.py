@@ -75,7 +75,8 @@ class PizzaPlatformDatabase(BaseDatabase):
         try:
             pizzerias_df = self._read_df(query)
         except Exception as e:
-            raise RuntimeError(f"Error reading from database: {e}") from e
+            msg = f"Error reading from database: {e}"
+            raise RuntimeError(msg) from e
         return schemas.PizzeriaSchema.validate(pizzerias_df)
 
     def read_rankings(self) -> pa_typing.DataFrame[schemas.RankingSchema]:
@@ -84,5 +85,6 @@ class PizzaPlatformDatabase(BaseDatabase):
         try:
             df = self._read_df(query)
         except Exception as e:
-            raise RuntimeError(f"Error reading rankings from database: {e}") from e
+            msg = f"Error reading rankings from database: {e}"
+            raise RuntimeError(msg) from e
         return schemas.RankingSchema.validate(df)

@@ -9,7 +9,7 @@ from pizza_app import constants, schemas, utils
 from pizza_platform_shared import enums as shared_enums
 
 
-def render_filters(  # noqa: PLR0912
+def render_filters(
     locations_df: pa_typing.DataFrame[schemas.PizzeriaSchema],
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
@@ -102,26 +102,28 @@ def render_filters(  # noqa: PLR0912
         )
 
         st.subheader(constants.Filters.YEARS)
-        selected_years = []
-        for year in shared_enums.Year:
+        selected_years = [
+            year.value
+            for year in shared_enums.Year
             if st.checkbox(
                 label=str(year.value),
                 value=True,
                 key=f"{constants.QueryParam.YEAR}{year.value!s}",
                 bind=constants.QueryParam.BIND,
-            ):
-                selected_years.append(year.value)
+            )
+        ]
 
         st.subheader(constants.Filters.CATEGORIES)
-        selected_categories = []
-        for cat in shared_enums.Categories:
+        selected_categories = [
+            cat.value
+            for cat in shared_enums.Categories
             if st.checkbox(
                 label=cat.value,
                 value=True,
                 key=f"{constants.QueryParam.CATEGORY}{cat.name}",
                 bind=constants.QueryParam.BIND,
-            ):
-                selected_categories.append(cat.value)
+            )
+        ]
 
         st.subheader(constants.Filters.EXCELLENT_CATEGORIES)
         for cat in shared_enums.CategoriesExcellent:
@@ -131,7 +133,7 @@ def render_filters(  # noqa: PLR0912
                 key=f"{constants.QueryParam.CATEGORY}{cat.name}",
                 bind=constants.QueryParam.BIND,
             ):
-                selected_categories.append(cat.value)
+                selected_categories.append(cat.value)  # noqa: PERF401
 
         st.subheader(constants.Filters.SPECIAL_AWARDS)
         for cat in shared_enums.CategoriesSpecial:
@@ -141,7 +143,7 @@ def render_filters(  # noqa: PLR0912
                 key=f"{constants.QueryParam.CATEGORY}{cat.name}",
                 bind=constants.QueryParam.BIND,
             ):
-                selected_categories.append(cat.value)
+                selected_categories.append(cat.value)  # noqa: PERF401
 
     filtered_rankings = rankings_df[
         rankings_df[schemas.RankingSchema.year].isin(selected_years)
