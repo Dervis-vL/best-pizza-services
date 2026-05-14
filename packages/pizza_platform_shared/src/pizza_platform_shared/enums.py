@@ -65,3 +65,10 @@ class Year(IntEnum):
     Y2022 = 2022
     Y2021 = 2021
     Y2020 = 2020
+
+
+class URLSchemas(StrEnum):
+    """Enum for allowed url schemas."""
+
+    HTTP = "http://"
+    HTTPS = "https://"
