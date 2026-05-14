@@ -1,7 +1,5 @@
 """Scrape url use case."""
 
-import pathlib
-
 from bs4 import BeautifulSoup
 
 from pizza_data_collector.application import ports
@@ -14,6 +12,6 @@ class ScrapeUseCase:  # pylint: disable=too-few-public-methods
         """Initialize the use case."""
         self._scraper = scraper
 
-    def execute(self, url: pathlib.Path) -> BeautifulSoup:
+    def execute(self, url: str) -> BeautifulSoup:
         """Execute the use case."""
         return self._scraper.scrape(url=url)

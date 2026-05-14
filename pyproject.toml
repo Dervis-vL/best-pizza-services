@@ -115,8 +115,16 @@ plugins = [
     "pydantic.mypy",
 ]
 
-# Monorepo: tells mypy where first-party packages live
-mypy_path = ["apps", "packages", "services"]
+# Monorepo: src-layout requires explicit src/ paths so mypy doesn't pick up the
+# project-root directories as namespace packages and shadow the real source.
+mypy_path = [
+    "apps/pizza_app/src",
+    "apps/pizza_api/src",
+    "packages/pizza_platform_shared/src",
+    "services/geolocation/src",
+    "services/pizza_data_collector/src",
+    "services/pizza_data_storage/src",
+]
 
 [tool.deptry]
 ignore_notebooks = true

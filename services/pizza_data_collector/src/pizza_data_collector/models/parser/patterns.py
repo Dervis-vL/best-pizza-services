@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from collections.abc import Iterator
+from collections.abc import Generator
 
 from pydantic import BaseModel, ConfigDict
 
@@ -16,7 +16,7 @@ class BasePattern[T](BaseModel, ABC):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    def __iter__(self) -> Iterator[tuple[str, re.Pattern[str]]]:
+    def __iter__(self) -> Generator[tuple[str, re.Pattern[str]]]:
         """Iterate as (name, pattern) pairs — preserves definition order."""
         for name in self.__class__.model_fields:
             yield name, getattr(self, name)

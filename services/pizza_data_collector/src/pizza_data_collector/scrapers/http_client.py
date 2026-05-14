@@ -25,7 +25,8 @@ class HttpClient:  # pylint: disable=too-few-public-methods
                 msg = f"Unsupported URL schema: {parsed_url.scheme!r}"
                 raise ValueError(msg)
             with urlopen(url, timeout=self._timeout) as response:  # noqa: S310
-                return response.read()
+                content: bytes = response.read()
+                return content
         except HTTPError as e:
             logger.warning("HTTP %s fetching %s", e.code, url)
         except URLError as e:
