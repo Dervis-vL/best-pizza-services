@@ -55,6 +55,13 @@ class CategoriesSpecial(BaseCategories):
     USA_SPECIAL = "USA Special Awards"
 
 
+class HtmlModelName(StrEnum):
+    """Enum for HTML model names."""
+
+    EDITIONS = "editions"
+    WEBPAGES = "webpages"
+
+
 class Year(IntEnum):
     """Enum for years of pizza rankings."""
 

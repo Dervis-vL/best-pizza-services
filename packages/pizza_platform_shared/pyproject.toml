@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pizza_platform_shared"
+name = "pizza-platform-shared"
 version = "0.1.0"
 description = "A package with shared modules for pizza platform"
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
@@ -12,17 +12,29 @@ requires-python = ">=3.13"
 
 dependencies = [
     "pandas>=2.3.3",
-    "pandera>=0.29.0",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "sqlalchemy>=2.0.46",
     "yarl>=1.22.0",
+    "boto3>=1.42.92",
 ]
 
 [dependency-groups]
 dev = [
+    "boto3-stubs[essential]>=1.43.8",
     "pandas-stubs>=3.0.0.260204",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pizza_platform_shared"]
+include = ["py.typed"]
+
+[tool.deptry]
+ignore_notebooks = true
+per_rule_ignores = { DEP002 = [
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-xdist"
+], DEP003 = [
+    "pizza_platform_shared",
+] }

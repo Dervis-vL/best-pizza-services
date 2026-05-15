@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pizza_data_collector"
+name = "pizza-data-collector"
 version = "0.1.0"
 description = "A webscraper and data parser for the pizza platform"
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
@@ -12,9 +12,7 @@ requires-python = ">=3.13"
 
 dependencies = [
     "beautifulsoup4>=4.14.3",
-    "pandera>=0.29.0",
     "pydantic>=2.12.5",
-    "pydantic-settings>=2.12.0",
     "yarl>=1.22.0",
     "pizza-platform-shared",
 ]
@@ -25,3 +23,14 @@ include = ["py.typed"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }
+
+[tool.deptry]
+ignore_notebooks = true
+per_rule_ignores = { DEP002 = [
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-xdist"
+], DEP003 = [
+    "pizza_data_collector",
+    "pizza_platform_shared",
+] }

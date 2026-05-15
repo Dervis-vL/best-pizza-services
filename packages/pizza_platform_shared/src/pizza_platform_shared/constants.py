@@ -31,6 +31,16 @@ class ModelColumnLengths:
     PHONE: Final[int] = 20
 
 
+class StorageKeys:
+    """Constants for storage keys."""
+
+    SCRAPES_PREFIX: Final[str] = "scrapes"
+    HTML_SUFFIX: Final[str] = "html"
+    JSON_SUFFIX: Final[str] = "json"
+    STORAGE_TYPE: Final = "s3"
+    STORAGE_TIER: Final = "STANDARD"
+
+
 class YearRange:
     """Constants for year range validation."""
 

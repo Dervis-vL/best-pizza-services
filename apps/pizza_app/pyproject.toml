@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pizza_app"
+name = "pizza-app"
 version = "0.1.0"
 description = "A Streamlit pizza platform data viewer"
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
@@ -19,7 +19,6 @@ dependencies = [
     "sqlalchemy>=2.0.46",
     "streamlit>=1.55.0",
     "streamlit-folium>=0.26.1",
-    "yarl>=1.22.0",
     "pizza-platform-shared",
 ]
 
@@ -31,3 +30,15 @@ packages = ["src/pizza_app"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }
+
+[tool.deptry]
+ignore_notebooks = true
+per_rule_ignores = { DEP002 = [
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-xdist"
+], DEP003 = [
+    "pizza_app",
+    "pizza_platform_shared",
+] }
+

@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING
 
 import boto3
 
-from pizza_data_storage import constants, enums, settings
+from pizza_platform_shared import constants, enums
+from pizza_platform_shared.settings.pizza_storage import PizzaStorageSettings
 
 if TYPE_CHECKING:
     from mypy_boto3_s3 import S3Client
@@ -26,7 +27,7 @@ class BaseStorage:  # pylint: disable=too-few-public-methods
     @classmethod
     def from_settings(
         cls,
-        storage_settings: settings.PizzaStorageSettings,
+        storage_settings: PizzaStorageSettings,
     ) -> BaseStorage:
         """Create a storage repo instance from settings."""
         client = boto3.client(

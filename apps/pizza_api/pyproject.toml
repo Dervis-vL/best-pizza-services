@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pizza_api"
+name = "pizza-api"
 version = "0.1.0"
 description = "The pizza platform API for managing and scraping data."
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
@@ -11,14 +11,14 @@ readme = "README.md"
 requires-python = ">=3.13"
 
 dependencies = [
-    "pandera>=0.28.1",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "pizza-data-collector",
     "pizza-data-storage",
+    "pizza-platform-shared",
     "geolocation",
     "fastapi[standard]>=0.136.1",
-    "uvicorn[standard]>=0.46.0",
+    "sqlalchemy>=2.0.46",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -27,5 +27,19 @@ packages = ["src/pizza_api"]
 [tool.uv.sources]
 pizza-data-collector = { workspace = true }
 pizza-data-storage = { workspace = true }
+pizza-platform-shared = { workspace = true }
 geolocation = { workspace = true }
 
+[tool.deptry]
+ignore_notebooks = true
+per_rule_ignores = { DEP002 = [
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-xdist"
+], DEP003 = [
+    "pizza_api",
+    "pizza_platform_shared",
+    "pizza_data_storage",
+    "pizza_data_collector",
+    "geolocation",
+] }

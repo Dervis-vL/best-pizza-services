@@ -32,13 +32,3 @@ class ColumnLengths:
     DESCRIPTION: Final[int] = 500
     URL: Final[int] = 500
     SLUG: Final[int] = 200
-
-
-class StorageKeys:
-    """Constants for storage keys."""
-
-    SCRAPES_PREFIX: Final[str] = "scrapes"
-    HTML_SUFFIX: Final[str] = "html"
-    JSON_SUFFIX: Final[str] = "json"
-    STORAGE_TYPE: Final = "s3"
-    STORAGE_TIER: Final = "STANDARD"
