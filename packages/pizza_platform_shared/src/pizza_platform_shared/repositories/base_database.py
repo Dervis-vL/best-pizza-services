@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Any
+from typing import Any, Literal, overload
 
 import pandas as pd
 import sqlalchemy as sa
@@ -23,7 +23,9 @@ class BaseDatabase:
 
     """
 
-    def __init__(self, connection_string: str, schema_name: str | None = None) -> None:
+    def __init__(
+        self, connection_string: str | sa.engine.URL, schema_name: str | None = None
+    ) -> None:
         """Initialize the database repository."""
         self._engine = sa.create_engine(connection_string, pool_pre_ping=True)
         self._schema = schema_name
@@ -58,7 +60,21 @@ class BaseDatabase:
                 session.rollback()
                 raise
 
-    def _read_orm(self, query: sa.Select[Any], *, single: bool = False) -> list[Any]:
+    @overload
+    def _read_orm[T](self, query: sa.Select[tuple[T]], *, single: Literal[True]) -> T | None: ...
+    @overload
+    def _read_orm[T](
+        self,
+        query: sa.Select[tuple[T]],
+        *,
+        single: Literal[False] = ...,
+    ) -> list[T]: ...
+    def _read_orm[T](
+        self,
+        query: sa.Select[tuple[T]],
+        *,
+        single: bool = False,
+    ) -> list[T] | T | None:
         """Execute an ORM query and return mapped model instances.
 
         Uses a bare session (no commit) since this is read-only.
@@ -68,7 +84,7 @@ class BaseDatabase:
         with sa_orm.Session(self._engine) as session:
             if single:
                 return session.execute(query).scalars().first()
-            return session.execute(query).scalars().unique().all()
+            return list(session.execute(query).scalars().unique().all())
 
     def _read_df(self, query: sa.Select[Any]) -> pd.DataFrame:
         """Execute a query and return a pandas DataFrame.

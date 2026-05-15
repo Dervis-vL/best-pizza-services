@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
 import boto3
 
 from pizza_data_storage import constants, enums, settings
+
+if TYPE_CHECKING:
+    from mypy_boto3_s3 import S3Client
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +18,7 @@ logger = logging.getLogger(__name__)
 class BaseStorage:  # pylint: disable=too-few-public-methods
     """Base class for S3-compatible object storage repositories."""
 
-    def __init__(self, client: boto3.client, bucket: str) -> None:
+    def __init__(self, client: S3Client, bucket: str) -> None:
         """Initialize the storage repository."""
         self._client = client
         self._bucket = bucket

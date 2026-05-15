@@ -48,7 +48,8 @@ class TableNames(pydantic.BaseModel):
 
     def __getitem__(self, key: str) -> str:
         """Allow dict-like access to table names."""
-        return getattr(self, key)
+        result: str = getattr(self, key)
+        return result
 
     def __contains__(self, key: str) -> bool:
         """Check if table name exists."""

@@ -12,6 +12,7 @@ import json
 import time
 import urllib.parse
 import urllib.request
+from typing import Any
 from urllib.error import HTTPError, URLError
 
 import yarl
@@ -56,7 +57,7 @@ class GeolocationService:
             time.sleep(self._MIN_INTERVAL - elapsed)
         self._last_request_at = time.monotonic()
 
-    def _fetch(self, lat: float, lon: float) -> dict:
+    def _fetch(self, lat: float, lon: float) -> dict[str, Any]:
         params = urllib.parse.urlencode({"lat": lat, "lon": lon, "format": "json"})
         url_str = f"{self._BASE_URL}?{params}"
         req = urllib.request.Request(  # noqa: S310
@@ -68,7 +69,8 @@ class GeolocationService:
                 msg = "Invalid URL scheme"
                 raise ValueError(msg)
             with urllib.request.urlopen(req, timeout=10) as resp:  # noqa: S310
-                return json.loads(resp.read())
+                result: dict[str, Any] = json.loads(resp.read())
+                return result
         except HTTPError as e:
             raise HTTPError(
                 e.url,
@@ -82,7 +84,7 @@ class GeolocationService:
             raise URLError(msg) from e
 
     @staticmethod
-    def _parse(data: dict) -> models.LocationResult:
+    def _parse(data: dict[str, Any]) -> models.LocationResult:
         if "error" in data:
             msg = f"Nominatim returned an error: {data['error']}"
             raise RuntimeError(msg)

@@ -218,20 +218,22 @@ class PizzeriaRepository(BaseDatabase):
         location_config: shared_schemas.LocationSchema,
     ) -> models.Locations:
         """Upsert a pizzeria location, skipping if coordinates already exist nearby."""
-        if location_config.has_coordinates:
+        lat = location_config.latitude
+        lon = location_config.longitude
+        if lat is not None and lon is not None:
             existing = session.scalar(
                 select(models.Locations)
                 .where(models.Locations.pizzeria_id == location_config.pizzaria_id)
                 .where(
                     models.Locations.latitude.between(
-                        location_config.latitude - constants.Coordinate.LOC_DELTA,
-                        location_config.latitude + constants.Coordinate.LOC_DELTA,
+                        lat - constants.Coordinate.LOC_DELTA,
+                        lat + constants.Coordinate.LOC_DELTA,
                     ),
                 )
                 .where(
                     models.Locations.longitude.between(
-                        location_config.longitude - constants.Coordinate.LOC_DELTA,
-                        location_config.longitude + constants.Coordinate.LOC_DELTA,
+                        lon - constants.Coordinate.LOC_DELTA,
+                        lon + constants.Coordinate.LOC_DELTA,
                     ),
                 ),
             )

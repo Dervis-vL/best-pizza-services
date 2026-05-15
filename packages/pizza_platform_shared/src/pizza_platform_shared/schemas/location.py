@@ -38,7 +38,7 @@ class LocationSchema(pyd.BaseModel):
     @property
     def has_coordinates(self) -> bool:
         """True is coordinates are not default."""
-        return self.latitude is not None or self.longitude is not None
+        return self.latitude is not None and self.longitude is not None
 
     @pyd.field_validator("phone", mode="before")
     @classmethod

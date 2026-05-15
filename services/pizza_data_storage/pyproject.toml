@@ -22,6 +22,11 @@ dependencies = [
     "boto3>=1.42.92",
 ]
 
+[dependency-groups]
+dev = [
+    "boto3-stubs[essential]>=1.43.8",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/pizza_data_storage"]
 
@@ -66,4 +71,3 @@ formatter = "generic"
 [tool.alembic.formatter_generic]
 format  = "%(levelname)-5.5s [%(name)s] %(message)s"
 datefmt = "%H:%M:%S"
-

@@ -42,24 +42,36 @@ class Locations(base.BaseModel):
     )
 
     # columns
-    adress: orm.Mapped[str] = orm.mapped_column(
+    adress: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(250),
         nullable=True,
-        comment="",
+        comment="Pizzeria adress",
     )
-    city: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=True, comment="")
-    country: orm.Mapped[str] = orm.mapped_column(
+    city: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(50),
         nullable=True,
-        comment="",
+        comment="Pizzeria city",
     )
-    latitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True, comment="")
-    longitude: orm.Mapped[float] = orm.mapped_column(
+    country: orm.Mapped[str | None] = orm.mapped_column(
+        sa.String(50),
+        nullable=True,
+        comment="Pizzeria country",
+    )
+    latitude: orm.Mapped[float | None] = orm.mapped_column(
         sa.Float,
         nullable=True,
-        comment="",
+        comment="Pizzeria latitude",
     )
-    phone: orm.Mapped[str] = orm.mapped_column(sa.String(20), nullable=True, comment="")
+    longitude: orm.Mapped[float | None] = orm.mapped_column(
+        sa.Float,
+        nullable=True,
+        comment="Pizzeria longitude",
+    )
+    phone: orm.Mapped[str | None] = orm.mapped_column(
+        sa.String(20),
+        nullable=True,
+        comment="Pizzeria phonenumber",
+    )
 
     # relationships
     pizzeria: orm.Mapped[Pizzerias] = orm.relationship(

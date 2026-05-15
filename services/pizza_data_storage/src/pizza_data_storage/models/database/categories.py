@@ -30,7 +30,7 @@ class Categories(base.BaseModel):
     )
     description: orm.Mapped[str] = orm.mapped_column(
         sa.String(500),
-        nullable=True,
+        nullable=False,
         comment="Description of the pizza category",
     )
     slug: orm.Mapped[str] = orm.mapped_column(

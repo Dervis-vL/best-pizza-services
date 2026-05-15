@@ -31,7 +31,7 @@ class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
         nullable=False,
         comment="Name of the pizzeria",
     )
-    description: orm.Mapped[str] = orm.mapped_column(
+    description: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(500),
         nullable=True,
         comment="Description of the pizzeria",

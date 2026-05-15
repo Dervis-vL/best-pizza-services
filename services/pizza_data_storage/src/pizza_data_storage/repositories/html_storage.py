@@ -47,7 +47,7 @@ class HtmlStorageRepository(shared_repos.BaseStorage):
 
         try:
             response = self._client.get_object(Bucket=self._bucket, Key=key)
-            html = response["Body"].read().decode("utf-8")
+            html: str = response["Body"].read().decode("utf-8")
             logger.info("Retrieved %s HTML from key=%s", model_name, key)
         except ClientError as e:
             if e.response["Error"]["Code"] == "NoSuchKey":

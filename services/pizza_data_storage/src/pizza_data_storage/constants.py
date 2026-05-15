@@ -40,5 +40,5 @@ class StorageKeys:
     SCRAPES_PREFIX: Final[str] = "scrapes"
     HTML_SUFFIX: Final[str] = "html"
     JSON_SUFFIX: Final[str] = "json"
-    STORAGE_TYPE: Final[str] = "s3"
-    STORAGE_TIER: Final[str] = "STANDARD"
+    STORAGE_TYPE: Final = "s3"
+    STORAGE_TIER: Final = "STANDARD"
