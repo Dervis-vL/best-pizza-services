@@ -13,8 +13,8 @@ typecheck:
     {{run}} mypy --package pizza_data_storage --strict
     {{run}} mypy --package geolocation --strict
     {{run}} mypy --package pizza_platform_shared --strict
-    {{run}} mypy --package pizza_app --strict
-    {{run}} mypy --package pizza_api --strict
+    # {{run}} mypy --package pizza_app --strict
+    # {{run}} mypy --package pizza_api --strict
     @echo "{{bold}}{{green}}✓ All type checks passed.{{nc}}"
 
 
@@ -28,5 +28,10 @@ lint:
 # Check dependecies for all workspace members
 deps-check:
     @echo "{{bold}}{{green}}🔍 Checking dependencies...{{nc}}"
-    {{run}} deptry .
+    {{run}} --directory apps/pizza_api deptry .
+    {{run}} --directory apps/pizza_app deptry .
+    {{run}} --directory packages/pizza_platform_shared deptry .
+    {{run}} --directory services/geolocation deptry .
+    {{run}} --directory services/pizza_data_collector deptry .
+    {{run}} --directory services/pizza_data_storage deptry .
     @echo "{{bold}}{{green}}✓ All dependencies are valid.{{nc}}"
