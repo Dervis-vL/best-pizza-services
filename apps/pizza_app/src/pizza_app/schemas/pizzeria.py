@@ -25,7 +25,9 @@ class PizzeriaSchema(pa.DataFrameModel):
 
     @pa.dataframe_parser
     @classmethod
-    def derive_name(cls, df: pa_typing.DataFrame) -> pa_typing.DataFrame:
+    def derive_name(
+        cls, df: pa_typing.DataFrame[PizzeriaSchema]
+    ) -> pa_typing.DataFrame[PizzeriaSchema]:
         """Derive name from slug"""
         df = df.copy()
         df["name"] = df["slug"].apply(

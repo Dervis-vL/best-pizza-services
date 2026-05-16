@@ -9,7 +9,7 @@ class AppContext:
     TAB_TITLE: Final[str] = "🍕 Top Pizzerias Platform"
     TAB_ICON: Final[str] = "🍕"
     PAGE_TITLE: Final[str] = "🍕 Pizzerias — World Map"
-    LAYOUT: Final[str] = "wide"
+    LAYOUT: Final = "wide"
     CAPTION: Final[str] = "Locations sourced from 50 Top Pizza rankings."
     HEADER: Final[str] = """Explore the world's best pizzerias, ranked and reviewed by
         [50 Top Pizza](https://www.50toppizza.com). Use the sidebar filters to narrow
@@ -48,4 +48,4 @@ class QueryParam:
     CITY: Final[str] = "selected_city"
     YEAR: Final[str] = "year_"
     CATEGORY: Final[str] = "cat_"
-    BIND: Final[str] = "query-params"
+    BIND: Final = "query-params"

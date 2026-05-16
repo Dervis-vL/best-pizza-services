@@ -15,5 +15,5 @@ default:
 
 
 # Run all checks: fmt, test, typecheck, lint, deps-check
-check: fmt typecheck lint deps-check
+check: fmt typecheck lint deps-check test
     @echo "{{bold}}{{green}}✓ All checks passed.{{nc}}"

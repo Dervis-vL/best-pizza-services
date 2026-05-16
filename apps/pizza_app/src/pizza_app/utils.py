@@ -47,7 +47,7 @@ def make_on_city_change(
     relevant_locations: pa_typing.DataFrame[schemas.PizzeriaSchema],
     city_col: str,
     country_col: str,
-) -> Callable:
+) -> Callable[[], None]:
     """Factory to return the on change callback"""
 
     def on_city_change() -> None:

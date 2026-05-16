@@ -136,14 +136,14 @@ def render_filters(
                 selected_categories.append(cat.value)  # noqa: PERF401
 
         st.subheader(constants.Filters.SPECIAL_AWARDS)
-        for cat in shared_enums.CategoriesSpecial:
+        for cat_special in shared_enums.CategoriesSpecial:
             if st.checkbox(
-                label=cat.value,
+                label=cat_special.value,
                 value=False,
-                key=f"{constants.QueryParam.CATEGORY}{cat.name}",
+                key=f"{constants.QueryParam.CATEGORY}{cat_special.name}",
                 bind=constants.QueryParam.BIND,
             ):
-                selected_categories.append(cat.value)  # noqa: PERF401
+                selected_categories.append(cat_special.value)  # noqa: PERF401
 
     filtered_rankings = rankings_df[
         rankings_df[schemas.RankingSchema.year].isin(selected_years)

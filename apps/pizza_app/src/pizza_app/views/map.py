@@ -17,7 +17,7 @@ def render_map(
 ) -> None:
     """Build and render the Folium pizzeria map."""
     if filtered.empty:
-        avg_lat, avg_lng = 0, 0
+        avg_lat, avg_lng = 0.0, 0.0
     else:
         avg_lat = filtered[schemas.PizzeriaSchema.latitude].mean()
         avg_lng = filtered[schemas.PizzeriaSchema.longitude].mean()
@@ -29,10 +29,9 @@ def render_map(
     )
 
     # Cluster plugin keeps the map readable with many markers
-    cluster = fo_plugins.MarkerCluster().add_to(m)
+    cluster = fo_plugins.MarkerCluster().add_to(m)  # type: ignore[no-untyped-call]
 
     for _, row in filtered.iterrows():
-        row: pa_typing.DataFrame[schemas.PizzeriaSchema]
         pizzeria_rankings = rankings_df[
             rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
         ]
@@ -65,5 +64,5 @@ def render_map(
             icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
         ).add_to(cluster)
 
-    fo_plugins.LocateControl(auto_start=False, keepCurrentZoomLevel=True).add_to(m)
+    fo_plugins.LocateControl(auto_start=False, keepCurrentZoomLevel=True).add_to(m)  # type: ignore[no-untyped-call]
     st_folium(m, width="stretch", height=650, returned_objects=[])

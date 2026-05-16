@@ -127,6 +127,10 @@ mypy_path = [
     "services/pizza_data_storage/src",
 ]
 
+[[tool.mypy.overrides]]
+module = "streamlit_folium"
+ignore_missing_imports = true
+
 [tool.bumpversion]
 current_version = "0.1.0"
 commit          = true

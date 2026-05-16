@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Any, Literal, overload
+from typing import Any, Literal, Self, overload
 
 import pandas as pd
 import sqlalchemy as sa
@@ -31,7 +31,7 @@ class BaseDatabase:
         self._schema = schema_name
 
     @classmethod
-    def from_engine(cls, engine: sa.Engine) -> BaseDatabase:
+    def from_engine(cls, engine: sa.Engine) -> Self:
         """Create a database instance from an existing engine, without db settings.
 
         schema_name will be None — queries must not rely on it.
@@ -42,7 +42,7 @@ class BaseDatabase:
         return instance
 
     @classmethod
-    def from_settings(cls, db_settings: settings.DatabaseSettings) -> BaseDatabase:
+    def from_settings(cls, db_settings: settings.DatabaseSettings) -> Self:
         """Create a database repo instance from settings."""
         return cls(
             connection_string=db_settings.connection_string,
