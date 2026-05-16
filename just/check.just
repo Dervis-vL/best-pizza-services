@@ -4,6 +4,7 @@ fmt:
     {{run}} ruff format .
     @echo "{{bold}}{{green}}🔍 Ruff check fix...{{nc}}"
     {{run}} ruff check . --fix
+    @echo "{{bold}}{{green}}✓ All formatting done.{{nc}}"
 
 
 # Type check all workspace members (strict)

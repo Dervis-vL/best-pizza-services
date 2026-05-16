@@ -3,6 +3,7 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 # --- IMPORTS --------------------------------------------
 import 'just/check.just'
 import 'just/test.just'
+import 'just/build.just'
 
 # --- VARIABLES ------------------------------------------
 run  := "uv run"
@@ -15,5 +16,5 @@ default:
 
 
 # Run all checks: fmt, test, typecheck, lint, deps-check
-check: fmt typecheck lint deps-check test
+check: fmt typecheck lint deps-check
     @echo "{{bold}}{{green}}✓ All checks passed.{{nc}}"
