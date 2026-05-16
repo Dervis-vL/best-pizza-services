@@ -12,6 +12,6 @@ class ScrapeUseCase:  # pylint: disable=too-few-public-methods
         """Initialize the use case."""
         self._scraper = scraper
 
-    def execute(self, url: str) -> BeautifulSoup:
+    def execute(self, url: str) -> BeautifulSoup | None:
         """Execute the use case."""
         return self._scraper.scrape(url=url)

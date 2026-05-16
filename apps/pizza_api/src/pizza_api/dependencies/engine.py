@@ -1,6 +1,6 @@
 """Engine dependencies for the pizza API."""
 
-from typing import Annotated
+from typing import Annotated, cast
 
 import sqlalchemy as sa
 from fastapi import Depends, Request
@@ -19,7 +19,7 @@ def create_engine() -> Engine:
 
 def get_engine(request: Request) -> Engine:
     """Return the shared SQLAlchemy engine stored on app state."""
-    return request.app.state.engine
+    return cast("Engine", request.app.state.engine)
 
 
 EngineDep = Annotated[Engine, Depends(get_engine)]

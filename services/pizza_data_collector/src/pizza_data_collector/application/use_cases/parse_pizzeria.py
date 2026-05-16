@@ -16,7 +16,7 @@ class ParsePizzeriaUseCase:  # pylint: disable=too-few-public-methods
     def execute(
         self,
         soup: BeautifulSoup,
-        pizzeria_id: str,
+        pizzeria_id: int,
     ) -> shared_schemas.LocationSchema:
         """Execute the use case."""
         return self._parser.parse(soup=soup, pizzeria_id=pizzeria_id)

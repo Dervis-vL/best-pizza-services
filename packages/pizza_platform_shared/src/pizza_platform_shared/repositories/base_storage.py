@@ -1,9 +1,7 @@
 """Abstract base class for object storage repositories."""
 
-from __future__ import annotations
-
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 import boto3
 
@@ -28,7 +26,7 @@ class BaseStorage:  # pylint: disable=too-few-public-methods
     def from_settings(
         cls,
         storage_settings: PizzaStorageSettings,
-    ) -> BaseStorage:
+    ) -> Self:
         """Create a storage repo instance from settings."""
         client = boto3.client(
             constants.StorageKeys.STORAGE_TYPE,

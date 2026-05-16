@@ -13,7 +13,7 @@ class IEditionParser(Protocol):  # pylint: disable=too-few-public-methods
     def parse(
         self,
         soup: BeautifulSoup,
-        edition_id: str,
+        edition_id: int,
     ) -> list[shared_schemas.PizzeriaSchema]:
         """Parses the soup object and returns a list of pizzeria schemas."""
 
@@ -24,6 +24,6 @@ class IPizzaParser(Protocol):  # pylint: disable=too-few-public-methods
     def parse(
         self,
         soup: BeautifulSoup,
-        pizzeria_id: str,
+        pizzeria_id: int,
     ) -> shared_schemas.LocationSchema:
         """Parses the soup object and returns a list of location schemas."""
