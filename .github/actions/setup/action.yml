@@ -1,18 +1,9 @@
 name: Setup
-description: Checkout, install just + uv, restore cache, sync dependencies
-
-inputs:
-  fetch-depth:
-    description: Number of commits to fetch (0 = full history)
-    default: "1"
+description: Install just + uv, restore cache, sync dependencies
 
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: ${{ inputs.fetch-depth }}
-
     - name: Install just
       uses: extractions/setup-just@v2
 
