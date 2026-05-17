@@ -148,3 +148,42 @@ replace  = 'current_version = "{new_version}"'
 filename = "CHANGELOG.md"
 search   = "[Unreleased]"
 replace  = "## [{new_version}] - {now:%Y-%m-%d}"
+
+[tool.alembic]
+script_location  = "services/pizza_data_storage/alembic"
+prepend_sys_path = "."
+path_separator   = "os"
+
+[tool.alembic.loggers]
+keys = "root,sqlalchemy,alembic"
+
+[tool.alembic.handlers]
+keys = "console"
+
+[tool.alembic.formatters]
+keys = "generic"
+
+[tool.alembic.logger_root]
+level    = "WARNING"
+handlers = "console"
+qualname = ""
+
+[tool.alembic.logger_sqlalchemy]
+level    = "WARNING"
+handlers = ""
+qualname = "sqlalchemy.engine"
+
+[tool.alembic.logger_alembic]
+level    = "INFO"
+handlers = ""
+qualname = "alembic"
+
+[tool.alembic.handler_console]
+class     = "StreamHandler"
+args      = "(sys.stderr,)"
+level     = "NOTSET"
+formatter = "generic"
+
+[tool.alembic.formatter_generic]
+format  = "%(levelname)-5.5s [%(name)s] %(message)s"
+datefmt = "%H:%M:%S"

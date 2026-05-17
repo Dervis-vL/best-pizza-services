@@ -1,9 +1,15 @@
 """Alembic environment configuration for pizza_platform."""
 
 import logging
-from logging.config import fileConfig
 
 import psycopg2.errors as pg_errors
+
+logging.basicConfig(
+    format="%(levelname)-5.5s [%(name)s] %(message)s",
+    datefmt="%H:%M:%S",
+    level=logging.WARNING,
+)
+logging.getLogger("alembic").setLevel(logging.INFO)
 from alembic import context
 from sqlalchemy import Connection, create_engine, engine_from_config, pool, text
 from sqlalchemy import exc as sa_exc
@@ -23,11 +29,6 @@ config.set_main_option(
         "%%",
     ),
 )
-
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support

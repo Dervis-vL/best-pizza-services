@@ -8,4 +8,4 @@ alembic-upgrade:
 
 # Alembic revision: message arg sets the revision message
 alembic-revision m:
-    {{run}} alembic revision "{{m}}"
+    {{run}} alembic revision -m "{{m}}"
