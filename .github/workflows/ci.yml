@@ -10,7 +10,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup/
 
       - name: Run checks
         run: just check
