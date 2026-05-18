@@ -34,3 +34,22 @@ per_rule_ignores = { DEP002 = [
     "pizza_data_collector",
     "pizza_platform_shared",
 ] }
+
+[tool.bumpversion]
+current_version = "0.1.0"
+commit          = true
+tag             = true
+tag_name        = "pizza-data-collector/v{new_version}"
+tag_message     = "Release pizza-data-collector {new_version}"
+message         = "chore(pizza-data-collector): bump {current_version} → {new_version}"
+commit_args     = "--no-verify"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search   = 'version = "{current_version}"'
+replace  = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search   = "[Unreleased]"
+replace  = "## [{new_version}] - {now:%Y-%m-%d}"

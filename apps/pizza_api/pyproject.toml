@@ -43,3 +43,22 @@ per_rule_ignores = { DEP002 = [
     "pizza_data_collector",
     "geolocation",
 ] }
+
+[tool.bumpversion]
+current_version = "0.1.0"
+commit          = true
+tag             = true
+tag_name        = "pizza-api/v{new_version}"
+tag_message     = "Release pizza-api {new_version}"
+message         = "chore(pizza-api): bump {current_version} → {new_version}"
+commit_args     = "--no-verify"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search   = 'version = "{current_version}"'
+replace  = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search   = "[Unreleased]"
+replace  = "## [{new_version}] - {now:%Y-%m-%d}"

@@ -20,17 +20,30 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: check
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: "0"
+          fetch-depth: 0
+          # Use GITHUB_TOKEN so the version-bump push does not re-trigger this workflow
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./.github/actions/setup
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump versions for changed projects
+        run: just version "${{ github.event.before }}"
+
+      - name: Push version bumps and tags
+        run: git push origin main --follow-tags
 
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Version
-        run: just version
 
       - name: Build and push
         run: just push-ghcr
