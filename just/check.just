@@ -36,3 +36,10 @@ deps-check:
     {{run}} --directory services/pizza_data_collector deptry .
     {{run}} --directory services/pizza_data_storage deptry .
     @echo "{{bold}}{{green}}✓ All dependencies are valid.{{nc}}"
+
+
+# Spell check
+spell-check:
+    @echo "{{bold}}{{green}}🔍 Spell checking...{{nc}}"
+    {{run}} codespell apps packages services README.md
+    @echo "{{bold}}{{green}}✓ All spelling is valid.{{nc}}"
