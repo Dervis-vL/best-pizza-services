@@ -1,1 +1,0 @@
-"""Pizza app tests module."""
