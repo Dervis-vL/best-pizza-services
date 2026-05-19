@@ -47,9 +47,9 @@ def mock_repo(
     return repo
 
 
-@pytest.fixture
+@pytest.fixture(name="adapter_fixture")
 def adapter(mock_repo_fixture: MagicMock) -> Generator[PizzaDataAdapter]:
     """PizzaDataAdapter with mock repo and a clean cache for each test."""
-    PizzaDataAdapter.load_pizza_data.clear()  # pylint: disable=no-member
+    PizzaDataAdapter.load_data.clear()  # pylint: disable=no-member
     yield PizzaDataAdapter(repo=mock_repo_fixture)
-    PizzaDataAdapter.load_pizza_data.clear()  # pylint: disable=no-member
+    PizzaDataAdapter.load_data.clear()  # pylint: disable=no-member
