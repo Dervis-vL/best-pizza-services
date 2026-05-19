@@ -1,4 +1,4 @@
-"""Save, get, list and check existance of webpage HTML use case."""
+"""Save, get, list and check existence of webpage HTML use case."""
 
 import logging
 

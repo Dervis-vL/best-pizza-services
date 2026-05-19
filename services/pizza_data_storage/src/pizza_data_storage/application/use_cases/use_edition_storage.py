@@ -1,4 +1,4 @@
-"""Save, get, list and check existance of edition HTML use case."""
+"""Save, get, list and check existence of edition HTML use case."""
 
 import logging
 

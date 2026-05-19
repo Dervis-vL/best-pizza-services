@@ -33,7 +33,7 @@ class PizzeriaParser:  # pylint: disable=too-few-public-methods
 
         return LocationSchema(
             pizzaria_id=pizzeria_id,
-            adress=address,
+            address=address,
             city=None,
             country=None,
             latitude=coords[0],

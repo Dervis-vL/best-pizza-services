@@ -41,7 +41,7 @@ class Locations(base.BaseModel):
     )
 
     # columns
-    adress: orm.Mapped[str] = orm.mapped_column(
+    address: orm.Mapped[str] = orm.mapped_column(
         sa.String(250),
         nullable=True,
         comment="",

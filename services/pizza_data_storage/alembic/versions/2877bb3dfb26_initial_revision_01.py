@@ -220,7 +220,7 @@ def upgrade() -> None:
             nullable=False,
             comment="Foreign key to the pizzerias table",
         ),
-        sa.Column("adress", sa.String(length=250), nullable=True),
+        sa.Column("address", sa.String(length=250), nullable=True),
         sa.Column("city", sa.String(length=50), nullable=True),
         sa.Column("country", sa.String(length=50), nullable=True),
         sa.Column("latitude", sa.Float(), nullable=True),

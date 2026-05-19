@@ -69,7 +69,7 @@ class PizzaPlatformDatabase(BaseDatabase):
         )
 
     def read_pizzerias(self) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
-        """Return every pizzeria that has lat lon pupulated."""
+        """Return every pizzeria that has lat lon populated."""
         query = self._get_read_query()
 
         try:

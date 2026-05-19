@@ -12,10 +12,10 @@ class LocationSchema(pyd.BaseModel):
     """Schema for validating pizzeria location data."""
 
     pizzaria_id: int = pyd.Field(..., description="Id foreignkey of the pizzeria")
-    adress: str | None = pyd.Field(
+    address: str | None = pyd.Field(
         default=None,
         max_length=250,
-        description="Adress of the pizzeria",
+        description="Address of the pizzeria",
     )
     city: str | None = pyd.Field(
         default=None,

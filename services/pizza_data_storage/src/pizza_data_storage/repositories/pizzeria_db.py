@@ -238,7 +238,7 @@ class PizzeriaRepository(BaseDatabase):
                 ),
             )
             if existing:
-                existing.adress = location_config.adress
+                existing.address = location_config.address
                 existing.city = location_config.city
                 existing.country = location_config.country
                 existing.phone = location_config.phone
@@ -246,7 +246,7 @@ class PizzeriaRepository(BaseDatabase):
 
         location = models.Locations(
             pizzeria_id=location_config.pizzaria_id,
-            adress=location_config.adress,
+            address=location_config.address,
             city=location_config.city,
             country=location_config.country,
             latitude=location_config.latitude,

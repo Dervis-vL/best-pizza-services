@@ -38,7 +38,7 @@ def get_add_category_uc(
     parse_pizzeria_uc = collector_use_cases.ParsePizzeriaUseCase(
         parser=parsers.PizzeriaParser(
             coord_patterns=collector_models.coordinate_patterns,
-            address_patterns=collector_models.adress_patterns,
+            address_patterns=collector_models.address_patterns,
             phone_patterns=collector_models.phone_patterns,
         ),
     )

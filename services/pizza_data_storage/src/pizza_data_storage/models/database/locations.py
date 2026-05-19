@@ -42,10 +42,10 @@ class Locations(base.BaseModel):
     )
 
     # columns
-    adress: orm.Mapped[str | None] = orm.mapped_column(
+    address: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(250),
         nullable=True,
-        comment="Pizzeria adress",
+        comment="Pizzeria address",
     )
     city: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(50),
