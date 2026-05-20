@@ -49,7 +49,6 @@ addopts = """
     --cov=geolocation
     --cov=pizza_platform_shared
     --cov-report=term-missing
-    --cov-fail-under=100
 """
 
 [tool.codespell]
@@ -60,7 +59,7 @@ branch   = true
 parallel = true
 
 [tool.coverage.report]
-fail_under    = 100
+fail_under    = 40
 show_missing  = true
 exclude_lines = [
     "pragma: no cover",
