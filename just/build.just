@@ -31,6 +31,13 @@ build-app:
 # Build both app and api service images
 build: build-api build-app
 
+# Build and push dev images to GHCR tagged with a given SHA (e.g. `just push-ghcr-dev abc1234`)
+push-ghcr-dev sha:
+    podman build -f apps/pizza_api/Dockerfile -t {{_registry_ghcr}}/{{_api_image}}:{{sha}} .
+    podman build -f apps/pizza_app/Dockerfile -t {{_registry_ghcr}}/{{_app_image}}:{{sha}} .
+    podman push {{_registry_ghcr}}/{{_api_image}}:{{sha}}
+    podman push {{_registry_ghcr}}/{{_app_image}}:{{sha}}
+
 # Build and push both images to GHCR, also tagging latest
 push-ghcr: build
     podman push {{_registry_ghcr}}/{{_api_image}}:{{_api_version}}
