@@ -6,7 +6,6 @@ import pytest
 
 from geolocation import GeolocationService, models
 
-
 COLOSSEUM_RESPONSE = {
     "display_name": "Colosseum, Via Sacra, Celio, Rome, Roma Capitale, Lazio, 00184, Italy",
     "address": {
@@ -29,8 +28,8 @@ def test_reverse_geocode(mock_fetch: MagicMock) -> None:
     assert result.city == "Rome"
 
 
-@patch.object(GeolocationService, "_fetch", return_value={"error": "Unable to geocode"})
-def test_reverse_geocode_nominatim_error(_mock_fetch: MagicMock) -> None:
-    service = GeolocationService(user_agent="test-agent")
-    with pytest.raises(RuntimeError, match="Nominatim returned an error"):
-        service.reverse_geocode(0.0, 0.0)
+def test_reverse_geocode_nominatim_error() -> None:
+    with patch.object(GeolocationService, "_fetch", return_value={"error": "Unable to geocode"}):
+        service = GeolocationService(user_agent="test-agent")
+        with pytest.raises(RuntimeError, match="Nominatim returned an error"):
+            service.reverse_geocode(0.0, 0.0)
