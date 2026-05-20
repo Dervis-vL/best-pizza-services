@@ -1,3 +1,7 @@
+[![CI](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml/badge.svg)](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml)  ![Python](https://img.shields.io/badge/python-3.14-blue)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)  [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+
+
+
 # 🍕 Best Pizza Services
 
 A monorepo for collecting, storing, and visualising data from the [50 Top Pizza](https://www.50toppizza.it/) world rankings. It scrapes pizzeria data across six global categories, enriches it with geolocation data, persists everything in PostgreSQL, and surfaces it through an interactive Streamlit map and a REST API.
