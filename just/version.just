@@ -55,7 +55,7 @@ reset-scope project:
     perl -i -pe 's/^SCOPE=.*/SCOPE=placeholder/' "$env_file"
     echo "✓ Reset SCOPE to placeholder in $env_file"
 
-# Validate changelogs and release scopes for changed projects — no bumping
+# Validate changelogs and release scopes for changed projects; no bumping
 version-check base_sha="":
     #!/usr/bin/env bash
     set -euo pipefail

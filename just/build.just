@@ -1,9 +1,12 @@
-github_user    := "Dervis-vL"
-api_image      := "pizza-api"
-app_image      := "pizza-app"
-registry_ghcr  := "ghcr.io/" + github_user
-_api_version  := `grep '^version' apps/pizza_api/pyproject.toml | head -1 | sed 's/.*"\(.*\)"/\1/'`
-_app_version  := `grep '^version' apps/pizza_app/pyproject.toml | head -1 | sed 's/.*"\(.*\)"/\1/'`
+api_config    := "apps/pizza_api/pyproject.toml"
+app_config    := "apps/pizza_app/pyproject.toml"
+
+_github_user  := `git remote get-url origin | sed 's/.*github\.com[:/]\([^/]*\)\/.*/\1/'`
+_api_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
+_app_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
+_registry_ghcr := "ghcr.io/" + _github_user
+_api_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
+_app_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
 
 # Run podman compose: action defaults to "up", e.g. `just compose down`
 compose action="up" env_file=".env":
@@ -17,22 +20,22 @@ alembic-upgrade:
 alembic-revision m:
     {{run}} alembic revision -m "{{m}}"
 
-# Build both app and api service images
-build: build-api build-app
-
 # Build the FastAPI image
 build-api:
-    podman build -f apps/pizza_api/Dockerfile -t {{registry_ghcr}}/{{api_image}}:{{_api_version}} .
+    podman build -f apps/pizza_api/Dockerfile -t {{_registry_ghcr}}/{{_api_image}}:{{_api_version}} .
 
 # Build the Streamlit app image
 build-app:
-    podman build -f apps/pizza_app/Dockerfile -t {{registry_ghcr}}/{{app_image}}:{{_app_version}} .
+    podman build -f apps/pizza_app/Dockerfile -t {{_registry_ghcr}}/{{_app_image}}:{{_app_version}} .
+
+# Build both app and api service images
+build: build-api build-app
 
 # Build and push both images to GHCR, also tagging latest
 push-ghcr: build
-    podman push {{registry_ghcr}}/{{api_image}}:{{_api_version}}
-    podman push {{registry_ghcr}}/{{app_image}}:{{_app_version}}
-    podman tag  {{registry_ghcr}}/{{api_image}}:{{_api_version}} {{registry_ghcr}}/{{api_image}}:latest
-    podman tag  {{registry_ghcr}}/{{app_image}}:{{_app_version}} {{registry_ghcr}}/{{app_image}}:latest
-    podman push {{registry_ghcr}}/{{api_image}}:latest
-    podman push {{registry_ghcr}}/{{app_image}}:latest
+    podman push {{_registry_ghcr}}/{{_api_image}}:{{_api_version}}
+    podman push {{_registry_ghcr}}/{{_app_image}}:{{_app_version}}
+    podman tag  {{_registry_ghcr}}/{{_api_image}}:{{_api_version}} {{_registry_ghcr}}/{{_api_image}}:latest
+    podman tag  {{_registry_ghcr}}/{{_app_image}}:{{_app_version}} {{_registry_ghcr}}/{{_app_image}}:latest
+    podman push {{_registry_ghcr}}/{{_api_image}}:latest
+    podman push {{_registry_ghcr}}/{{_app_image}}:latest
