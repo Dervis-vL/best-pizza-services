@@ -1,6 +1,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 # --- IMPORTS --------------------------------------------
+import 'just/setup.just'
 import 'just/check.just'
 import 'just/test.just'
 import 'just/build.just'
@@ -16,6 +17,6 @@ default:
     @just --list
 
 
-# Run all checks: fmt, test, typecheck, lint, deps-check
-check: fmt typecheck lint deps-check spell-check test
+# Run all checks: fmt, test, typecheck, lint, deps-check, version-check
+check: fmt typecheck lint deps-check spell-check test version-check
     @echo "{{bold}}{{green}}✓ All checks passed.{{nc}}"
