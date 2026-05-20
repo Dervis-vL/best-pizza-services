@@ -23,7 +23,7 @@ def add_category(
     body: requests.CategoryCreateRequest,
     use_case: dependencies.AddCategoryUCDep,
 ) -> responses.AddCategoryResponse:
-    """Seed a new category, scrape all its editions and pizzeria webpages, and parse the results."""
+    """Seed a new category, scrape all its editions/pizzeria/webpages, and parse."""
     handler = WarningCaptureHandler()
     _pizza_api_logger.addHandler(handler)
     try:
@@ -31,6 +31,9 @@ def add_category(
     finally:
         _pizza_api_logger.removeHandler(handler)
 
-    response = responses.AddCategoryResponse.model_validate(result, from_attributes=True)
+    response = responses.AddCategoryResponse.model_validate(
+        result,
+        from_attributes=True,
+    )
     response.warnings = handler.warnings
     return response

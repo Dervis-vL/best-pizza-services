@@ -9,7 +9,11 @@ class WebpageSchema(pyd.BaseModel):
     """Schema for validating pizzeria websites data."""
 
     url: str = pyd.Field(..., max_length=500, description="URL of the resource")
-    slug: str = pyd.Field(..., max_length=200, description="URL-friendly slug for the resource")
+    slug: str = pyd.Field(
+        ...,
+        max_length=200,
+        description="URL-friendly slug for the resource",
+    )
 
     @pyd.field_validator("url")
     @classmethod
@@ -22,7 +26,8 @@ class WebpageSchema(pyd.BaseModel):
             v = v.replace("http://", "https://", 1)
         # Ensure URL starts with https://
         if not v.startswith("https://"):
-            raise ValueError(f"URL is not valid: {v}")
+            msg = f"URL is not valid: {v}"
+            raise ValueError(msg)
         return v
 
     @pyd.field_validator("slug")

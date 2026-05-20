@@ -2,23 +2,26 @@
 
 from typing import Protocol
 
-from pizza_platform_shared import schemas as shared_schemas
-
 from pizza_data_storage import models
+from pizza_platform_shared import schemas as shared_schemas
 
 
 class IRankingsRepository(Protocol):
     """Interface for a repository handling ranking categories and editions."""
 
     def seed_categories_and_editions(
-        self, category_schemas: list[shared_schemas.CategorySchema]
+        self,
+        category_schemas: list[shared_schemas.CategorySchema],
     ) -> None:
         """Write categories and editions from config, inserting or updating."""
 
     def get_editions(
-        self, *, only_unscraped: bool = False, only_unparsed: bool = False
+        self,
+        *,
+        only_unscraped: bool = False,
+        only_unparsed: bool = False,
     ) -> list[models.Editions]:
-        """Return all ranking editions, optional that have not been scraped or parsed yet."""
+        """Return all ranking editions, optional if not been scraped or parsed yet."""
 
     def get_edition(self, edition_id: int) -> models.Editions | None:
         """Return a single edition by id."""

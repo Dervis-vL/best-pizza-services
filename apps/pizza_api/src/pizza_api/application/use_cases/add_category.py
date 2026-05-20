@@ -4,17 +4,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pizza_api.application import results
 from pizza_data_storage.application import use_cases as storage_use_cases
 from pizza_platform_shared import schemas as shared_schemas
-
-from pizza_api.application import results
 
 if TYPE_CHECKING:
     from pizza_api.application.use_cases.parse_editions import ParseEditionsUseCase
     from pizza_api.application.use_cases.parse_webpages import ParseWebpagesUseCase
     from pizza_api.application.use_cases.scrape_editions import ScrapeEditionsUseCase
     from pizza_api.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
-
 
 
 class AddCategoryUseCase:  # pylint: disable=too-few-public-methods
@@ -36,7 +34,8 @@ class AddCategoryUseCase:  # pylint: disable=too-few-public-methods
         self._parse_webpages_uc = parse_webpages_uc
 
     def execute(
-        self, category_schemas: list[shared_schemas.CategorySchema]
+        self,
+        category_schemas: list[shared_schemas.CategorySchema],
     ) -> results.AddCategoryResult:
         """Seed categories and editions, then run the full scrape + parse cycle."""
         self._seed_uc.execute(category_schemas=category_schemas)

@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pizza_app"
-version = "0.1.0"
+name = "pizza-app"
+version = "0.0.0"
 description = "A Streamlit pizza platform data viewer"
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
 readme = "README.md"
@@ -19,7 +19,6 @@ dependencies = [
     "sqlalchemy>=2.0.46",
     "streamlit>=1.55.0",
     "streamlit-folium>=0.26.1",
-    "yarl>=1.22.0",
     "pizza-platform-shared",
 ]
 
@@ -31,3 +30,33 @@ packages = ["src/pizza_app"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }
+
+[tool.deptry]
+ignore_notebooks = true
+per_rule_ignores = { DEP002 = [
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-xdist"
+], DEP003 = [
+    "pizza_app",
+    "pizza_platform_shared",
+] }
+
+[tool.bumpversion]
+current_version = "0.0.0"
+commit          = true
+tag             = true
+tag_name        = "pizza-app/v{new_version}"
+tag_message     = "Release pizza-app {new_version}"
+message         = "chore(pizza-app): bump {current_version} → {new_version}"
+commit_args     = "--no-verify"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search   = 'version = "{current_version}"'
+replace  = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search   = "[Unreleased]"
+replace  = "## [{new_version}] - {now:%Y-%m-%d}"

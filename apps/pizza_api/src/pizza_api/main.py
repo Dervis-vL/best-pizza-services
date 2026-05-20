@@ -1,16 +1,16 @@
 """Main entry point for the pizza API."""
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI
 
-from pizza_api.dependencies.engine import create_engine
 from pizza_api import routers, settings
+from pizza_api.dependencies.engine import create_engine
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(application: FastAPI) -> AsyncGenerator[None]:
     """Create the shared DB engine on startup and dispose it on shutdown."""
     application.state.engine = create_engine()
     yield
@@ -26,39 +26,3 @@ app = FastAPI(
 
 app.include_router(routers.categories.router)
 app.include_router(routers.maintenance.router)
-
-# # create an app with a title and description
-# if os.getenv("FUNCTIONS_WORKER_RUNTIME"):
-#     app = FastAPI(
-#         servers=[{"url": f"/api/{settings.name}", "description": "API"}],
-#         root_path=f"/{settings.name}",
-#         root_path_in_servers=False,
-#         title=settings.title,
-#         description=settings.description,
-#         swagger_ui_oauth2_redirect_url="/oauth2-redirect",
-#         swagger_ui_init_oauth={
-#             "usePkceWithAuthorizationCodeGrant": True,
-#             "clientId": auth_settings.open_api_client_id,
-#             "scopes": auth_settings.scope_name,
-#         },
-#     )
-# else:
-#     app_auth_init = {}
-#     if auth_settings.is_set:
-#         app_auth_init["swagger_ui_oauth2_redirect_url"] = "/oauth2-redirect"
-#         app_auth_init["swagger_ui_init_oauth"] = {
-#             "usePkceWithAuthorizationCodeGrant": True,
-#             "clientId": auth_settings.open_api_client_id,
-#             "scopes": auth_settings.scope_name,
-#         }
-#     app = FastAPI(
-#         title=f"{settings.title} - development",
-#         description=settings.description,
-#         **app_auth_init,
-#     )
-
-# # add GZipMiddleware in case of large payloads
-# app.add_middleware(GZipMiddleware)
-
-# # Include our hello world router
-# app.include_router(router)

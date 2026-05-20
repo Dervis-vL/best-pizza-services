@@ -1,21 +1,21 @@
 """Alembic environment configuration for pizza_platform."""
 
 import logging
-from logging.config import fileConfig
-from pizza_platform_shared import settings
 
 import psycopg2.errors as pg_errors
-from sqlalchemy import exc as sa_exc
-from sqlalchemy import (
-    create_engine,
-    pool,
-    text,
-    Connection,
-    engine_from_config
+
+logging.basicConfig(
+    format="%(levelname)-5.5s [%(name)s] %(message)s",
+    datefmt="%H:%M:%S",
+    level=logging.WARNING,
 )
+logging.getLogger("alembic").setLevel(logging.INFO)
 from alembic import context
+from sqlalchemy import Connection, create_engine, engine_from_config, pool, text
+from sqlalchemy import exc as sa_exc
 
 from pizza_data_storage import models
+from pizza_platform_shared import settings
 
 logger = logging.getLogger(__name__)
 
@@ -23,16 +23,12 @@ logger = logging.getLogger(__name__)
 # access to the values within the .ini file in use.
 config = context.config  # pylint: disable=no-member
 config.set_main_option(
-        "sqlalchemy.url",
-        settings.pizza_db.connection_string.render_as_string(hide_password=False).replace(
-            "%", "%%"
-        ),
-    )
-
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+    "sqlalchemy.url",
+    settings.pizza_db.connection_string.render_as_string(hide_password=False).replace(
+        "%",
+        "%%",
+    ),
+)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -46,6 +42,7 @@ target_metadata = models.BaseModel.metadata
 # ... etc.
 
 # Database and schema bootstrap
+
 
 def ensure_database_exists() -> None:
     """Create the target database if it doesn't exist.
@@ -70,7 +67,7 @@ def ensure_database_exists() -> None:
             logger.debug("Database '%s' already exists.", target_db_name)
         elif isinstance(err.orig, pg_errors.InsufficientPrivilege):  # pylint: disable=no-member
             logger.debug(
-                "No CREATEDB privilege — assuming database '%s' already exists (managed host).",
+                "No CREATEDB privilege, assuming database '%s' already exists.",
                 target_db_name,
             )
         else:
@@ -144,6 +141,7 @@ def run_migrations_online() -> None:
 
         with context.begin_transaction():  # pylint: disable=no-member
             context.run_migrations()  # pylint: disable=no-member
+
 
 # Database must exist before running migrations:
 ensure_database_exists()

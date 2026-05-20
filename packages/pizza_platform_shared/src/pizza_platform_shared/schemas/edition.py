@@ -2,6 +2,7 @@
 
 import pydantic as pyd
 
+from pizza_platform_shared import constants
 from pizza_platform_shared.schemas.base import BaseReadSchema
 
 
@@ -15,15 +16,17 @@ class EditionSchema(pyd.BaseModel):
     @classmethod
     def year_reasonable(cls, v: int) -> int:
         """Validates that the year is within a reasonable range."""
-        if v < 2017 or v > 2030:
-            raise ValueError(f"Year {v} is outside reasonable range (2017-2030)")
+        if v < constants.YearRange.MIN or v > constants.YearRange.MAX:
+            msg = f"Year {v} is outside reasonable range ({constants.YearRange.MAX})"
+            raise ValueError(msg)
         return v
 
     @pyd.model_validator(mode="after")
-    def year_in_url(self) -> "EditionSchema":
+    def year_in_url(self) -> EditionSchema:
         """Validates that the year appears in the URL."""
         if str(self.year) not in self.url:
-            raise ValueError(f"Year {self.year} must appear in the URL")
+            msg = f"Year {self.year} must appear in the URL"
+            raise ValueError(msg)
         return self
 
 

@@ -1,8 +1,9 @@
 """Geolocation service: reverse-geocodes lat/lon via Nominatim (OpenStreetMap).
 
 Nominatim is completely free with no API token required.
-Hard rate limit: 1 request/second — enforced here to stay compliant.
-Attribution requirement: must display "© OpenStreetMap contributors" where results are shown.
+Hard rate limit: 1 request/second; enforced here to stay compliant.
+Attribution requirement: must display "© OpenStreetMap contributors"
+where results are shown.
 
 Docs: https://nominatim.org/release-docs/latest/api/Reverse/
 """
@@ -11,6 +12,7 @@ import json
 import time
 import urllib.parse
 import urllib.request
+from typing import Any
 from urllib.error import HTTPError, URLError
 
 import yarl
@@ -32,9 +34,8 @@ class GeolocationService:
     _MIN_INTERVAL: float = constants.GeoLocationConstants.MIN_INTERVAL
 
     def __init__(self, user_agent: str) -> None:
-        """
-        :param user_agent: Identifies your app to Nominatim (required by their policy).
-                           Use something like "best-pizza-services/1.0 contact@example.com".
+        """:param user_agent: Identifies your app to Nominatim (required by their policy).
+        Use something like "best-pizza-services/1.0 contact@example.com".
         """
         self._user_agent = user_agent
         self._last_request_at: float = 0.0
@@ -56,34 +57,52 @@ class GeolocationService:
             time.sleep(self._MIN_INTERVAL - elapsed)
         self._last_request_at = time.monotonic()
 
-    def _fetch(self, lat: float, lon: float) -> dict:
+    def _fetch(self, lat: float, lon: float) -> dict[str, Any]:
         params = urllib.parse.urlencode({"lat": lat, "lon": lon, "format": "json"})
         url_str = f"{self._BASE_URL}?{params}"
-        req = urllib.request.Request(
-            url_str, 
+        req = urllib.request.Request(  # noqa: S310
+            url_str,
             headers={"User-Agent": self._user_agent, "Accept-Language": "en"},
         )
         try:
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                return json.loads(resp.read())
+            if urllib.parse.urlsplit(url_str).scheme not in ("http", "https"):
+                msg = "Invalid URL scheme"
+                raise ValueError(msg)
+            with urllib.request.urlopen(req, timeout=10) as resp:  # noqa: S310
+                result: dict[str, Any] = json.loads(resp.read())
+                return result
         except HTTPError as e:
-            raise HTTPError(e.url, e.code, f"Nominatim error for ({lat}, {lon}): {e.reason}", e.headers, e.fp)
+            raise HTTPError(
+                e.url,
+                e.code,
+                f"Nominatim error for ({lat}, {lon}): {e.reason}",
+                e.headers,
+                e.fp,
+            ) from e
         except URLError as e:
-            raise URLError(f"Failed to reach Nominatim for ({lat}, {lon}): {e.reason}")
+            msg = f"Failed to reach Nominatim for ({lat}, {lon}): {e.reason}"
+            raise URLError(msg) from e
 
     @staticmethod
-    def _parse(data: dict) -> models.LocationResult:
+    def _parse(data: dict[str, Any]) -> models.LocationResult:
         if "error" in data:
-            raise RuntimeError(f"Nominatim returned an error: {data['error']}")
+            msg = f"Nominatim returned an error: {data['error']}"
+            raise RuntimeError(msg)
 
         addr = data.get("address", {})
         city = (
-            addr.get("city")
-            or addr.get("town")
-            or addr.get("village")
-            or addr.get("municipality")
-            or ""
-        ).split(",")[0].strip().split("-")[0].strip()
+            (
+                addr.get("city")
+                or addr.get("town")
+                or addr.get("village")
+                or addr.get("municipality")
+                or ""
+            )
+            .split(",")[0]
+            .strip()
+            .split("-")[0]
+            .strip()
+        )
         return models.LocationResult(
             country=addr.get("country", ""),
             city=city,

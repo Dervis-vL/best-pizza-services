@@ -2,10 +2,9 @@
 
 import logging
 
+from pizza_api.application import results
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
-
-from pizza_api.application import results
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +52,9 @@ class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
 
             if len(pizzerias) < _MIN_PIZZERIAS_THRESHOLD:
                 logger.warning(
-                    "Only %s pizzerias parsed for edition %s", len(pizzerias), edition.id
+                    "Only %s pizzerias parsed for edition %s",
+                    len(pizzerias),
+                    edition.id,
                 )
                 failed += 1
                 continue
@@ -62,4 +63,8 @@ class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
             self._mark_parsed_uc.execute(edition_id=edition.id)
             parsed += 1
 
-        return results.ParseEditionsResult(parsed=parsed, skipped=skipped, failed=failed)
+        return results.ParseEditionsResult(
+            parsed=parsed,
+            skipped=skipped,
+            failed=failed,
+        )

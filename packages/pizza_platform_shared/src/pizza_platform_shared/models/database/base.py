@@ -5,8 +5,8 @@ from __future__ import annotations
 import datetime
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
+from sqlalchemy.dialects import postgresql
 
 
 class BaseModel(orm.DeclarativeBase):
@@ -20,7 +20,8 @@ class BaseModel(orm.DeclarativeBase):
     Provides:
         - Auto-incrementing ID (BigInt for Postgres, Int for SQLite)
         - created_at timestamp with timezone
-        - updated_at timestamp with timezone (auto-updates)"""
+        - updated_at timestamp with timezone (auto-updates)
+    """
 
     __abstract__ = True
 
@@ -60,4 +61,4 @@ class BaseModel(orm.DeclarativeBase):
         """Returns the str of the foreign key name with dot separation."""
         if schema_name is None:
             return f"{table_name}.id"
-        return ".".join((schema_name, table_name, "id"))
+        return f"{schema_name}.{table_name}.id"

@@ -1,11 +1,11 @@
-"""Save, get, list and check existance of edition HTML use case."""
+"""Save, get, list and check existence of edition HTML use case."""
 
 import logging
 
 import bs4
 
 from pizza_data_storage.application import ports
-from pizza_data_storage import enums
+from pizza_platform_shared import enums as shared_enums
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class StoreEditionHtmlUseCase:  # pylint: disable=too-few-public-methods
         return self._html_repository.save_html(
             html=html,
             model_id=model_id,
-            model_name=enums.HtmlModelName.EDITIONS,
+            model_name=shared_enums.HtmlModelName.EDITIONS,
         )
 
 
@@ -42,7 +42,7 @@ class GetEditionHtmlUseCase:  # pylint: disable=too-few-public-methods
     def execute(self, *, model_id: int) -> bs4.BeautifulSoup:
         """Get the edition's HTML string from storage as soup."""
         html = self._html_repository.get_html(
-            model_name=enums.HtmlModelName.EDITIONS,
+            model_name=shared_enums.HtmlModelName.EDITIONS,
             model_id=model_id,
         )
         return bs4.BeautifulSoup(html, "html.parser")
@@ -59,7 +59,7 @@ class EditionHtmlExistsUseCase:  # pylint: disable=too-few-public-methods
         """Return True if the edition's HTML already exists in storage."""
         return self._html_repository.html_exists(
             model_id=model_id,
-            model_name=enums.HtmlModelName.EDITIONS,
+            model_name=shared_enums.HtmlModelName.EDITIONS,
         )
 
 
@@ -72,4 +72,4 @@ class ListEditionKeysUseCase:  # pylint: disable=too-few-public-methods
 
     def execute(self) -> list[str]:
         """List and return stored edition HTML keys."""
-        return self._html_repository.list_keys(model_name=enums.HtmlModelName.EDITIONS)
+        return self._html_repository.list_keys(model_name=shared_enums.HtmlModelName.EDITIONS)

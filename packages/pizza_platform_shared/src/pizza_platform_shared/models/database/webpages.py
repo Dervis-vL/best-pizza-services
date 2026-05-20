@@ -4,8 +4,8 @@ import datetime
 from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 from sqlalchemy import orm
+from sqlalchemy.dialects import postgresql
 
 from pizza_platform_shared import settings
 from pizza_platform_shared.models.database import base
@@ -21,37 +21,44 @@ class Webpages(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.webpages
     __table_args__ = (
         sa.UniqueConstraint("slug", name="uq_webpage_slug"),
-        {"schema": settings.pizza_db.schema_name}
+        {"schema": settings.pizza_db.schema_name},
     )
 
     # foreign key(s)
     pizzeria_id: orm.Mapped[int] = orm.mapped_column(
         sa.BigInteger().with_variant(sa.Integer, "sqlite"),
-        sa.ForeignKey(base.BaseModel.create_foreign_key_str(
-            schema_name=settings.pizza_db.schema_name,
-            table_name=settings.pizza_db.tables.pizzerias,
-        ), ondelete="CASCADE"),
+        sa.ForeignKey(
+            base.BaseModel.create_foreign_key_str(
+                schema_name=settings.pizza_db.schema_name,
+                table_name=settings.pizza_db.tables.pizzerias,
+            ),
+            ondelete="CASCADE",
+        ),
         nullable=False,
         comment="Foreign key to the pizzerias table",
     )
 
     # columns
     url: orm.Mapped[str] = orm.mapped_column(
-        sa.String(500), nullable=False, comment="URL of the pizzeria's page on 50 Top Pizza"
+        sa.String(500),
+        nullable=False,
+        comment="URL of the pizzeria's page on 50 Top Pizza",
     )
     slug: orm.Mapped[str] = orm.mapped_column(
-        sa.String(200), nullable=False, comment="URL-friendly slug for the pizzeria"
+        sa.String(200),
+        nullable=False,
+        comment="URL-friendly slug for the pizzeria",
     )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
             sa.DateTime(timezone=True),
-            "sqlite"
+            "sqlite",
         ),
         nullable=True,
-        comment="Timestamp when the data was scraped"
+        comment="Timestamp when the data was scraped",
     )
 
     # relationships
-    pizzeria: orm.Mapped["Pizzerias"] = orm.relationship(
-        back_populates=settings.pizza_db.tables.webpages
+    pizzeria: orm.Mapped[Pizzerias] = orm.relationship(
+        back_populates=settings.pizza_db.tables.webpages,
     )

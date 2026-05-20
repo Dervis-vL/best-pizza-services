@@ -6,7 +6,7 @@ class PizzaDataScraperError(Exception):
 
     message: str
 
-    def __init__(self, message: str = None):
+    def __init__(self, message: str) -> None:
         if message is not None:
             self.message = message
         super().__init__(self.message)
@@ -15,5 +15,8 @@ class PizzaDataScraperError(Exception):
 class URLExtractionError(PizzaDataScraperError):
     """Exception raised when URL extraction from a card element fails."""
 
-    def __init__(self, message: str = "Failed to extract URL from card element."):
+    def __init__(
+        self,
+        message: str = "Failed to extract URL from card element.",
+    ) -> None:
         super().__init__(message)

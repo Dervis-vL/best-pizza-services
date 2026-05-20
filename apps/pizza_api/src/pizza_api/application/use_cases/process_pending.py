@@ -13,9 +13,8 @@ if TYPE_CHECKING:
     from pizza_api.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
 
 
-
 class ProcessPendingUseCase:  # pylint: disable=too-few-public-methods
-    """Retry all unscraped and unparsed editions and webpages already in the database."""
+    """Retry all unscraped and unparsed editions/webpages already in the database."""
 
     def __init__(
         self,

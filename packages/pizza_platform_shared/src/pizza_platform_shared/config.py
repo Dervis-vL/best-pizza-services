@@ -4,6 +4,6 @@ import pydantic_settings
 
 
 class DatabaseSettingsConfigDict(pydantic_settings.SettingsConfigDict, total=False):
-    """Config dict for database settings, with a field to indicate if tables are required."""
+    """Config dict for database settings, with field to indicate tables are required."""
 
     requires_tables: bool

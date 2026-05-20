@@ -6,17 +6,17 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from typing import Iterator
+from collections.abc import Generator
 
 from pydantic import BaseModel, ConfigDict
 
 
-class BasePattern(BaseModel, ABC):
+class BasePattern[T](BaseModel, ABC):
     """Base pattern model."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    def __iter__(self) -> Iterator[tuple[str, re.Pattern[str]]]:
+    def __iter__(self) -> Generator[tuple[str, re.Pattern[str]]]:
         """Iterate as (name, pattern) pairs — preserves definition order."""
         for name in self.__class__.model_fields:
             yield name, getattr(self, name)
@@ -34,27 +34,26 @@ class BasePattern(BaseModel, ABC):
         return None
 
     @abstractmethod
-    def extract(self, html: str):
+    def extract(self, html: str) -> T:
         """Abstract base method"""
 
 
-class CardPatterns(BasePattern):
-    """
-    Patterns for extracting individual ranking card HTML chunks from a full ranking page.
+class CardPatterns(BasePattern[list[str]]):
+    """Patterns for extracting ranking card HTML chunks from full ranking page.
     Each pattern targets the outer <a> wrapping a single ranking entry.
 
     Use extract() to get all card chunks, then run URLPattern and
-    RankingPositionPatterns or AwarsNamePatterns on each chunk to extract URL and position.
+    RankingPositionPatterns or AwarsNamePatterns on each chunk to extract URL/position.
     """
 
-    # Special awards (2022+): must be first since award pages also have id="scheda" anchors
+    # Special awards (2022+): must be first since award sites also have "scheda" anchors
     testo_card: re.Pattern[str] = re.compile(
         r'<div\b[^>]*\bid="sponsor_speciali testo-card"[^>]*>.*?</div>',
         re.DOTALL,
     )
 
-    # 2022+: <a href="...referenza/recensione/..."> — more specific than scheda_id because
-    # some pages reuse id="scheda" on sponsor/partner cards that don't link to referenza URLs.
+    # 2022+: <a href="...referenza/recensione/...">:more specific than scheda_id because
+    # because some pages reuse id="scheda" on sponsor cards that don't link referenza.
     referenza_href: re.Pattern[str] = re.compile(
         r'<a\b[^>]*\bhref="https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]*"[^>]*>.*?</a>',
         re.DOTALL,
@@ -66,7 +65,7 @@ class CardPatterns(BasePattern):
         re.DOTALL,
     )
 
-    # Older (2020): <a class="...altezza-NNN-desktop..." href="...recensione/...">...</a>
+    # Older (2020): <a class="...altezza-NNN-desktop..." href="..recensione/..">...</a>
     altezza_class: re.Pattern[str] = re.compile(
         r"<a\b[^>]*\baltezza-\d+-desktop\b[^>]*>.*?</a>",
         re.DOTALL,
@@ -81,16 +80,14 @@ class CardPatterns(BasePattern):
         return []
 
 
-class URLPatterns(BasePattern):
-    """
-    Pattern for extracting the raw url string.
-    """
+class URLPatterns(BasePattern[str | None]):
+    """Pattern for extracting the raw url string."""
 
     pizzeria_url: re.Pattern[str] = re.compile(
-        r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"'
+        r'href="(https://www\.50toppizza\.it/(?:referenza|recensione)/[^"]+)"',
     )
 
-    def extract(self, html: str) -> str:
+    def extract(self, html: str) -> str | None:
         """Return the raw url string from each cards html, or None."""
         match = self.search(html)
         if match:
@@ -98,9 +95,8 @@ class URLPatterns(BasePattern):
         return None
 
 
-class RankingPositionPatterns(BasePattern):
-    """
-    Patterns for extracting a ranked position (1–100) from a ranking-list card's HTML.
+class RankingPositionPatterns(BasePattern[int | None]):
+    """Patterns for extracting a ranked position from a ranking-list card's HTML.
     Run on each individual card/entry's HTML extracted from a ranking page.
     Each pattern must contain a (?P<position>...) named group.
 
@@ -127,9 +123,8 @@ class RankingPositionPatterns(BasePattern):
         return None
 
 
-class CoordPatterns(BasePattern):
-    """
-    Compiled regex patterns for coordinate extraction.
+class CoordPatterns(BasePattern[tuple[float, float] | tuple[None, None]]):
+    """Compiled regex patterns for coordinate extraction.
     Each attribute targets a specific HTML structure observed in the wild.
     Both (?P<lat>...) and (?P<lng>...) named groups are required in every pattern.
     """
@@ -161,9 +156,8 @@ class CoordPatterns(BasePattern):
         return None, None
 
 
-class AddressPatterns(BasePattern):
-    """
-    Patterns for extracting the raw address string.
+class AddressPatterns(BasePattern[str | None]):
+    """Patterns for extracting the raw address string.
     Each pattern must contain an (?P<address>...) named group.
     """
 
@@ -179,9 +173,8 @@ class AddressPatterns(BasePattern):
         return None
 
 
-class PhonePatterns(BasePattern):
-    """
-    Patterns for extracting the phone number.
+class PhonePatterns(BasePattern[str | None]):
+    """Patterns for extracting the phone number.
     Each pattern must contain a (?P<phone>...) named group.
     """
 
@@ -197,9 +190,8 @@ class PhonePatterns(BasePattern):
         return None
 
 
-class AwardNamePatterns(BasePattern):
-    """
-    Pattern for extracting the award name and sponsor from a special awards card.
+class AwardNamePatterns(BasePattern[tuple[str, str] | tuple[None, None]]):
+    """Pattern for extracting the award name and sponsor from a special awards card.
     Run on each individual card HTML chunk extracted by AwardCardPatterns.
 
     The source element looks like:

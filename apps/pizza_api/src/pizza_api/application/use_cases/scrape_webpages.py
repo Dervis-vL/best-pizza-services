@@ -1,9 +1,8 @@
 """Scrape all unscraped pizzeria webpages use case."""
 
+from pizza_api.application import results
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
-
-from pizza_api.application import results
 
 
 class ScrapeWebpagesUseCase:  # pylint: disable=too-few-public-methods

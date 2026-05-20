@@ -8,9 +8,6 @@ from pizza_platform_shared.models.database.ranking_editions import RankingEditio
 from pizza_platform_shared.models.database.ranking_entries import RankingEntries
 from pizza_platform_shared.models.database.webpages import Webpages
 
-# TODO: Apply module level lazy loading to the models
-
-
 __all__ = [
     "BaseModel",
     "Categories",

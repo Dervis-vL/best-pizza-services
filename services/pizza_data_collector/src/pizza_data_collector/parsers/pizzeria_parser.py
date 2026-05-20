@@ -1,13 +1,13 @@
 """Pizza parser implementation for pizza data collector service."""
 
 from bs4 import BeautifulSoup
-from pizza_platform_shared.schemas import LocationSchema
 
 from pizza_data_collector.models.parser.patterns import (
     AddressPatterns,
     CoordPatterns,
     PhonePatterns,
 )
+from pizza_platform_shared.schemas import LocationSchema
 
 
 class PizzeriaParser:  # pylint: disable=too-few-public-methods
@@ -33,7 +33,7 @@ class PizzeriaParser:  # pylint: disable=too-few-public-methods
 
         return LocationSchema(
             pizzaria_id=pizzeria_id,
-            adress=address,
+            address=address,
             city=None,
             country=None,
             latitude=coords[0],

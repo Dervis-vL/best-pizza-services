@@ -8,17 +8,13 @@ from pizza_app import dataclasses, repositories
 class PizzaDataAdapter:  # pylint: disable=too-few-public-methods
     """Pizza data adapter class."""
 
-    def __init__(self, repo: repositories.PizzaPlatformDatabase):
+    def __init__(self, repo: repositories.PizzaPlatformDatabase) -> None:
         """Class initialization."""
         self._repo = repo
 
-    @st.cache_data(ttl=18000, show_spinner="Loading Pizzerias from DB...")
-    def load_pizza_data(_self) -> dataclasses.PizzaData:  # pylint: disable=no-self-argument
+    def load_pizza_data(self) -> dataclasses.PizzaData:
         """Load all pizza app data."""
-        pizza_data = dataclasses.PizzaData(
-            locations=_self._repo.read_pizzerias(),
-            rankings=_self._repo.read_rankings(),
-        )
+        pizza_data: dataclasses.PizzaData = PizzaDataAdapter.load_data(_repo=self._repo)
 
         if pizza_data.locations.empty:
             st.warning("No pizzerias with coordinates found in the database.")
@@ -29,3 +25,16 @@ class PizzaDataAdapter:  # pylint: disable=too-few-public-methods
             st.stop()
 
         return pizza_data
+
+    @staticmethod
+    @st.cache_data(ttl=18000, show_spinner="Loading Pizza Data from DB...")
+    def load_data(_repo: repositories.PizzaPlatformDatabase) -> dataclasses.PizzaData:
+        """Load all pizza app data.
+
+        Staticmethod implementation to allow caching of the method without
+        the need for an instance of the class.
+        """
+        return dataclasses.PizzaData(
+            locations=_repo.read_pizzerias(),
+            rankings=_repo.read_rankings(),
+        )

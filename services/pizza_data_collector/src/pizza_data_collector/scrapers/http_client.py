@@ -1,8 +1,10 @@
 """HTTP client implementation for pizza data collector service."""
 
 import logging
-from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
+from urllib.request import urlopen
+
 from pizza_data_collector.exceptions import URLExtractionError
 
 logger = logging.getLogger(__name__)
@@ -18,13 +20,19 @@ class HttpClient:  # pylint: disable=too-few-public-methods
     def fetch(self, url: str) -> bytes | None:
         """Fetches the content of the given URL."""
         try:
-            with urlopen(url, timeout=self._timeout) as response:
-                return response.read()
+            parsed_url = urlsplit(url)
+            if parsed_url.scheme not in ("http", "https"):
+                msg = f"Unsupported URL schema: {parsed_url.scheme!r}"
+                raise ValueError(msg)
+            with urlopen(url, timeout=self._timeout) as response:  # noqa: S310
+                content: bytes = response.read()
+                return content
         except HTTPError as e:
             logger.warning("HTTP %s fetching %s", e.code, url)
         except URLError as e:
             logger.warning("URL error fetching %s: %s", url, e.reason)
         except TimeoutError as e:
             logger.warning("Timeout fetching %s", url)
-            raise URLExtractionError(f"Timeout fetching {url}") from e
+            msg = f"Timeout fetching {url}"
+            raise URLExtractionError(msg) from e
         return None

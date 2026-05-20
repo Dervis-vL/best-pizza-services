@@ -10,12 +10,12 @@ from pizza_platform_shared import types
 
 
 class DatabaseSettings(pydantic_settings.BaseSettings):
-    """Base database settings from env vars. 
+    """Base database settings from env vars.
 
-    Subclasses should define 'tables' ClassVar if they require tables to 
+    Subclasses should define 'tables' ClassVar if they require tables to
     be defined. Validation will ensure that any subclass that requires
-    tables has them defined, but the base class itself can be used without 
-    defining tables for cases where it's not needed (e.g., alembic 
+    tables has them defined, but the base class itself can be used without
+    defining tables for cases where it's not needed (e.g., alembic
     maintenance settings).
 
     Attributes:
@@ -27,6 +27,7 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
         database_name: Name of the database to connect to.
         schema_name: Name of the schema to use within the database.
         tables: ClassVar containing table names relevant to the settings, if required.
+
     """
 
     model_config = pydantic_settings.SettingsConfigDict(
@@ -37,20 +38,31 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
     host: str = pydantic.Field(..., description="Database host")
     port: int = pydantic.Field(..., description="Database port")
     user_name: str = pydantic.Field(..., description="Database username")
-    name: types.PostgresName = pydantic.Field(..., description="Name of the database to connect to")
-    schema_name: types.SchemaName = pydantic.Field(..., description="Name of the schema to use within the database")
+    name: types.PostgresName = pydantic.Field(
+        ...,
+        description="Name of the database to connect to",
+    )
+    schema_name: types.SchemaName = pydantic.Field(
+        ...,
+        description="Name of the schema to use within the database",
+    )
     password: pydantic.SecretStr = pydantic.Field(..., description="Database password")
-    ssl_enabled: bool = pydantic.Field(..., description="Whether SSL is enabled for the database connection")
+    ssl_enabled: bool = pydantic.Field(
+        ...,
+        description="Whether SSL is enabled for the database connection",
+    )
 
     # Database tables if required. Must be defined in subclasses, and is not an env var.
     tables: ClassVar[types.TableNames | None]
 
     @pydantic.model_validator(mode="after")
-    def validate_tables_defined(self) -> "DatabaseSettings":
-        """Validate that if 'requires_tables' is True in the config, then 'tables' ClassVar is defined in the subclass.
+    def validate_tables_defined(self) -> DatabaseSettings:
+        """Validate that if 'requires_tables' is True in the config,
+        then 'tables' ClassVar is defined in the subclass.
 
-        This allows us to enforce that subclasses that need to define tables do so, 
-        while still allowing the base class to be used without tables for cases like alembic settings.
+        This allows us to enforce that subclasses that need to define tables do so,
+        while still allowing the base class to be used without tables for cases
+        like alembic settings.
         """
         config = self.model_config
         requires_tables: bool = config.get("requires_tables", True)  # type: ignore[assignment]
@@ -60,9 +72,8 @@ class DatabaseSettings(pydantic_settings.BaseSettings):
             return self
 
         if not hasattr(self.__class__, "tables") or self.__class__.tables is None:
-            raise ValueError(
-                f"{self.__class__.__name__} must define 'tables' ClassVar when 'requires_tables' is True."
-            )
+            msg = f"{self.__class__.__name__} must have 'tables' when 'requires_tables'."
+            raise ValueError(msg)
         return self
 
     @property

@@ -30,6 +30,9 @@ def process_pending(
     finally:
         _pizza_api_logger.removeHandler(handler)
 
-    response =  responses.ProcessPendingResponse.model_validate(result, from_attributes=True)
+    response = responses.ProcessPendingResponse.model_validate(
+        result,
+        from_attributes=True,
+    )
     response.warnings = handler.warnings
     return response

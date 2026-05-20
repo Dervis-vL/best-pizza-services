@@ -1,9 +1,9 @@
 """Edition parser implementation for pizza data collector service."""
 
 from bs4 import BeautifulSoup
-from pizza_platform_shared import schemas
 
 from pizza_data_collector import models, utils
+from pizza_platform_shared import schemas
 
 
 class EditionParser:  # pylint: disable=too-few-public-methods
@@ -22,7 +22,11 @@ class EditionParser:  # pylint: disable=too-few-public-methods
         self._positions = position_patterns
         self._awards = awards_patterns
 
-    def parse(self, soup: BeautifulSoup, edition_id: int) -> list[schemas.PizzeriaSchema]:
+    def parse(
+        self,
+        soup: BeautifulSoup,
+        edition_id: int,
+    ) -> list[schemas.PizzeriaSchema]:
         """Parses the edition page soup and returns structured data."""
         html_cards_list = self._cards.extract(html=str(soup))
 
@@ -41,7 +45,9 @@ class EditionParser:  # pylint: disable=too-few-public-methods
 
             if award is not None:
                 award_schema = schemas.AwardSchema(
-                    award=award, sponsor=sponsor, edition_id=edition_id
+                    award=award,
+                    sponsor=sponsor,
+                    edition_id=edition_id,
                 )
                 if slug not in pizzerias:
                     pizzerias[slug] = schemas.PizzeriaSchema(
@@ -53,7 +59,10 @@ class EditionParser:  # pylint: disable=too-few-public-methods
                     pizzerias[slug].awards.append(award_schema)
                     pizzerias[slug].webpages.append(webpage_schema)
             elif position is not None:
-                ranking_schema = schemas.RankingSchema(position=position, edition_id=edition_id)
+                ranking_schema = schemas.RankingSchema(
+                    position=position,
+                    edition_id=edition_id,
+                )
                 if slug not in pizzerias:
                     pizzerias[slug] = schemas.PizzeriaSchema(
                         slug=slug,
@@ -63,13 +72,12 @@ class EditionParser:  # pylint: disable=too-few-public-methods
                 else:
                     pizzerias[slug].rankings.append(ranking_schema)
                     pizzerias[slug].webpages.append(webpage_schema)
+            elif slug not in pizzerias:
+                pizzerias[slug] = schemas.PizzeriaSchema(
+                    slug=slug,
+                    webpages=[webpage_schema],
+                )
             else:
-                if slug not in pizzerias:
-                    pizzerias[slug] = schemas.PizzeriaSchema(
-                        slug=slug,
-                        webpages=[webpage_schema],
-                    )
-                else:
-                    pizzerias[slug].webpages.append(webpage_schema)
+                pizzerias[slug].webpages.append(webpage_schema)
 
         return list(pizzerias.values())

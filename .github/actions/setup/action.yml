@@ -1,0 +1,21 @@
+name: Setup
+description: Install just + uv, restore cache, sync dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Install just
+      uses: extractions/setup-just@v2
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+
+    - uses: actions/cache@v4
+      with:
+        path: ~/.cache/uv
+        key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+        restore-keys: uv-${{ runner.os }}-
+
+    - name: Install dependencies
+      run: uv sync
+      shell: bash

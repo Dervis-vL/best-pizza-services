@@ -8,14 +8,13 @@ import sys
 import streamlit as st
 
 from pizza_app import (
-    infrastructure,
     constants,
     dataclasses,
     enums,
+    infrastructure,
     utils,
     views,
 )
-
 
 # Page CONFIG
 st.set_page_config(
@@ -33,7 +32,7 @@ st.write(constants.AppContext.HEADER)
 try:
     pizza_adapter = infrastructure.PizzaDataAdapter(repo=utils.create_repo())
     pizza_data: dataclasses.PizzaData = pizza_adapter.load_pizza_data()
-except Exception as e:  # pylint: disable=broad-exception-caught
+except Exception as e:  # pylint: disable=broad-exception-caught  # noqa: BLE001
     st.error(f"Error loading pizzeria data: {e}")
     st.stop()
 
@@ -66,10 +65,12 @@ st.caption(constants.AppContext.DISCLAIMER)
 
 
 def main() -> None:
-    """Entry point; exists so the pyproject script works, but Streamlit
-    must be invoked via `streamlit run`, not as a plain Python script."""
+    """Entry point.
 
-    subprocess.run(
-        ["streamlit", "run", __file__, *sys.argv[1:]],
+    Exists so the pyproject script works, but Streamlit
+    must be invoked via `streamlit run`, not as a plain Python script.
+    """
+    subprocess.run(  # noqa: S603
+        [sys.executable, "-m", "streamlit", "run", __file__, *sys.argv[1:]],
         check=True,
     )

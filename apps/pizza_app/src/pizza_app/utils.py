@@ -1,14 +1,17 @@
 """Utility functions for the pizza app."""
 
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
 import streamlit as st
-from pizza_platform_shared import enums as shared_enums
 from pandera import typing as pa_typing
 
 from pizza_app import constants, repositories, schemas, settings
+from pizza_platform_shared import enums as shared_enums
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 # create repo
@@ -16,7 +19,7 @@ def create_repo() -> repositories.PizzaPlatformDatabase:
     """Create repo instance."""
     if settings.app_settings.database_type == shared_enums.DatabaseType.POSTGRESQL:
         pizza_repo = repositories.PizzaPlatformDatabase.from_settings(
-            db_settings=settings.pizza_db
+            db_settings=settings.pizza_db,
         )
     elif settings.app_settings.database_type == shared_enums.DatabaseType.SQLITE:
         root_path = Path(__file__).parent.parent.parent
@@ -29,7 +32,8 @@ def create_repo() -> repositories.PizzaPlatformDatabase:
             ),
         )
     else:
-        raise ValueError("Unsupported database type.")
+        msg = "Unsupported database type."
+        raise ValueError(msg)
 
     return pizza_repo
 
@@ -43,12 +47,14 @@ def make_on_city_change(
     relevant_locations: pa_typing.DataFrame[schemas.PizzeriaSchema],
     city_col: str,
     country_col: str,
-) -> Callable:
+) -> Callable[[], None]:
     """Factory to return the on change callback"""
+
     def on_city_change() -> None:
         city = st.session_state[constants.QueryParam.CITY]
         if city != constants.Filters.DEFAULT:
             match = relevant_locations[relevant_locations[city_col] == city]
             if not match.empty:
                 st.session_state[constants.QueryParam.COUNTRY] = match.iloc[0][country_col]
+
     return on_city_change

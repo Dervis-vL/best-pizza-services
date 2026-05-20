@@ -1,7 +1,11 @@
 """Request schemas for the pizza API."""
 
+from typing import TYPE_CHECKING
+
 import pydantic as pyd
-from pizza_platform_shared import schemas as shared_schemas
+
+if TYPE_CHECKING:
+    from pizza_platform_shared import schemas as shared_schemas
 
 
 class CategoryCreateRequest(pyd.BaseModel):

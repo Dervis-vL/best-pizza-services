@@ -19,13 +19,27 @@ class Categories(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.categories
     __table_args__ = (
         sa.UniqueConstraint("slug", name="uq_category_slug"),
-        {"schema": settings.pizza_db.schema_name}
+        {"schema": settings.pizza_db.schema_name},
     )
 
     # columns
-    name: orm.Mapped[str] = orm.mapped_column(sa.String(100), nullable=False, comment="Name of the pizza category")
-    description: orm.Mapped[str] = orm.mapped_column(sa.String(500), nullable=True, comment="Description of the pizza category")
-    slug: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=False, comment="URL-friendly slug for the pizza category")
+    name: orm.Mapped[str] = orm.mapped_column(
+        sa.String(100),
+        nullable=False,
+        comment="Name of the pizza category",
+    )
+    description: orm.Mapped[str] = orm.mapped_column(
+        sa.String(500),
+        nullable=True,
+        comment="Description of the pizza category",
+    )
+    slug: orm.Mapped[str] = orm.mapped_column(
+        sa.String(50),
+        nullable=False,
+        comment="URL-friendly slug for the pizza category",
+    )
 
     # relationships
-    ranked_editions: orm.Mapped[list["RankingEditions"]] = orm.relationship(back_populates="category")
+    ranked_editions: orm.Mapped[list[RankingEditions]] = orm.relationship(
+        back_populates="category",
+    )

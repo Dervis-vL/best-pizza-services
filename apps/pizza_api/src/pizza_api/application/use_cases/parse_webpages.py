@@ -3,18 +3,17 @@
 import logging
 
 from geolocation.application import use_cases as geo_use_cases
+from pizza_api.application import results
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage.application import use_cases as storage_use_cases
-
-from pizza_api.application import results
 
 logger = logging.getLogger(__name__)
 
 
 class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
-    """Parse stored HTML for every unparsed webpage, enrich with geolocation, seed location."""
+    """Parse stored HTML for unparsed webpage, enrich with geoloc, seed location."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         get_webpages_uc: storage_use_cases.GetWebpagesUseCase,
         get_html_uc: storage_use_cases.GetWebpageHtmlUseCase,
@@ -46,7 +45,8 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
 
             soup = self._get_html_uc.execute(model_id=webpage.id)
             location = self._parse_pizzeria_uc.execute(
-                soup=soup, pizzeria_id=webpage.pizzeria_id
+                soup=soup,
+                pizzeria_id=webpage.pizzeria_id,
             )
 
             if not location:
@@ -59,4 +59,8 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
             self._mark_parsed_uc.execute(webpage_id=webpage.id)
             parsed += 1
 
-        return results.ParseWebpagesResult(parsed=parsed, skipped=skipped, failed=failed)
+        return results.ParseWebpagesResult(
+            parsed=parsed,
+            skipped=skipped,
+            failed=failed,
+        )

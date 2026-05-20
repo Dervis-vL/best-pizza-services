@@ -55,6 +55,13 @@ class CategoriesSpecial(BaseCategories):
     USA_SPECIAL = "USA Special Awards"
 
 
+class HtmlModelName(StrEnum):
+    """Enum for HTML model names."""
+
+    EDITIONS = "editions"
+    WEBPAGES = "webpages"
+
+
 class Year(IntEnum):
     """Enum for years of pizza rankings."""
 
@@ -65,3 +72,10 @@ class Year(IntEnum):
     Y2022 = 2022
     Y2021 = 2021
     Y2020 = 2020
+
+
+class URLSchemas(StrEnum):
+    """Enum for allowed url schemas."""
+
+    HTTP = "http://"
+    HTTPS = "https://"

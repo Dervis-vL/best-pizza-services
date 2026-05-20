@@ -1,10 +1,8 @@
 """Constants for the scraper."""
 
 from typing import Final
+
 import yarl
-
-from pizza_data_storage import types
-
 
 URL_HOME: Final = yarl.URL("https://www.50toppizza.it/")
 
@@ -36,12 +34,11 @@ class ColumnLengths:
     SLUG: Final[int] = 200
 
 
-class PizzaTableNames(types.TableNames):
-    """Constants for pizza database table names."""
+class PizzaNameRules:
+    """Constants for pizza name rules."""
 
-    categories: types.TableName = "categories"
-    pizzerias: types.TableName = "pizzerias"
-    ranking_editions: types.TableName = "ranking_editions"
-    ranking_entries: types.TableName = "ranking_entries"
-    webpages: types.TableName = "webpages"
-    locations: types.TableName = "locations"
+    HAS_TWO_PARTS: Final[int] = 2
+    HAS_THREE_PARTS: Final[int] = 3
+    PART_FIVE: Final[int] = 5
+    PART_ELEVEN: Final[int] = 11
+    PART_FOURTEEN: Final[int] = 14

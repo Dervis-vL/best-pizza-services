@@ -5,7 +5,7 @@ from typing import Annotated
 import pydantic as pyd
 import pydantic_settings as pyd_settings
 
-from pizza_api import __version__, __description__
+from pizza_api import __description__, __version__
 
 
 class ApplicationSettings(pyd_settings.BaseSettings):
@@ -20,17 +20,17 @@ class ApplicationSettings(pyd_settings.BaseSettings):
 
     title: Annotated[
         str,
-        pyd.Field(description="The title of the API.", default="Best Pizza API")
+        pyd.Field(description="The title of the API.", default="Best Pizza API"),
     ]
     description: Annotated[
         str,
-        pyd.Field(description="The description of the API.", default=__description__)
+        pyd.Field(description="The description of the API.", default=__description__),
     ]
     version: Annotated[
         str,
-        pyd.Field(description="The version of the API.", default=__version__)
+        pyd.Field(description="The version of the API.", default=__version__),
     ]
     debug: Annotated[
         bool,
-        pyd.Field(description="Whether to enable debug mode.", default=False)
+        pyd.Field(description="Whether to enable debug mode.", default=False),
     ]

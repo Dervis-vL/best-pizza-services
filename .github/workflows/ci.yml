@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  push:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Run checks
+        run: just check
+
+  build-dev:
+    if: github.ref == 'refs/heads/development'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      sha: ${{ steps.sha.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - id: sha
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push dev images
+        run: just push-ghcr-dev ${{ steps.sha.outputs.sha }}
+
+  scan:
+    if: github.ref == 'refs/heads/development'
+    needs: build-dev
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Scan pizza-api
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ghcr.io/${{ github.repository_owner }}/pizza-api:${{ needs.build-dev.outputs.sha }}
+          format: table
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+
+      - name: Scan pizza-app
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ghcr.io/${{ github.repository_owner }}/pizza-app:${{ needs.build-dev.outputs.sha }}
+          format: table
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/development'
+    needs: [scan, build-dev]
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Deploy to staging
+        run: |
+          echo "TODO: deploy ghcr.io/${{ github.repository_owner }}/pizza-api:${{ needs.build-dev.outputs.sha }}"
+
+  smoke-tests:
+    if: github.ref == 'refs/heads/development'
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Smoke test
+        run: |
+          echo "TODO: curl https://staging.your-domain.com/health"
+
+  release:
+    if: github.ref == 'refs/heads/main'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Use GITHUB_TOKEN so the version-bump push does not re-trigger this workflow
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/setup
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump versions for changed projects
+        run: just version "${{ github.event.before }}"
+
+      - name: Push version bumps and tags
+        run: git push origin main --follow-tags
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push
+        run: just push-ghcr
