@@ -6,6 +6,7 @@ import 'just/check.just'
 import 'just/test.just'
 import 'just/build.just'
 import 'just/version.just'
+import 'just/git.just'
 
 # --- VARIABLES ------------------------------------------
 run  := "uv run"

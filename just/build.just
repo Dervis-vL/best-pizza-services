@@ -1,7 +1,7 @@
 api_config    := "apps/pizza_api/pyproject.toml"
 app_config    := "apps/pizza_app/pyproject.toml"
 
-_github_user  := `git remote get-url origin | sed 's/.*github\.com[:/]\([^/]*\)\/.*/\1/'`
+_github_user  := `git remote get-url origin | sed 's/.*github\.com[:/]\([^/]*\)\/.*/\1/' | tr '[:upper:]' '[:lower:]'`
 _api_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
 _app_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
 _registry_ghcr := "ghcr.io/" + _github_user
