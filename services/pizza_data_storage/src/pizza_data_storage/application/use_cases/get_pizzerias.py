@@ -1,6 +1,7 @@
 """Get all, with or without location, pizzerias use case."""
 
 from pizza_data_storage.application import ports
+from pizza_platform_shared import enums as shared_enums
 from pizza_platform_shared import schemas as shared_schemas
 
 
@@ -14,11 +15,11 @@ class GetPizzeriasUseCase:  # pylint: disable=too-few-public-methods
     def execute(
         self,
         *,
-        only_with_locations: bool,
+        include_relationships: list[shared_enums.PizzeriaInclude] | None = None,
     ) -> list[shared_schemas.PizzeriaReadSchema]:
         """Execute the use case."""
         pizzerias_models = self._pizza_repository.get_pizzerias(
-            only_with_locations=only_with_locations,
+            include_relationships=include_relationships,
         )
         return [
             shared_schemas.PizzeriaReadSchema.model_validate(

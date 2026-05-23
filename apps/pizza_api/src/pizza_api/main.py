@@ -26,3 +26,4 @@ app = FastAPI(
 
 app.include_router(routers.categories.router)
 app.include_router(routers.maintenance.router)
+app.include_router(routers.pizzerias.router)

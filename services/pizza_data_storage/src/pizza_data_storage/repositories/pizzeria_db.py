@@ -17,6 +17,7 @@ from sqlalchemy import orm as sa_orm
 from sqlalchemy import select
 
 from pizza_data_storage import constants, models
+from pizza_platform_shared import enums as shared_enums
 from pizza_platform_shared import schemas as shared_schemas
 from pizza_platform_shared.repositories.base_database import BaseDatabase
 
@@ -82,17 +83,13 @@ class PizzeriaRepository(BaseDatabase):
 
         return self._read_orm(query)
 
-    def get_pizzerias(self, *, only_with_locations: bool) -> list[models.Pizzerias]:
-        """Return all pizzerias, optionally filtering to only those with locations."""
-        query = select(models.Pizzerias).options(
-            sa_orm.joinedload(models.Pizzerias.webpages),
-            sa_orm.joinedload(models.Pizzerias.rankings),
-            sa_orm.joinedload(models.Pizzerias.awards),
-            sa_orm.joinedload(models.Pizzerias.locations),
-        )
-        if only_with_locations:
-            # Where locations list is not empty
-            query = query.where(models.Pizzerias.locations.any())
+    def get_pizzerias(
+        self, *, include_relationships: list[shared_enums.PizzeriaInclude] | None = None
+    ) -> list[models.Pizzerias]:
+        """Return all pizzerias, optionally add relationships."""
+        include_set = set(include_relationships or [])
+        options = [sa_orm.selectinload(getattr(models.Pizzerias, rel)) for rel in include_set]
+        query = select(models.Pizzerias).options(*options)
 
         return self._read_orm(query)
 
