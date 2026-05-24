@@ -8,9 +8,13 @@ _registry_ghcr := "ghcr.io/" + _github_user
 _api_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
 _app_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
 
-# Run podman compose: action defaults to "up", e.g. `just compose down`
+# Run podman compose up
 compose action="up" env_file=".env":
-    podman compose --env-file {{env_file}} {{action}} --build
+    podman compose --env-file {{env_file}} up --build
+
+# Run podman compose down
+compose-down env_file=".env":
+    podman compose --env-file {{env_file}} down
 
 # Alembic upgrade
 alembic-upgrade:
