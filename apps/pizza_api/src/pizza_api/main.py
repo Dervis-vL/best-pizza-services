@@ -27,3 +27,9 @@ app = FastAPI(
 app.include_router(routers.categories.router)
 app.include_router(routers.maintenance.router)
 app.include_router(routers.pizzerias.router)
+
+
+@app.get("/health")
+async def health() -> dict[str, str]:
+    """Health check endpoint."""
+    return {"status": "ok"}
