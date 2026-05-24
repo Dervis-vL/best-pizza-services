@@ -10,7 +10,7 @@ _app_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d 
 
 # Run podman compose: action defaults to "up", e.g. `just compose down`
 compose action="up" env_file=".env":
-    podman compose --env-file {{env_file}} {{action}}
+    podman compose --env-file {{env_file}} {{action}} --build
 
 # Alembic upgrade
 alembic-upgrade:
