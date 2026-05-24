@@ -1,6 +1,6 @@
 """Database types used across the pizza app/services."""
 
-from typing import Annotated
+from typing import Annotated, Self
 
 import pydantic
 
@@ -60,7 +60,7 @@ class TableNames(pydantic.BaseModel):
         return [field_info.default for field_info in self.__class__.model_fields.values()]
 
     @pydantic.model_validator(mode="after")
-    def validate_at_least_one_table(self) -> TableNames:
+    def validate_at_least_one_table(self) -> Self:
         """Ensure at least one table is defined."""
         if not self.__class__.model_fields:
             msg = f"{self.__class__.__name__} must define at least one table name field."
