@@ -22,7 +22,7 @@ def get_pizzeria_repo(engine: EngineDep) -> storage_repos.PizzeriaRepository:
 def get_html_repo() -> storage_repos.HtmlStorageRepository:
     """Return an HtmlStorageRepository from the configured object storage settings."""
     return storage_repos.HtmlStorageRepository.from_settings(
-        storage_settings=shared_settings.pizza_storage,
+        storage_settings=shared_settings.pizza_strg,
     )
 
 

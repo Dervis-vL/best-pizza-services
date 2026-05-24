@@ -15,7 +15,7 @@ from pizza_platform_shared.settings.pizza_storage import PizzaStorageSettings
 if TYPE_CHECKING:
     pizza_db: PizzaDatabaseSettings
     maintenance_db: MaintenanceDatabaseSettings
-    pizza_storage: PizzaStorageSettings
+    pizza_strg: PizzaStorageSettings
 
 
 @cache
@@ -39,7 +39,7 @@ def _pizza_storage() -> PizzaStorageSettings:
 _loaders = {
     "pizza_db": _pizza_db,
     "maintenance_db": _maintenance_db,
-    "pizza_storage": _pizza_storage,
+    "pizza_strg": _pizza_storage,
 }
 
 
@@ -51,8 +51,4 @@ def __getattr__(name: str) -> pyd_settings.BaseSettings:
     raise AttributeError(msg)
 
 
-__all__ = [
-    "DatabaseSettings",
-    "maintenance_db",
-    "pizza_db",
-]
+__all__ = ["DatabaseSettings", "maintenance_db", "pizza_db", "pizza_strg"]
