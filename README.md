@@ -1,96 +1,102 @@
 [![CI](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml/badge.svg)](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml)  ![Python](https://img.shields.io/badge/python-3.14-blue)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)  [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
+# Best Pizza Services
 
+A monorepo that collects, stores, and visualises pizzeria data from the [50 Top Pizza](https://www.50toppizza.it/) world rankings.
 
-# 🍕 Best Pizza Services
-
-A monorepo for collecting, storing, and visualising data from the [50 Top Pizza](https://www.50toppizza.it/) world rankings. It scrapes pizzeria data across six global categories, enriches it with geolocation data, persists everything in PostgreSQL, and surfaces it through an interactive Streamlit map and a REST API.
+This README is for **developers, testers, contributors, and people studying the code or wanting to fork it**. For user-facing documentation, see the READMEs inside `apps/`.
 
 ---
 
-## 📐 Architecture
+## Quick start
+
+### Prerequisites
+
+- Python 3.14+
+- [uv](https://docs.astral.sh/uv/) — `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- [Podman](https://podman.io/) with Podman Compose (or Docker Compose)
+- [just](https://just.systems/)
+
+### Setup
+
+```bash
+just setup
+```
+
+Installs all workspace dependencies, installs pre-commit hooks, and creates a `.env` from `.env.example` if one does not already exist. Edit `.env` with your credentials before starting the stack.
+
+### Run the full stack
+
+```bash
+just compose        # builds and starts PostgreSQL, MinIO, pizza_api, pizza_app
+just compose down   # stops and removes the containers
+```
+
+After startup:
+
+| Service | URL |
+|---|---|
+| REST API | http://localhost:8000 |
+| Streamlit app | http://localhost:8501 |
+| MinIO console | http://localhost:9001 |
+
+### Apply database migrations
+
+```bash
+just alembic-upgrade
+```
+
+---
+
+## Workspace layout
 
 ```
 best-pizza-services/
 ├── apps/
-│   ├── pizza_app/              # Streamlit interactive map & list viewer
-│   └── pizza_api/              # REST API (aggregates all services)
+│   ├── pizza_api/              # FastAPI REST API (deployable)
+│   └── pizza_app/              # Streamlit viewer (deployable)
 ├── services/
-│   ├── pizza_data_collector/   # Web scraper + HTML parser
-│   ├── pizza_data_storage/     # PostgreSQL + S3 storage layer
-│   └── geolocation/            # Nominatim reverse geocoding
+│   ├── pizza_data_collector/   # Web scraper + HTML parser (library)
+│   ├── pizza_data_storage/     # PostgreSQL + S3 storage layer (library)
+│   └── geolocation/            # Nominatim reverse geocoding (library)
 ├── packages/
 │   └── pizza_platform_shared/  # Shared Pydantic schemas, SQLAlchemy models, DB config
-└── dev/
-    ├── env/                    # Docker Compose (local PostgreSQL)
-    ├── ERD/                    # Entity relationship diagrams
-    └── scratch/                # Experimental code
+├── just/                       # Modular justfile recipes
+├── dev/                        # ERDs and scratch files
+└── compose.yaml                # Full-stack local environment
 ```
 
-### Design decisions
+**Services are libraries, not deployables.** `pizza_data_collector`, `pizza_data_storage`, and `geolocation` contain all business logic and are imported by `pizza_api` as workspace dependencies — no inter-service HTTP calls.
 
-- **Services are libraries, not deployables.** `pizza_data_collector`, `pizza_data_storage`, and `geolocation` are installable Python packages. They contain all business logic and are imported by `pizza_api` as workspace dependencies — no inter-service HTTP calls needed at this scale.
-- **`pizza_api` is the single deployment target** for the backend. It wires the three service packages together and exposes REST endpoints.
-- **`pizza_app`** is a standalone Streamlit frontend deployed separately. It reads directly from the database.
-- **`pizza_platform_shared`** holds the shared SQLAlchemy models, Pydantic schemas, and database configuration used across services and apps.
+`pizza_api` and `pizza_app` are the two deployment targets and each has its own `Dockerfile` and `README.md`.
 
 ---
 
-## 🗂️ Components
+## Projects
 
-### 🕷️ `pizza_data_collector`
+### `apps/pizza_api`
 
-Scrapes [50toppizza.it](https://www.50toppizza.it/) across six categories:
+FastAPI application. Wires the three service libraries together and exposes REST endpoints for scraping, storage, and querying. Uses a **factory pattern** to build the shared database engine on startup, which is then provided to request handlers via FastAPI's dependency injection layer.
 
-| Category slug | Region |
-|---|---|
-| `world` | Global top 50/100 |
-| `pizza-italia` | Italy |
-| `europe` | Europe |
-| `usa` | United States |
-| `pizza-latin-america` | Latin America |
-| `pizza-asia-pacific` | Asia-Pacific |
+### `apps/pizza_app`
 
-**Two scraping passes:**
-1. **Edition pages** (`/world/2024`) → ranked list of pizzerias + special awards per year
-2. **Pizzeria pages** (`/referenza/pepe-in-grani`) → address, phone, GPS coordinates
+Streamlit interactive viewer. Reads from the API and displays pizzerias on a Folium map and in a card list, with sidebar filters for year, category, and awards. Data is cached per session.
 
-Coordinates are extracted from embedded JavaScript using regex fallback chains (JS map init → JSON object → Google Maps link → generic lat/lon attributes).
+### `services/pizza_data_collector`
 
----
+Web scraper and HTML parser for [50toppizza.it](https://www.50toppizza.it/). Two scraping passes: edition pages (ranked lists + special awards) and individual pizzeria pages (address, phone, GPS coordinates).
 
-### 🗄️ `pizza_data_storage`
+### `services/pizza_data_storage`
 
-Manages all persistence:
+Persistence layer. Manages writes and reads to PostgreSQL via SQLAlchemy and archives raw HTML to S3-compatible storage (MinIO locally, Scaleway in production). Alembic is configured here and migrations live in `alembic/`.
 
-- **PostgreSQL** (via SQLAlchemy + Alembic) — stores pizzerias, editions, rankings, awards, locations, webpages
-- **S3-compatible object storage** (Scaleway Cloud Storage) — archives raw HTML pages in `STANDARD` class for cost efficiency
+### `services/geolocation`
 
-**Database schema (`api_v1`):**
+Reverse geocodes GPS coordinates to city and country via the [Nominatim](https://nominatim.openstreetmap.org/) API (OpenStreetMap). Enforces a 1 req/s rate limit to comply with Nominatim's usage policy. If you display map data, attribution to OpenStreetMap contributors is required.
 
-| Table | Purpose |
-|---|---|
-| `categories` | Pizza categories (World, Italy, USA, …) |
-| `pizzerias` | Pizzeria identity records |
-| `editions` | Ranking list per category + year |
-| `webpages` | Individual pizzeria pages on 50toppizza.it |
-| `rankings` | Ranked position per edition |
-| `awards` | Special/sponsored awards per edition |
-| `locations` | GPS coords, address, city, country, phone |
+### `packages/pizza_platform_shared`
 
----
-
-### 🌍 `geolocation`
-
-Reverse geocodes GPS coordinates to city + country using the [Nominatim](https://nominatim.openstreetmap.org/) API (OpenStreetMap). Enforces a 1 req/s rate limit to comply with Nominatim's usage policy.
-
-> **Attribution required:** If you display map data, include "© OpenStreetMap contributors".
-
----
-
-### 📦 `pizza_platform_shared`
-
-Shared library used across services and apps:
+Shared library used across all services and apps:
 
 - **Pydantic schemas** — `PizzeriaSchema`, `LocationSchema`, `RankingSchema`, `AwardSchema`, `EditionSchema`, `CategorySchema` (plus `Read` variants with `id`, `created_at`, `updated_at`)
 - **SQLAlchemy ORM models** — mirror the database schema with full `back_populates` relationships
@@ -98,177 +104,122 @@ Shared library used across services and apps:
 
 ---
 
-### 🗺️ `pizza_app` (Streamlit)
+## Data model
 
-Interactive viewer for the collected data:
+<!-- ERD goes here -->
 
-- **Map view** — Folium map with marker clusters; clicking a marker shows a popup with rankings table
-- **List view** — card-based layout
-- **Sidebar filters** — year, category, special awards
-- Data is cached for 5 hours per Streamlit session
+| Table | Purpose |
+|---|---|
+| `categories` | Pizza categories (World, Italy, Europe, USA, Latin America, Asia-Pacific) |
+| `pizzerias` | Pizzeria identity records |
+| `editions` | Ranking list per category + year |
+| `webpages` | Individual pizzeria pages on 50toppizza.it |
+| `rankings` | Ranked position of a pizzeria within an edition |
+| `awards` | Special awards per edition |
+| `locations` | GPS coordinates, address, city, country, phone |
 
-Run at: `http://localhost:8501`
-
----
-
-### 🔌 `pizza_api`
-
-FastAPI application that exposes `pizza_data_collector`, `pizza_data_storage`, and `geolocation` as REST endpoints. Currently in active development.
-
----
-
-## 🚀 Getting started
-
-### Prerequisites
-
-- Python 3.13+
-- [uv](https://docs.astral.sh/uv/) — install via:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-- A running PostgreSQL instance (see [Local database](#local-database))
-
-### Install dependencies
-
-```bash
-# Install all workspace packages + dev dependencies
-uv sync
-```
-
-### Local database
-
-Start a PostgreSQL 16 container:
-
-```bash
-docker compose -f dev/env/compose.yaml up -d
-```
-
-Run migrations:
-
-```bash
-uv run alembic -c services/pizza_data_storage/alembic.ini upgrade head
-```
-
-### Environment variables
-
-Copy the example and fill in your values:
-
-```bash
-cp .env.example .env
-```
-
-```env
-# PostgreSQL — application
-PIZZA_DB_HOST=localhost
-PIZZA_DB_PORT=5432
-PIZZA_DB_USER_NAME=best_pizza_user
-PIZZA_DB_PASSWORD=your_password
-PIZZA_DB_NAME=pizza_platform
-PIZZA_DB_SCHEMA_NAME=api_v1
-PIZZA_DB_SSL_ENABLED=False
-
-# PostgreSQL — migrations (can be the same DB with a superuser)
-MAINTENANCE_DB_HOST=localhost
-MAINTENANCE_DB_PORT=5432
-MAINTENANCE_DB_USER_NAME=best_pizza_user
-MAINTENANCE_DB_PASSWORD=your_password
-MAINTENANCE_DB_NAME=pizza_platform
-MAINTENANCE_DB_SCHEMA_NAME=api_v1
-MAINTENANCE_DB_SSL_ENABLED=False
-
-# S3-compatible object storage (Scaleway example)
-STORAGE_ENDPOINT=https://s3.fr-par.scw.cloud
-STORAGE_KEY_ID=your_key_id
-STORAGE_SECRET=your_secret
-STORAGE_BUCKET=pizza-html
-STORAGE_REGION=fr-par
-```
+All tables live in the `api_v1` schema. The schema name is configurable via `PIZZA_DB_SCHEMA_NAME`.
 
 ---
 
-## 🏃 Running the apps
+## Architecture
 
-### Streamlit app
+### Hexagonal architecture (ports & adapters)
 
-```bash
-uv run streamlit run apps/pizza_app/src/pizza_app/app.py
-# → http://localhost:8501
+All three service libraries follow hexagonal architecture. The `application/` layer defines abstract **ports** (interfaces). Concrete **adapters** live outside it and implement those interfaces:
+
+```
+service/
+├── application/
+│   ├── ports/          # Abstract interfaces (e.g. HttpClient, PizzeriaRepository)
+│   └── use_cases/      # Orchestration logic — depends only on ports, never on adapters
+├── scrapers/           # Adapter: HTTP client implementation
+├── parsers/            # Adapter: HTML parsing implementation
+└── repositories/       # Adapter: SQLAlchemy / S3 implementations
 ```
 
-Or via the installed script:
+This keeps business logic free of framework and infrastructure concerns. Swapping an adapter (e.g. replacing the HTTP client or storage backend) requires no changes to use cases.
 
-```bash
-uv run pizza-app
+### Repository pattern
+
+`pizza_data_storage` defines repository ports in `application/ports/` (`PizzeriaRepository`, `HtmlRepository`, `RankingRepository`) and ships concrete implementations in `repositories/` (SQLAlchemy for the database, S3 client for HTML archives). The API injects the correct implementation via its `dependencies/` module.
+
+### Factory pattern (`pizza_api`)
+
+The API's `main.py` uses a `create_engine()` factory to build the shared database engine once at startup and attaches it to `app.state`. The engine is never constructed at import time — only when the application starts.
+
+### Dependency injection (`pizza_api`)
+
+The `dependencies/` module forms a typed DI chain built on FastAPI's `Depends`. Each layer is exposed as an `Annotated` type alias so router handlers declare what they need and FastAPI resolves the graph:
+
+```
+app.state.engine  →  EngineDep
+EngineDep         →  PizzeriaRepoDep / RankingRepoDep / HtmlRepoDep
+PizzeriaRepoDep   →  ReadPizzeriasUCDep
 ```
 
-### REST API
-
-```bash
-# (FastAPI + uvicorn — in development)
-uv run uvicorn pizza_api.main:app --reload
-# → http://localhost:8000
-```
+Routers import only the leaf alias (e.g. `ReadPizzeriasUCDep`) and never touch engine construction or repository wiring directly. This means the infrastructure can be swapped without touching any router.
 
 ---
 
-## 🧪 Testing
+## Tech stack
 
-Run the full test suite from the workspace root:
-
-```bash
-uv run pytest
-```
-
-Run a specific service in isolation:
-
-```bash
-uv run pytest services/pizza_data_collector/
-uv run pytest services/geolocation/
-```
-
-Coverage reports are written to `reports/coverage/`.
-
----
-
-## 🔍 Code quality
-
-```bash
-# Lint
-uv run ruff check .
-
-# Format
-uv run ruff format .
-
-# Type checking
-uv run mypy apps/ services/ packages/
-
-# Dependency hygiene
-uv run deptry .
-```
+| Layer | Technology |
+|---|---|
+| Language | Python 3.14 |
+| Package / workspace manager | [uv](https://docs.astral.sh/uv/) |
+| Task runner | [just](https://just.systems/) |
+| API framework | FastAPI + uvicorn |
+| Frontend | Streamlit + Folium |
+| ORM | SQLAlchemy 2.x |
+| Migrations | Alembic |
+| Validation | Pydantic v2 |
+| Database | PostgreSQL 16 |
+| Object storage | MinIO (local) / Scaleway S3 (production) |
+| Containers | Podman + Podman Compose |
+| Container registry | GHCR (`ghcr.io/dervis-vl`) |
 
 ---
 
-## 🗃️ Dependency management
+## Dev toolchain
 
-This repo is a [uv workspace](https://docs.astral.sh/uv/concepts/workspaces/). All members share a single lock file (`uv.lock`).
+### Dev dependencies (workspace root)
+
+| Tool | Purpose |
+|---|---|
+| `pytest` + `pytest-asyncio` | Testing with async support |
+| `pytest-cov` | Coverage reporting |
+| `pytest-xdist` | Parallel test execution |
+| `mypy` | Static type checking (strict mode) |
+| `ruff` | Linting and formatting |
+| `deptry` | Unused / missing dependency detection |
+| `pre-commit` | Git hook runner |
+| `codespell` | Spell checking |
+| `hypothesis` | Property-based testing |
+| `bump-my-version` | Version management |
+
+### Common `just` recipes
 
 ```bash
-# Add a dependency to a specific package
-uv add httpx --package pizza_api
-
-# Add a dev dependency at the workspace root
-uv add --dev pytest-xdist
-
-# Upgrade all dependencies
-uv lock --upgrade
-
-# Sync after pulling changes
-uv sync
+just setup            # Install deps, hooks, create .env
+just compose          # Start full stack (postgres, minio, api, app)
+just compose down     # Stop full stack
+just test             # Run the full test suite (parallel)
+just check            # Run everything: fmt, typecheck, lint, deps-check, spell, test, version
+just fmt              # Auto-format and fix safe lint issues
+just typecheck        # mypy strict on all packages
+just lint             # ruff check
+just alembic-upgrade  # Apply pending migrations
+just build            # Build both container images
 ```
 
-Workspace members reference each other via `[tool.uv.sources]`:
+Run `just` with no arguments to list all available recipes.
+
+---
+
+## uv workspace
+
+The repo is a [uv workspace](https://docs.astral.sh/uv/concepts/workspaces/). A single `uv.lock` covers all members. Workspace members reference each other via `[tool.uv.sources]` in their own `pyproject.toml`:
 
 ```toml
 [tool.uv.sources]
@@ -276,38 +227,27 @@ pizza-platform-shared = { workspace = true }
 pizza-data-collector  = { workspace = true }
 ```
 
----
+Useful commands:
 
-## 🗺️ Data flow
-
-```
-50toppizza.it
-     │
-     ▼
-pizza_data_collector  ──────────────────────────────────────────┐
-  • scrape edition pages (rankings + awards)                     │
-  • scrape pizzeria pages (address, phone, GPS)                  │
-     │                                                           │
-     ▼                                                           ▼
-geolocation                                           pizza_data_storage
-  • GPS → city/country                                  • PostgreSQL (structured data)
-  (Nominatim/OSM)                                       • S3 (raw HTML archive)
-     │                                                           │
-     └────────────────────────┬──────────────────────────────────┘
-                              │
-                   ┌──────────┴──────────┐
-                   │                     │
-              pizza_api            pizza_app
-          (REST endpoints)    (Streamlit viewer)
+```bash
+uv add httpx --package pizza_api   # Add a dep to a specific package
+uv add --dev pytest-xdist          # Add a dev dep at the workspace root
+uv lock --upgrade                  # Upgrade all deps
+uv sync                            # Sync after pulling changes
 ```
 
 ---
 
-## ☁️ Production
+## CI
+
+GitHub Actions runs on every push. The pipeline runs the full `just check` suite: formatting, type checking, linting, dependency hygiene, spell checking, tests, and version consistency. See `.github/workflows/ci.yml`.
+
+---
+
+## Production
 
 | Component | Provider |
 |---|---|
-| PostgreSQL | [Clever Cloud](https://www.clever-cloud.com/) |
-| Object storage | [Scaleway Cloud Storage](https://www.scaleway.com/en/object-storage/) (Paris, `fr-par`) |
-| FastAPI | Standalone deployment |
-| Streamlit app | Standalone deployment |
+| PostgreSQL | Clever Cloud |
+| Object storage | Scaleway Cloud Storage (Paris, `fr-par`) |
+| Container images | GHCR (`ghcr.io/dervis-vl`) |
