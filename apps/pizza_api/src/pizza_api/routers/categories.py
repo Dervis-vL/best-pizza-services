@@ -8,7 +8,7 @@ from pizza_api import dependencies
 from pizza_api.application.logging import WarningCaptureHandler
 from pizza_api.schemas import requests, responses
 
-router = APIRouter(prefix="/categories", tags=["categories"])
+router = APIRouter(prefix="/categories", tags=["Data entry"])
 
 _pizza_api_logger = logging.getLogger("pizza_api")
 

@@ -8,7 +8,7 @@ from pizza_api import dependencies
 from pizza_platform_shared import enums as shared_enums
 from pizza_platform_shared import schemas as shared_schemas
 
-router = APIRouter(prefix="/pizzerias", tags=["pizzerias"])
+router = APIRouter(prefix="/pizzerias", tags=["Data read"])
 
 
 @router.get(
