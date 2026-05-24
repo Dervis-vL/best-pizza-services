@@ -8,7 +8,7 @@ version = "0.0.0"
 description = "The pizza platform API for managing and scraping data."
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 
 dependencies = [
     "pydantic>=2.12.5",
