@@ -40,8 +40,8 @@ class PizzeriaSchema(PizzeriaBaseSchema):
         description="Slug for the pizzeria",
     )
 
+    @pyd.computed_field  # type: ignore[prop-decorator]
     @property
-    @pyd.computed_field
     def name(self) -> str:
         """Derive the display name from the slug."""
         derived_name = " ".join(word.capitalize() for word in self.slug.split("-"))  # pylint: disable=no-member
