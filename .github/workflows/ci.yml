@@ -115,3 +115,30 @@ jobs:
 
       - name: Build and push
         run: just push-ghcr
+
+  migrate:
+    if: github.ref == 'refs/heads/main'
+    needs: release
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - name: Run database migrations
+        env:
+          PIZZA_DB_HOST: ${{ secrets.PIZZA_DB_HOST }}
+          PIZZA_DB_PORT: ${{ vars.PIZZA_DB_PORT }}
+          PIZZA_DB_USER_NAME: ${{ secrets.PIZZA_DB_USER_NAME }}
+          PIZZA_DB_NAME: ${{ vars.PIZZA_DB_NAME }}
+          PIZZA_DB_SCHEMA_NAME: ${{ vars.PIZZA_DB_SCHEMA_NAME }}
+          PIZZA_DB_PASSWORD: ${{ secrets.PIZZA_DB_PASSWORD }}
+          PIZZA_DB_SSL_ENABLED: ${{ vars.PIZZA_DB_SSL_ENABLED }}
+          MAINTENANCE_DB_HOST: ${{ secrets.PIZZA_DB_HOST }}
+          MAINTENANCE_DB_PORT: ${{ vars.PIZZA_DB_PORT }}
+          MAINTENANCE_DB_USER_NAME: ${{ secrets.PIZZA_DB_USER_NAME }}
+          MAINTENANCE_DB_NAME: ${{ vars.PIZZA_DB_NAME }}
+          MAINTENANCE_DB_SCHEMA_NAME: ${{ vars.PIZZA_DB_SCHEMA_NAME }}
+          MAINTENANCE_DB_PASSWORD: ${{ secrets.PIZZA_DB_PASSWORD }}
+          MAINTENANCE_DB_SSL_ENABLED: ${{ vars.PIZZA_DB_SSL_ENABLED }}
+        run: just alembic-upgrade
