@@ -11,15 +11,9 @@ class GetPizzeriasUseCase:  # pylint: disable=too-few-public-methods
         """Initialize the use case."""
         self._pizza_repository = pizza_repository
 
-    def execute(
-        self,
-        *,
-        only_with_locations: bool,
-    ) -> list[shared_schemas.PizzeriaReadSchema]:
+    def execute(self) -> list[shared_schemas.PizzeriaReadSchema]:
         """Execute the use case."""
-        pizzerias_models = self._pizza_repository.get_pizzerias(
-            only_with_locations=only_with_locations,
-        )
+        pizzerias_models = self._pizza_repository.get_pizzerias()
         return [
             shared_schemas.PizzeriaReadSchema.model_validate(
                 edition,

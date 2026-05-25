@@ -62,6 +62,15 @@ class HtmlModelName(StrEnum):
     WEBPAGES = "webpages"
 
 
+class PizzeriaInclude(StrEnum):
+    """Pizzeria relationships that can be eagerly loaded."""
+
+    LOCATIONS = "locations"
+    RANKINGS = "rankings"
+    WEBPAGES = "webpages"
+    AWARDS = "awards"
+
+
 class Year(IntEnum):
     """Enum for years of pizza rankings."""
 

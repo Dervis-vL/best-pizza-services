@@ -35,20 +35,20 @@ class AuthSettings(pyd_settings.BaseSettings):
         ),
     ] = "user_impersonation"
 
+    @computed_field  # type: ignore[prop-decorator]
     @property
-    @computed_field
     def is_set(self) -> bool:
         """Return True if all required auth settings are set, False otherwise."""
         return bool(self.open_api_client_id and self.app_client_id and self.tenant_id)
 
+    @computed_field  # type: ignore[prop-decorator]
     @property
-    @computed_field
     def scope_name(self) -> str:
         """Return the scope name for the API, which is used in documentation."""
         return f"api://{self.app_client_id}/{self.scope_description}"
 
+    @computed_field  # type: ignore[prop-decorator]
     @property
-    @computed_field
     def scopes(self) -> dict[str, str]:
         """Return the scopes dict for the API, which is used in documentation."""
         return {self.scope_name: self.scope_description}

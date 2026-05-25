@@ -3,14 +3,11 @@ name: CI
 on:
   push:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
 
       - name: Run checks
@@ -26,7 +23,7 @@ jobs:
     outputs:
       sha: ${{ steps.sha.outputs.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
 
       - id: sha
@@ -46,14 +43,14 @@ jobs:
       packages: read
     steps:
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Scan pizza-api
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ghcr.io/${{ github.repository_owner }}/pizza-api:${{ needs.build-dev.outputs.sha }}
           format: table
@@ -61,7 +58,7 @@ jobs:
           severity: CRITICAL,HIGH
 
       - name: Scan pizza-app
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ghcr.io/${{ github.repository_owner }}/pizza-app:${{ needs.build-dev.outputs.sha }}
           format: table
@@ -95,7 +92,7 @@ jobs:
       contents: write
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           # Use GITHUB_TOKEN so the version-bump push does not re-trigger this workflow
@@ -118,3 +115,30 @@ jobs:
 
       - name: Build and push
         run: just push-ghcr
+
+  migrate:
+    if: github.ref == 'refs/heads/main'
+    needs: release
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - name: Run database migrations
+        env:
+          PIZZA_DB_HOST: ${{ secrets.PIZZA_DB_HOST }}
+          PIZZA_DB_PORT: ${{ vars.PIZZA_DB_PORT }}
+          PIZZA_DB_USER_NAME: ${{ secrets.PIZZA_DB_USER_NAME }}
+          PIZZA_DB_NAME: ${{ vars.PIZZA_DB_NAME }}
+          PIZZA_DB_SCHEMA_NAME: ${{ vars.PIZZA_DB_SCHEMA_NAME }}
+          PIZZA_DB_PASSWORD: ${{ secrets.PIZZA_DB_PASSWORD }}
+          PIZZA_DB_SSL_ENABLED: ${{ vars.PIZZA_DB_SSL_ENABLED }}
+          MAINTENANCE_DB_HOST: ${{ secrets.PIZZA_DB_HOST }}
+          MAINTENANCE_DB_PORT: ${{ vars.PIZZA_DB_PORT }}
+          MAINTENANCE_DB_USER_NAME: ${{ secrets.PIZZA_DB_USER_NAME }}
+          MAINTENANCE_DB_NAME: ${{ vars.PIZZA_DB_NAME }}
+          MAINTENANCE_DB_SCHEMA_NAME: ${{ vars.PIZZA_DB_SCHEMA_NAME }}
+          MAINTENANCE_DB_PASSWORD: ${{ secrets.PIZZA_DB_PASSWORD }}
+          MAINTENANCE_DB_SSL_ENABLED: ${{ vars.PIZZA_DB_SSL_ENABLED }}
+        run: just alembic-upgrade

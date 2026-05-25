@@ -1,5 +1,7 @@
 """Schema for ranked edition data validation."""
 
+from typing import Self
+
 import pydantic as pyd
 
 from pizza_platform_shared import constants
@@ -22,7 +24,7 @@ class EditionSchema(pyd.BaseModel):
         return v
 
     @pyd.model_validator(mode="after")
-    def year_in_url(self) -> EditionSchema:
+    def year_in_url(self) -> Self:
         """Validates that the year appears in the URL."""
         if str(self.year) not in self.url:
             msg = f"Year {self.year} must appear in the URL"

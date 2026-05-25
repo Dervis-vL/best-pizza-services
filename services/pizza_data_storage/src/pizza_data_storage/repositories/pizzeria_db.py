@@ -82,17 +82,14 @@ class PizzeriaRepository(BaseDatabase):
 
         return self._read_orm(query)
 
-    def get_pizzerias(self, *, only_with_locations: bool) -> list[models.Pizzerias]:
-        """Return all pizzerias, optionally filtering to only those with locations."""
+    def get_pizzerias(self) -> list[models.Pizzerias]:
+        """Return all pizzerias with their relationships."""
         query = select(models.Pizzerias).options(
-            sa_orm.joinedload(models.Pizzerias.webpages),
-            sa_orm.joinedload(models.Pizzerias.rankings),
-            sa_orm.joinedload(models.Pizzerias.awards),
-            sa_orm.joinedload(models.Pizzerias.locations),
+            sa_orm.selectinload(models.Pizzerias.locations),
+            sa_orm.selectinload(models.Pizzerias.rankings),
+            sa_orm.selectinload(models.Pizzerias.awards),
+            sa_orm.selectinload(models.Pizzerias.webpages),
         )
-        if only_with_locations:
-            # Where locations list is not empty
-            query = query.where(models.Pizzerias.locations.any())
 
         return self._read_orm(query)
 
