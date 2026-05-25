@@ -88,6 +88,7 @@ class PizzeriaRepository(BaseDatabase):
             sa_orm.selectinload(models.Pizzerias.locations),
             sa_orm.selectinload(models.Pizzerias.rankings),
             sa_orm.selectinload(models.Pizzerias.awards),
+            sa_orm.selectinload(models.Pizzerias.webpages),
         )
 
         return self._read_orm(query)
