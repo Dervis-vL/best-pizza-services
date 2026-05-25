@@ -3,7 +3,6 @@
 from typing import Protocol
 
 from pizza_data_storage import models
-from pizza_platform_shared import enums as shared_enums
 from pizza_platform_shared import schemas as shared_schemas
 
 
@@ -27,9 +26,7 @@ class IPizzeriaRepository(Protocol):
     ) -> list[models.Webpages]:
         """Return all pizzeria webpages, optional if not been scraped or parsed yet."""
 
-    def get_pizzerias(
-        self, *, include_relationships: list[shared_enums.PizzeriaInclude] | None = None
-    ) -> list[models.Pizzerias]:
+    def get_pizzerias(self) -> list[models.Pizzerias]:
         """Return all pizzerias, optionally filtering on presence of location."""
 
     def mark_webpage_scraped(self, webpage_id: int) -> None:
