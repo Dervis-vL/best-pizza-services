@@ -3,12 +3,13 @@
 import streamlit as st
 
 from pizza_app import dataclasses, repositories
+from pizza_platform_shared import schemas
 
 
 class PizzaDataAdapter:  # pylint: disable=too-few-public-methods
     """Pizza data adapter class."""
 
-    def __init__(self, repo: repositories.PizzaPlatformDatabase) -> None:
+    def __init__(self, repo: repositories.PizzaPlatformAPI) -> None:
         """Class initialization."""
         self._repo = repo
 
@@ -28,13 +29,16 @@ class PizzaDataAdapter:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     @st.cache_data(ttl=18000, show_spinner="Loading Pizza Data from DB...")
-    def load_data(_repo: repositories.PizzaPlatformDatabase) -> dataclasses.PizzaData:
+    def load_data(_repo: repositories.PizzaPlatformAPI) -> dataclasses.PizzaData:
         """Load all pizza app data.
 
         Staticmethod implementation to allow caching of the method without
         the need for an instance of the class.
         """
+        pizzerias: list[schemas.PizzeriaReadSchema] = _repo.read_pizzerias()
         return dataclasses.PizzaData(
-            locations=_repo.read_pizzerias(),
-            rankings=_repo.read_rankings(),
+            locations=[
+                pizzeria.locations for pizzeria in pizzerias if pizzeria.locations is not None
+            ],
+            rankings=[pizzeria.rankings for pizzeria in pizzerias if pizzeria.rankings is not None],
         )

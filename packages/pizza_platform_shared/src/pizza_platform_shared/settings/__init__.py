@@ -24,7 +24,6 @@ def _pizza_db() -> PizzaDatabaseSettings:
     return PizzaDatabaseSettings()
 
 
-@cache
 def _maintenance_db() -> MaintenanceDatabaseSettings:
     """Load (lazy) the maintenance database settings."""
     return MaintenanceDatabaseSettings()
@@ -51,4 +50,9 @@ def __getattr__(name: str) -> pyd_settings.BaseSettings:
     raise AttributeError(msg)
 
 
-__all__ = ["DatabaseSettings", "maintenance_db", "pizza_db", "pizza_strg"]
+__all__ = [
+    "DatabaseSettings",
+    "maintenance_db",
+    "pizza_db",
+    "pizza_strg",
+]

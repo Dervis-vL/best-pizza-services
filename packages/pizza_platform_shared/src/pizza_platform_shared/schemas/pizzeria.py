@@ -3,8 +3,9 @@
 import pydantic as pyd
 
 from pizza_platform_shared import constants
-from pizza_platform_shared import schemas as shared_schemas
+from pizza_platform_shared.schemas.award import AwardSchema
 from pizza_platform_shared.schemas.base import BaseReadSchema
+from pizza_platform_shared.schemas.location import LocationSchema
 from pizza_platform_shared.schemas.ranking import RankingSchema
 from pizza_platform_shared.schemas.webpage import WebpageSchema
 
@@ -25,7 +26,7 @@ class PizzeriaBaseSchema(pyd.BaseModel):
         default_factory=list,
         description="List of webpages linked to this pizzeria",
     )
-    awards: list[shared_schemas.AwardSchema] = pyd.Field(
+    awards: list[AwardSchema] = pyd.Field(
         default_factory=list,
         description="List of awards received by the pizzeria",
     )
@@ -64,4 +65,9 @@ class PizzeriaReadSchema(PizzeriaBaseSchema, BaseReadSchema):
         ...,
         max_length=constants.ModelColumnLengths.NAME,
         description="Name for pizzeria",
+    )
+
+    locations: list[LocationSchema] = pyd.Field(
+        default_factory=list,
+        description="List of locations for the pizzeria",
     )

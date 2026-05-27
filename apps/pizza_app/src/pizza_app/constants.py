@@ -49,3 +49,10 @@ class QueryParam:
     YEAR: Final[str] = "year_"
     CATEGORY: Final[str] = "cat_"
     BIND: Final = "query-params"
+
+
+class PizzaAPI:
+    """Constants for the pizza platform API."""
+
+    PIZZERIAS_ENDPOINT: Final[str] = "/pizzerias/all"
+    TIMEOUT: Final[int] = 10
