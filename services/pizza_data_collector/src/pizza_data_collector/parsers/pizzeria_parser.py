@@ -2,7 +2,7 @@
 
 from bs4 import BeautifulSoup
 
-from pizza_data_collector.models.parser.patterns import (
+from pizza_data_collector.models import (
     AddressPatterns,
     CoordPatterns,
     PhonePatterns,

@@ -10,12 +10,12 @@ from sqlalchemy import orm
 from sqlalchemy.dialects import postgresql
 
 from pizza_data_storage import settings
-from pizza_data_storage.models.database import base
+from pizza_data_storage.models import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.database.awards import Awards
-    from pizza_data_storage.models.database.categories import Categories
-    from pizza_data_storage.models.database.rankings import Rankings
+    from pizza_data_storage.models.awards import Awards
+    from pizza_data_storage.models.categories import Categories
+    from pizza_data_storage.models.rankings import Rankings
 
 
 class Editions(base.BaseModel):

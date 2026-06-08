@@ -8,10 +8,10 @@ from sqlalchemy import orm
 from sqlalchemy.dialects import postgresql
 
 from pizza_data_storage import settings
-from pizza_data_storage.models.database import base
+from pizza_data_storage.models import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.database.pizzerias import Pizzerias
+    from pizza_data_storage.models.pizzerias import Pizzerias
 
 
 class Webpages(base.BaseModel):

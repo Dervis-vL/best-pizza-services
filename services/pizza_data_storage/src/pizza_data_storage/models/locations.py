@@ -6,10 +6,10 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from pizza_data_storage import settings
-from pizza_data_storage.models.database import base
+from pizza_data_storage.models import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.database.pizzerias import Pizzerias
+    from pizza_data_storage.models.pizzerias import Pizzerias
 
 
 class Locations(base.BaseModel):

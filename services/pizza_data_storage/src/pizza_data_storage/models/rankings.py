@@ -6,11 +6,11 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from pizza_data_storage import settings
-from pizza_data_storage.models.database import base
+from pizza_data_storage.models import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.database.editions import Editions
-    from pizza_data_storage.models.database.pizzerias import Pizzerias
+    from pizza_data_storage.models.editions import Editions
+    from pizza_data_storage.models.pizzerias import Pizzerias
 
 
 class Rankings(base.BaseModel):  # pylint: disable=too-few-public-methods

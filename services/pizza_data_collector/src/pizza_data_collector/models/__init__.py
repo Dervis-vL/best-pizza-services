@@ -1,6 +1,6 @@
 """Module for pizza data scraper models."""
 
-from pizza_data_collector.models.parser.patterns import (
+from pizza_data_collector.models.patterns import (
     AddressPatterns,
     AwardNamePatterns,
     CardPatterns,
