@@ -67,14 +67,8 @@ class PizzeriaRepository(BaseDatabase):
         only_unscraped: bool = False,
         only_unparsed: bool = False,
     ) -> list[models.Webpages]:
-        """Return all webpages of pizzerias, optionally filtering scraped/parsed status.
-
-        Relationships are eagerly loaded so objects remain usable after
-        the session closes.
-        """
-        query = select(models.Webpages).options(
-            sa_orm.joinedload(models.Webpages.pizzeria),
-        )
+        """Return all webpages of pizzerias, optionally filtering scraped/parsed status."""
+        query = select(models.Webpages)
         if only_unscraped:
             query = query.where(models.Webpages.scraped_at.is_(None))
         if only_unparsed:

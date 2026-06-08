@@ -37,4 +37,6 @@ class EditionReadSchema(EditionSchema, BaseReadSchema):
     """Schema for validating ranked edition data."""
 
     category_id: int = pyd.Field(..., description="Foreign key to the categories table")
-    category: CategoryReadSchema = pyd.Field(..., description="Category information for edition")
+    category: CategoryReadSchema = pyd.Field(
+        ..., description="Category information for the edition"
+    )
