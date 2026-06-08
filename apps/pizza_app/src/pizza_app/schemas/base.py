@@ -10,14 +10,15 @@ class FromParentMixin:
     @classmethod
     def from_parent(
         cls,
-        parents: pyd.BaseModel | list[pyd.BaseModel],
+        parents: list[pyd.BaseModel],
         relationship: str,
         fk_field: str,
         pk_field: str = "id",
     ) -> pd.DataFrame:
         """Create a DataFrame from a parent (pydantic) model's relationship."""
-        if isinstance(parents, pyd.BaseModel):
-            parents = [parents]
+        if not isinstance(parents, list[pyd.BaseModel]):
+            msg = "Parents must be a list of pydantic BaseModel instances."
+            raise TypeError(msg)
 
         records = [
             {**child.model_dump(), fk_field: getattr(parent, pk_field)}

@@ -86,8 +86,12 @@ class PizzeriaRepository(BaseDatabase):
         """Return all pizzerias with their relationships."""
         query = select(models.Pizzerias).options(
             sa_orm.selectinload(models.Pizzerias.locations),
-            sa_orm.selectinload(models.Pizzerias.rankings),
-            sa_orm.selectinload(models.Pizzerias.awards),
+            sa_orm.selectinload(models.Pizzerias.rankings)
+            .selectinload(models.Rankings.edition)
+            .selectinload(models.Editions.category),
+            sa_orm.selectinload(models.Pizzerias.awards)
+            .selectinload(models.Awards.edition)
+            .selectinload(models.Editions.category),
             sa_orm.selectinload(models.Pizzerias.webpages),
         )
 

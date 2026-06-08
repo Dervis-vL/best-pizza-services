@@ -58,6 +58,7 @@ class RankingsRepository(BaseDatabase):
         query = select(models.Editions).options(
             sa_orm.joinedload(models.Editions.category),
             sa_orm.joinedload(models.Editions.rankings),
+            sa_orm.joinedload(models.Editions.awards),
         )
         if only_unscraped:
             query = query.where(models.Editions.scraped_at.is_(None))
@@ -74,6 +75,7 @@ class RankingsRepository(BaseDatabase):
             .options(
                 sa_orm.joinedload(models.Editions.category),
                 sa_orm.joinedload(models.Editions.rankings),
+                sa_orm.joinedload(models.Editions.awards),
             )
         )
         return self._read_orm(query, single=True)

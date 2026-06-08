@@ -3,6 +3,7 @@
 import pydantic as pyd
 
 from pizza_platform_shared.schemas.base import BaseReadSchema
+from pizza_platform_shared.schemas.edition import EditionReadSchema
 
 
 class AwardSchema(pyd.BaseModel):
@@ -20,3 +21,4 @@ class AwardReadSchema(AwardSchema, BaseReadSchema):
     """Schema for validating special awards data."""
 
     pizzeria_id: int = pyd.Field(..., description="Foreign key to the pizzerias table")
+    edition: EditionReadSchema = pyd.Field(..., description="Nested edition data for the ranking")
