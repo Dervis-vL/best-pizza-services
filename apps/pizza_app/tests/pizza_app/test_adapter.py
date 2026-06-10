@@ -48,7 +48,7 @@ def test_load_pizza_data_locations_match_schema(adapter_fixture: PizzaDataAdapte
     result = adapter_fixture.load_pizza_data()
 
     # THEN the locations DataFrame passes schema validation
-    schemas.PizzeriaSchema.validate(result.locations)
+    schemas.LocationSchema.validate(result.locations)
 
 
 def test_load_pizza_data_rankings_match_schema(adapter_fixture: PizzaDataAdapter) -> None:

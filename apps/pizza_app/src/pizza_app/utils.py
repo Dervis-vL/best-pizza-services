@@ -44,7 +44,7 @@ def on_country_change() -> None:
 
 
 def make_on_city_change(
-    relevant_locations: pa_typing.DataFrame[schemas.PizzeriaSchema],
+    relevant_locations: pa_typing.DataFrame[schemas.LocationSchema],
     city_col: str,
     country_col: str,
 ) -> Callable[[], None]:

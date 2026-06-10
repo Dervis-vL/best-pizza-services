@@ -10,7 +10,7 @@ from pizza_app import schemas
 
 
 def render_list(
-    filtered: pa_typing.DataFrame[schemas.PizzeriaSchema],
+    filtered: pa_typing.DataFrame[schemas.LocationSchema],
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> None:
     """Render each pizzeria as a card with location and ranking details."""
@@ -20,16 +20,16 @@ def render_list(
 
     for _, row in filtered.iterrows():
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
+            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.LocationSchema.slug]
         ]
 
         with st.container(border=True):
             name_col, rankings_col = st.columns([1, 2])
 
             with name_col:
-                city = row[schemas.PizzeriaSchema.city]
-                country = row[schemas.PizzeriaSchema.country]
-                st.markdown(f"### {row[schemas.PizzeriaSchema.name].title()}")
+                city = row[schemas.LocationSchema.city]
+                country = row[schemas.LocationSchema.country]
+                st.markdown(f"### {row[schemas.LocationSchema.name].title()}")
                 st.markdown(f"{city}, {country}")
 
             with rankings_col:

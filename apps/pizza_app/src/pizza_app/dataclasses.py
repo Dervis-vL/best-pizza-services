@@ -11,5 +11,5 @@ from pizza_app import schemas
 class PizzaData:
     """Pizza dataclass."""
 
-    locations: pa_typing.DataFrame[schemas.PizzeriaSchema]
+    locations: pa_typing.DataFrame[schemas.LocationSchema]
     rankings: pa_typing.DataFrame[schemas.RankingSchema]

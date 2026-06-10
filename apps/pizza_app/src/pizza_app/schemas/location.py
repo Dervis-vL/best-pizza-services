@@ -4,8 +4,8 @@ import pandera.pandas as pa
 from pandera import typing as pa_typing
 
 
-class PizzeriaSchema(pa.DataFrameModel):
-    """Validates a DataFrame of pizzerias that have known coordinates.
+class LocationSchema(pa.DataFrameModel):
+    """Validates a DataFrame of pizzerias location that have known coordinates.
 
     Columns:
         name: Display name of the pizzeria.
@@ -26,8 +26,8 @@ class PizzeriaSchema(pa.DataFrameModel):
     @pa.dataframe_parser
     @classmethod
     def derive_name(
-        cls, df: pa_typing.DataFrame[PizzeriaSchema]
-    ) -> pa_typing.DataFrame[PizzeriaSchema]:
+        cls, df: pa_typing.DataFrame[LocationSchema]
+    ) -> pa_typing.DataFrame[LocationSchema]:
         """Derive name from slug"""
         df = df.copy()
         df["name"] = df["slug"].apply(

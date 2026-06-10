@@ -20,7 +20,7 @@ def sample_locations_df() -> pd.DataFrame:
         "country": ["Italy", "Italy"],
         "city": ["Naples", "Naples"],
     }
-    return schemas.PizzeriaSchema.validate(pd.DataFrame(data))
+    return schemas.LocationSchema.validate(pd.DataFrame(data))
 
 
 @pytest.fixture(name="sample_rankings_df_fixture")
