@@ -1,9 +1,13 @@
 """Schema for category data validation."""
 
+from typing import TYPE_CHECKING
+
 import pydantic as pyd
 
 from pizza_platform_shared.schemas.base import BaseReadSchema
-from pizza_platform_shared.schemas.edition import EditionSchema
+
+if TYPE_CHECKING:
+    from pizza_platform_shared.schemas.edition import EditionSchema
 
 
 class CategoryBaseSchema(pyd.BaseModel):

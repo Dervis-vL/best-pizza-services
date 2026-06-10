@@ -1,12 +1,14 @@
 """Schema for ranked edition data validation."""
 
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 import pydantic as pyd
 
 from pizza_platform_shared import constants
 from pizza_platform_shared.schemas.base import BaseReadSchema
-from pizza_platform_shared.schemas.category import CategoryReadSchema
+
+if TYPE_CHECKING:
+    from pizza_platform_shared.schemas.category import CategoryReadSchema
 
 
 class EditionSchema(pyd.BaseModel):
