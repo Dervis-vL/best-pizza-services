@@ -22,6 +22,7 @@ dev = [
     "pre-commit>=4.6.0",
     "codespell>=2.4.2",
     "hypothesis>=6.0.0",
+    "types-requests>=2.33.0.20260518",
 ]
 
 [tool.pytest.ini_options]
@@ -119,6 +120,7 @@ strict         = true
 plugins = [
     "sqlalchemy.ext.mypy.plugin",
     "pydantic.mypy",
+    "pandera.mypy",
 ]
 
 # Monorepo: src-layout requires explicit src/ paths so mypy doesn't pick up the

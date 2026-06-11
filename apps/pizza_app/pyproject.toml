@@ -16,10 +16,10 @@ dependencies = [
     "pandera>=0.29.0",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
-    "sqlalchemy>=2.0.46",
     "streamlit>=1.55.0",
     "streamlit-folium>=0.26.1",
     "pizza-platform-shared",
+    "requests>=2.32.5",
 ]
 
 [project.scripts]
