@@ -18,6 +18,16 @@ class PizzeriaBaseSchema(pyd.BaseModel):
         max_length=500,
         description="Pizzeria description",
     )
+
+
+class PizzeriaSchema(PizzeriaBaseSchema):
+    """Schema for validating pizzeria data."""
+
+    slug: str = pyd.Field(
+        ...,
+        max_length=constants.ModelColumnLengths.SLUG,
+        description="Slug for the pizzeria",
+    )
     rankings: list[RankingSchema] = pyd.Field(
         default_factory=list,
         description="List of rankings linking to this pizzeria",
@@ -29,16 +39,6 @@ class PizzeriaBaseSchema(pyd.BaseModel):
     awards: list[AwardSchema] = pyd.Field(
         default_factory=list,
         description="List of awards received by the pizzeria",
-    )
-
-
-class PizzeriaSchema(PizzeriaBaseSchema):
-    """Schema for validating pizzeria data."""
-
-    slug: str = pyd.Field(
-        ...,
-        max_length=constants.ModelColumnLengths.SLUG,
-        description="Slug for the pizzeria",
     )
 
     @pyd.computed_field  # type: ignore[prop-decorator]

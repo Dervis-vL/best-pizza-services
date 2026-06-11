@@ -26,9 +26,6 @@ class IRankingsRepository(Protocol):
     def get_edition(self, edition_id: int) -> models.Editions | None:
         """Return a single edition by id."""
 
-    def get_category(self, category_id: int) -> models.Categories | None:
-        """Return a single category by id."""
-
     def mark_edition_scraped(self, edition_id: int) -> None:
         """Mark an edition as scraped."""
 

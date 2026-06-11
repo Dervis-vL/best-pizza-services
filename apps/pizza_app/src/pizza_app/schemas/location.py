@@ -66,9 +66,9 @@ class LocationSchema(pa.DataFrameModel):
             cls.country,
             cls.city,
         ]
-        return cls.validate(pa_typing.cast(pd.DataFrame, records)[columns])
+        return cls.validate(pd.DataFrame(records, columns=columns))
 
-    class Config:
+    class Config:  # pylint: disable=too-few-public-methods
         """Config."""
 
         strict = True

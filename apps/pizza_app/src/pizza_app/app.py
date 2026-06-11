@@ -12,7 +12,8 @@ from pizza_app import (
     dataclasses,
     enums,
     infrastructure,
-    utils,
+    repositories,
+    settings,
     views,
 )
 
@@ -30,7 +31,9 @@ st.write(constants.AppContext.HEADER)
 
 # READ data
 try:
-    pizza_adapter = infrastructure.PizzaDataAdapter(repo=utils.create_repo())
+    pizza_adapter = infrastructure.PizzaDataAdapter(
+        repo=repositories.PizzaPlatformAPI(api_settings=settings.pizza_api)
+    )
     pizza_data: dataclasses.PizzaData = pizza_adapter.load_pizza_data()
 except Exception as e:  # pylint: disable=broad-exception-caught  # noqa: BLE001
     st.error(f"Error loading pizzeria data: {e}")

@@ -61,7 +61,7 @@ class AwardSchema(pa.DataFrameModel):
             cls.year,
             cls.category,
         ]
-        return cls.validate(pa_typing.cast(pd.DataFrame, records)[columns])
+        return cls.validate(pd.DataFrame(records, columns=columns))
 
     class Config:  # pylint: disable=too-few-public-methods
         """Config."""
