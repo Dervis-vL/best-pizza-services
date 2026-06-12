@@ -11,7 +11,7 @@ from pizza_platform_shared.schemas.base import BaseReadSchema
 class LocationSchema(pyd.BaseModel):
     """Schema for validating pizzeria location data."""
 
-    pizzaria_id: int = pyd.Field(..., description="Id foreignkey of the pizzeria")
+    pizzeria_id: int = pyd.Field(..., description="Id foreignkey of the pizzeria")
     address: str | None = pyd.Field(
         default=None,
         max_length=250,
