@@ -9,8 +9,11 @@ from hypothesis import strategies as st
 
 from pizza_platform_shared import constants
 from pizza_platform_shared.schemas.location import LocationReadSchema, LocationSchema
-
-from .conftest import st_finite_float, st_optional_float, st_optional_text
+from schemas.strategies import (
+    st_finite_float,
+    st_optional_float,
+    st_optional_text,
+)
 
 _PHONE_MAX = constants.ModelColumnLengths.PHONE
 

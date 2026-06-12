@@ -1,4 +1,4 @@
-"""Shared strategies for schema tests."""
+"""Hypothesis strategies shared across schema tests."""
 
 from hypothesis import strategies as st
 

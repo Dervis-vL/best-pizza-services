@@ -8,6 +8,10 @@ from pizza_platform_shared.schemas.pizzeria import PizzeriaReadSchema, PizzeriaS
 from pizza_platform_shared.schemas.ranking import RankingReadSchema, RankingSchema
 from pizza_platform_shared.schemas.webpage import WebpageReadSchema, WebpageSchema
 
+# Resolve forward references from TYPE_CHECKING-only imports
+CategorySchema.model_rebuild()
+EditionReadSchema.model_rebuild()
+
 __all__ = [
     "AwardReadSchema",
     "AwardSchema",
