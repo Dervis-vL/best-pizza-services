@@ -61,7 +61,7 @@ services:
       dockerfile: apps/pizza_app/Dockerfile
     env_file: .env
     environment:
-      PIZZA_API_URL: http://pizza_api:8000
+      API_BASE_URL: http://pizza_api:8000
     ports:
       - "8501:8501"
     depends_on:
