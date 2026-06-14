@@ -17,7 +17,7 @@ class AwardSchema(pa.DataFrameModel):
         award:         Name of the award.
         sponsor:       Sponsor of the award.
         year:          Edition year.
-        category:      Category name (e.g. '50 Top Pizza Italia').
+        category:      Category name (e.g. 'Top Pizza Italia').
     """
 
     pizzeria_name: pa_typing.Series[str] = pa.Field(

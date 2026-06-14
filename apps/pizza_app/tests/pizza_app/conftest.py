@@ -20,8 +20,8 @@ def sample_pizzerias() -> list[shared_schemas.PizzeriaReadSchema]:
         category_id=1,
         category=shared_schemas.CategoryReadSchema(
             id=1,
-            slug="50-top-pizza-italia",
-            name="50 Top Pizza Italia",
+            slug="top-pizza-italia",
+            name="Top Pizza Italia",
             description="Best pizzerias in Italy.",
         ),
     )
