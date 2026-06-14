@@ -46,7 +46,10 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1
 
 RUN groupadd --system appgroup && \
-    useradd --system --gid appgroup --no-create-home appuser
+    useradd --system --gid appgroup --create-home --home-dir /home/appuser appuser
+
+# Streamlit writes its machine-id/telemetry file under $HOME; give appuser a writable one
+ENV HOME=/home/appuser
 
 USER appuser
 
