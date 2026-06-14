@@ -56,8 +56,14 @@ class ParseWebpagesUseCase:  # pylint: disable=too-few-public-methods
 
             enriched = self._enrich_geo_uc.execute(location=location)
             self._seed_location_uc.execute(location_config=enriched)
-            self._mark_parsed_uc.execute(webpage_id=webpage.id)
-            parsed += 1
+            if enriched.city is not None or enriched.country is not None:
+                logger.info(
+                    "Parsed and enriched location for webpage %s: %s",
+                    webpage.id,
+                    enriched.model_dump(),
+                )
+                self._mark_parsed_uc.execute(webpage_id=webpage.id)
+                parsed += 1
 
         return results.ParseWebpagesResult(
             parsed=parsed,
