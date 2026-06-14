@@ -18,19 +18,16 @@ class EnrichGeolocationUseCase:  # pylint: disable=too-few-public-methods
         """Return the location schema, enriched with city and country if missing."""
         lat = location.latitude
         lon = location.longitude
-        if (
-            (lat is not None)
-            and (lon is not None)
-            and (location.city is None or location.country is None)
-        ):
+
+        # Nothing to geocode without coordinates.
+        if lat is None or lon is None:
             return location
 
-        if lat is not None and lon is not None:
-            reverse_location = self._geo_service.reverse_geocode(
-                lat=lat,
-                lon=lon,
-            )
-            location.country = reverse_location.country
-            location.city = reverse_location.city
+        # Already have both city and country; no enrichment needed.
+        if location.city is not None and location.country is not None:
             return location
+
+        reverse_location = self._geo_service.reverse_geocode(lat=lat, lon=lon)
+        location.country = reverse_location.country
+        location.city = reverse_location.city
         return location

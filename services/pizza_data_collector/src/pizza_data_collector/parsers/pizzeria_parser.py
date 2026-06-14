@@ -2,7 +2,7 @@
 
 from bs4 import BeautifulSoup
 
-from pizza_data_collector.models.parser.patterns import (
+from pizza_data_collector.models import (
     AddressPatterns,
     CoordPatterns,
     PhonePatterns,
@@ -32,7 +32,7 @@ class PizzeriaParser:  # pylint: disable=too-few-public-methods
         phone = self._phones.extract(html)
 
         return LocationSchema(
-            pizzaria_id=pizzeria_id,
+            pizzeria_id=pizzeria_id,
             address=address,
             city=None,
             country=None,

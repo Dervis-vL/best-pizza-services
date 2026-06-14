@@ -1,4 +1,4 @@
-"""Model for ranking editions and their associated data."""
+"""Model for ranked editions and their associated data."""
 
 from __future__ import annotations
 
@@ -9,16 +9,17 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.dialects import postgresql
 
-from pizza_platform_shared import settings
-from pizza_platform_shared.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models import base
 
 if TYPE_CHECKING:
-    from pizza_platform_shared.models.database.categories import Categories
-    from pizza_platform_shared.models.database.ranking_entries import RankingEntries
+    from pizza_data_storage.models.awards import Awards
+    from pizza_data_storage.models.categories import Categories
+    from pizza_data_storage.models.rankings import Rankings
 
 
-class RankingEditions(base.BaseModel):
-    """Model for storing ranking edition information."""
+class Editions(base.BaseModel):
+    """Model for storing ranked edition information."""
 
     # table configuration
     __tablename__ = settings.pizza_db.tables.editions
@@ -50,12 +51,12 @@ class RankingEditions(base.BaseModel):
     year: orm.Mapped[int] = orm.mapped_column(
         sa.SmallInteger,
         nullable=False,
-        comment="Year of the ranking edition",
+        comment="Year of the ranked edition",
     )
     url: orm.Mapped[str] = orm.mapped_column(
         sa.String(500),
         nullable=False,
-        comment="Endpoint URL for the ranking edition data",
+        comment="Endpoint URL for the ranked edition data",
     )
     scraped_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
         postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
@@ -65,11 +66,16 @@ class RankingEditions(base.BaseModel):
         nullable=True,
         comment="Timestamp when the data was scraped",
     )
+    parsed_at: orm.Mapped[datetime.datetime | None] = orm.mapped_column(
+        postgresql.TIMESTAMP(precision=0, timezone=True).with_variant(
+            sa.DateTime(timezone=True),
+            "sqlite",
+        ),
+        nullable=True,
+        comment="Timestamp when the data was parsed",
+    )
 
     # relationships
-    category: orm.Mapped[Categories] = orm.relationship(
-        back_populates="ranked_editions",
-    )
-    rankings: orm.Mapped[list[RankingEntries]] = orm.relationship(
-        back_populates="edition",
-    )
+    category: orm.Mapped[Categories] = orm.relationship(back_populates="editions")
+    rankings: orm.Mapped[list[Rankings]] = orm.relationship(back_populates="edition")
+    awards: orm.Mapped[list[Awards]] = orm.relationship(back_populates="edition")

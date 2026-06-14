@@ -1,11 +1,14 @@
 """Schema for ranked edition data validation."""
 
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 import pydantic as pyd
 
 from pizza_platform_shared import constants
 from pizza_platform_shared.schemas.base import BaseReadSchema
+
+if TYPE_CHECKING:
+    from pizza_platform_shared.schemas.category import CategoryReadSchema
 
 
 class EditionSchema(pyd.BaseModel):
@@ -36,3 +39,6 @@ class EditionReadSchema(EditionSchema, BaseReadSchema):
     """Schema for validating ranked edition data."""
 
     category_id: int = pyd.Field(..., description="Foreign key to the categories table")
+    category: CategoryReadSchema = pyd.Field(
+        ..., description="Category information for the edition"
+    )

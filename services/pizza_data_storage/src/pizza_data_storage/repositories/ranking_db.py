@@ -56,8 +56,7 @@ class RankingsRepository(BaseDatabase):
         the session closes.
         """
         query = select(models.Editions).options(
-            sa_orm.joinedload(models.Editions.category),
-            sa_orm.joinedload(models.Editions.rankings),
+            sa_orm.selectinload(models.Editions.category),
         )
         if only_unscraped:
             query = query.where(models.Editions.scraped_at.is_(None))
@@ -73,17 +72,7 @@ class RankingsRepository(BaseDatabase):
             .where(models.Editions.id == edition_id)
             .options(
                 sa_orm.joinedload(models.Editions.category),
-                sa_orm.joinedload(models.Editions.rankings),
             )
-        )
-        return self._read_orm(query, single=True)
-
-    def get_category(self, category_id: int) -> models.Categories | None:
-        """Return a single category by id."""
-        query = (
-            select(models.Categories)
-            .where(models.Categories.id == category_id)
-            .options(sa_orm.joinedload(models.Categories.editions))
         )
         return self._read_orm(query, single=True)
 

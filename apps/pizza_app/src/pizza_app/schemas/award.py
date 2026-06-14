@@ -1,4 +1,4 @@
-"""Schema for ranking data."""
+"""Award pandera schema."""
 
 import pandas as pd
 import pandera.pandas as pa
@@ -9,21 +9,26 @@ from pizza_platform_shared import enums as shared_enums
 from pizza_platform_shared import schemas as shared_schemas
 
 
-class RankingSchema(pa.DataFrameModel):
-    """Validates a flat DataFrame of all pizzeria ranking entries.
+class AwardSchema(pa.DataFrameModel):
+    """Validates a flat DataFrame of all pizzeria award entries.
 
     Columns:
-        pizzeria_name: Display name of the pizzeria.
-        position:      Rank position (nullable — some entries only have an award).
+        pizzeria_name: Slug of the pizzeria (join key with LocationSchema.slug).
+        award:         Name of the award.
+        sponsor:       Sponsor of the award.
         year:          Edition year.
-        category:      Category name (e.g. 'Top 50 World').
+        category:      Category name (e.g. 'Top Pizza Italia').
     """
 
     pizzeria_name: pa_typing.Series[str] = pa.Field(
         nullable=False,
         str_length={"min_value": 1},
     )
-    position: pa_typing.Series[float] = pa.Field(nullable=True, ge=1)
+    award: pa_typing.Series[str] = pa.Field(
+        nullable=False,
+        str_length={"min_value": 1},
+    )
+    sponsor: pa_typing.Series[str] = pa.Field(nullable=False)
     year: pa_typing.Series[int] = pa.Field(
         nullable=False,
         isin=[y.value for y in shared_enums.Year],
@@ -37,21 +42,23 @@ class RankingSchema(pa.DataFrameModel):
     @classmethod
     def from_pizzeria_schema(
         cls, pizzerias: list[shared_schemas.PizzeriaReadSchema]
-    ) -> pa_typing.DataFrame[RankingSchema]:
-        """Create a RankingSchema DataFrame by flattening the rankings from PizzeriaReadSchema."""
+    ) -> pa_typing.DataFrame[AwardSchema]:
+        """Create an AwardSchema DataFrame by flattening the awards from PizzeriaReadSchema."""
         records = [
             {
                 cls.pizzeria_name: pizzeria.name,
-                cls.position: ranking.position,
-                cls.year: ranking.edition.year,
-                cls.category: ranking.edition.category.name,
+                cls.award: award.award,
+                cls.sponsor: award.sponsor,
+                cls.year: award.edition.year,
+                cls.category: award.edition.category.name,
             }
             for pizzeria in pizzerias
-            for ranking in pizzeria.rankings
+            for award in pizzeria.awards
         ]
         columns = [
             cls.pizzeria_name,
-            cls.position,
+            cls.award,
+            cls.sponsor,
             cls.year,
             cls.category,
         ]
@@ -62,4 +69,4 @@ class RankingSchema(pa.DataFrameModel):
 
         strict = True
         coerce = True
-        name = "RankingSchema"
+        name = "AwardSchema"

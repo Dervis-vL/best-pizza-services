@@ -5,16 +5,17 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_platform_shared import settings
-from pizza_platform_shared.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models import base
 
 if TYPE_CHECKING:
-    from pizza_platform_shared.models.database.locations import Locations
-    from pizza_platform_shared.models.database.ranking_entries import RankingEntries
-    from pizza_platform_shared.models.database.webpages import Webpages
+    from pizza_data_storage.models.awards import Awards
+    from pizza_data_storage.models.locations import Locations
+    from pizza_data_storage.models.rankings import Rankings
+    from pizza_data_storage.models.webpages import Webpages
 
 
-class Pizzerias(base.BaseModel):
+class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
     """Model for storing pizza category information."""
 
     # table configuration
@@ -30,7 +31,7 @@ class Pizzerias(base.BaseModel):
         nullable=False,
         comment="Name of the pizzeria",
     )
-    description: orm.Mapped[str] = orm.mapped_column(
+    description: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(500),
         nullable=True,
         comment="Description of the pizzeria",
@@ -39,6 +40,5 @@ class Pizzerias(base.BaseModel):
     # relationships
     webpages: orm.Mapped[list[Webpages]] = orm.relationship(back_populates="pizzeria")
     locations: orm.Mapped[list[Locations]] = orm.relationship(back_populates="pizzeria")
-    rankings: orm.Mapped[list[RankingEntries]] = orm.relationship(
-        back_populates="pizzeria",
-    )
+    rankings: orm.Mapped[list[Rankings]] = orm.relationship(back_populates="pizzeria")
+    awards: orm.Mapped[list[Awards]] = orm.relationship(back_populates="pizzeria")

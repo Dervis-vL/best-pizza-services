@@ -5,14 +5,14 @@ from __future__ import annotations
 import streamlit as st
 from pandera import typing as pa_typing
 
-from pizza_app import constants, schemas, utils
+from pizza_app import constants, enums, schemas, utils
 from pizza_platform_shared import enums as shared_enums
 
 
 def render_filters(
-    locations_df: pa_typing.DataFrame[schemas.PizzeriaSchema],
+    locations_df: pa_typing.DataFrame[schemas.LocationSchema],
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
-) -> pa_typing.DataFrame[schemas.PizzeriaSchema]:
+) -> pa_typing.DataFrame[schemas.LocationSchema]:
     """Render the sidebar filters and return the filtered pizzerias dataframe."""
     if constants.QueryParam.COUNTRY not in st.session_state:
         st.session_state[constants.QueryParam.COUNTRY] = constants.Filters.DEFAULT
@@ -34,7 +34,7 @@ def render_filters(
         pre_categories = (
             [
                 cat.value
-                for cat in shared_enums.Categories
+                for cat in enums.Categories
                 if st.session_state.get(
                     f"{constants.QueryParam.CATEGORY}{cat.name}",
                     True,
@@ -42,7 +42,7 @@ def render_filters(
             ]
             + [
                 cat.value
-                for cat in shared_enums.CategoriesExcellent
+                for cat in enums.CategoriesExcellent
                 if st.session_state.get(
                     f"{constants.QueryParam.CATEGORY}{cat.name}",
                     False,
@@ -50,7 +50,7 @@ def render_filters(
             ]
             + [
                 cat.value
-                for cat in shared_enums.CategoriesSpecial
+                for cat in enums.CategoriesSpecial
                 if st.session_state.get(
                     f"{constants.QueryParam.CATEGORY}{cat.name}",
                     False,
@@ -64,11 +64,11 @@ def render_filters(
             ][schemas.RankingSchema.pizzeria_name],
         )
         relevant_locations = locations_df[
-            locations_df[schemas.PizzeriaSchema.slug].isin(pre_valid_names)
+            locations_df[schemas.LocationSchema.slug].isin(pre_valid_names)
         ]
 
         countries = sorted(
-            relevant_locations[schemas.PizzeriaSchema.country].dropna().unique().tolist(),
+            relevant_locations[schemas.LocationSchema.country].dropna().unique().tolist(),
         )
         selected_country = st.selectbox(
             "Search by country",
@@ -80,14 +80,14 @@ def render_filters(
 
         if st.session_state[constants.QueryParam.COUNTRY] != constants.Filters.DEFAULT:
             city_pool = relevant_locations[
-                relevant_locations[schemas.PizzeriaSchema.country]
+                relevant_locations[schemas.LocationSchema.country]
                 == st.session_state[constants.QueryParam.COUNTRY]
             ]
         else:
             city_pool = relevant_locations
 
         cities = sorted(
-            city_pool[schemas.PizzeriaSchema.city].dropna().unique().tolist(),
+            city_pool[schemas.LocationSchema.city].dropna().unique().tolist(),
         )
         selected_city = st.selectbox(
             "Search by city",
@@ -95,8 +95,8 @@ def render_filters(
             key=constants.QueryParam.CITY,
             on_change=utils.make_on_city_change(
                 relevant_locations=relevant_locations,
-                city_col=schemas.PizzeriaSchema.city,
-                country_col=schemas.PizzeriaSchema.country,
+                city_col=schemas.LocationSchema.city,
+                country_col=schemas.LocationSchema.country,
             ),
             bind=constants.QueryParam.BIND,
         )
@@ -116,7 +116,7 @@ def render_filters(
         st.subheader(constants.Filters.CATEGORIES)
         selected_categories = [
             cat.value
-            for cat in shared_enums.Categories
+            for cat in enums.Categories
             if st.checkbox(
                 label=cat.value,
                 value=True,
@@ -126,7 +126,7 @@ def render_filters(
         ]
 
         st.subheader(constants.Filters.EXCELLENT_CATEGORIES)
-        for cat in shared_enums.CategoriesExcellent:
+        for cat in enums.CategoriesExcellent:
             if st.checkbox(
                 label=cat.value,
                 value=False,
@@ -136,7 +136,7 @@ def render_filters(
                 selected_categories.append(cat.value)  # noqa: PERF401
 
         st.subheader(constants.Filters.SPECIAL_AWARDS)
-        for cat_special in shared_enums.CategoriesSpecial:
+        for cat_special in enums.CategoriesSpecial:
             if st.checkbox(
                 label=cat_special.value,
                 value=False,
@@ -152,21 +152,21 @@ def render_filters(
     valid_names = set(filtered_rankings[schemas.RankingSchema.pizzeria_name])
 
     country_mask = (
-        (locations_df[schemas.PizzeriaSchema.country] == selected_country)
+        (locations_df[schemas.LocationSchema.country] == selected_country)
         if selected_country != constants.Filters.DEFAULT
         else True
     )
 
     city_mask = (
-        (locations_df[schemas.PizzeriaSchema.city] == selected_city)
+        (locations_df[schemas.LocationSchema.city] == selected_city)
         if selected_city != constants.Filters.DEFAULT
         else True
     )
 
     if search:
         filtered = locations_df[
-            locations_df[schemas.PizzeriaSchema.slug].isin(valid_names)
-            & locations_df[schemas.PizzeriaSchema.slug].str.contains(
+            locations_df[schemas.LocationSchema.slug].isin(valid_names)
+            & locations_df[schemas.LocationSchema.slug].str.contains(
                 search,
                 case=False,
                 na=False,
@@ -176,7 +176,7 @@ def render_filters(
         ]
     else:
         filtered = locations_df[
-            locations_df[schemas.PizzeriaSchema.slug].isin(valid_names) & country_mask & city_mask
+            locations_df[schemas.LocationSchema.slug].isin(valid_names) & country_mask & city_mask
         ]
 
     st.sidebar.metric("Showing", f"{len(filtered)} / {len(locations_df)} pizzerias")

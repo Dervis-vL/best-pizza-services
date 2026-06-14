@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_platform_shared import settings
-from pizza_platform_shared.models.database import base
+from pizza_data_storage import settings
+from pizza_data_storage.models import base
 
 if TYPE_CHECKING:
-    from pizza_platform_shared.models.database.pizzerias import Pizzerias
+    from pizza_data_storage.models.pizzerias import Pizzerias
 
 
 class Locations(base.BaseModel):
@@ -19,9 +19,10 @@ class Locations(base.BaseModel):
     __tablename__ = settings.pizza_db.tables.locations
     __table_args__ = (
         sa.UniqueConstraint(
+            "pizzeria_id",
             "latitude",
             "longitude",
-            name="uq_location_latitude_longitude",
+            name="uq_location_pizzeria_latitude_longitude",
         ),
         {"schema": settings.pizza_db.schema_name},
     )
@@ -41,24 +42,36 @@ class Locations(base.BaseModel):
     )
 
     # columns
-    address: orm.Mapped[str] = orm.mapped_column(
+    address: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(250),
         nullable=True,
-        comment="",
+        comment="Pizzeria address",
     )
-    city: orm.Mapped[str] = orm.mapped_column(sa.String(50), nullable=True, comment="")
-    country: orm.Mapped[str] = orm.mapped_column(
+    city: orm.Mapped[str | None] = orm.mapped_column(
         sa.String(50),
         nullable=True,
-        comment="",
+        comment="Pizzeria city",
     )
-    latitude: orm.Mapped[float] = orm.mapped_column(sa.Float, nullable=True, comment="")
-    longitude: orm.Mapped[float] = orm.mapped_column(
+    country: orm.Mapped[str | None] = orm.mapped_column(
+        sa.String(50),
+        nullable=True,
+        comment="Pizzeria country",
+    )
+    latitude: orm.Mapped[float | None] = orm.mapped_column(
         sa.Float,
         nullable=True,
-        comment="",
+        comment="Pizzeria latitude",
     )
-    phone: orm.Mapped[str] = orm.mapped_column(sa.String(20), nullable=True, comment="")
+    longitude: orm.Mapped[float | None] = orm.mapped_column(
+        sa.Float,
+        nullable=True,
+        comment="Pizzeria longitude",
+    )
+    phone: orm.Mapped[str | None] = orm.mapped_column(
+        sa.String(20),
+        nullable=True,
+        comment="Pizzeria phonenumber",
+    )
 
     # relationships
     pizzeria: orm.Mapped[Pizzerias] = orm.relationship(

@@ -12,15 +12,15 @@ from pizza_app import schemas
 
 
 def render_map(
-    filtered: pa_typing.DataFrame[schemas.PizzeriaSchema],
+    filtered: pa_typing.DataFrame[schemas.LocationSchema],
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> None:
     """Build and render the Folium pizzeria map."""
     if filtered.empty:
         avg_lat, avg_lng = 0.0, 0.0
     else:
-        avg_lat = filtered[schemas.PizzeriaSchema.latitude].mean()
-        avg_lng = filtered[schemas.PizzeriaSchema.longitude].mean()
+        avg_lat = filtered[schemas.LocationSchema.latitude].mean()
+        avg_lng = filtered[schemas.LocationSchema.longitude].mean()
 
     m = folium.Map(
         location=[avg_lat, avg_lng],
@@ -33,7 +33,7 @@ def render_map(
 
     for _, row in filtered.iterrows():
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
+            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.LocationSchema.slug]
         ]
         table_rows = ""
         for category, group in pizzeria_rankings.groupby(
@@ -56,11 +56,11 @@ def render_map(
                 )
         folium.Marker(
             location=[
-                row[schemas.PizzeriaSchema.latitude],
-                row[schemas.PizzeriaSchema.longitude],
+                row[schemas.LocationSchema.latitude],
+                row[schemas.LocationSchema.longitude],
             ],
             popup=folium.Popup(f"<table>{table_rows}</table>", max_width=300),
-            tooltip=row[schemas.PizzeriaSchema.name],
+            tooltip=row[schemas.LocationSchema.name],
             icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
         ).add_to(cluster)
 

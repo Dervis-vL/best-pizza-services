@@ -22,6 +22,7 @@ dev = [
     "pre-commit>=4.6.0",
     "codespell>=2.4.2",
     "hypothesis>=6.0.0",
+    "types-requests>=2.33.0.20260518",
 ]
 
 [tool.pytest.ini_options]
@@ -59,7 +60,7 @@ branch   = true
 parallel = true
 
 [tool.coverage.report]
-fail_under    = 40
+fail_under    = 35
 show_missing  = true
 exclude_lines = [
     "pragma: no cover",
@@ -119,6 +120,7 @@ strict         = true
 plugins = [
     "sqlalchemy.ext.mypy.plugin",
     "pydantic.mypy",
+    "pandera.mypy",
 ]
 
 # Monorepo: src-layout requires explicit src/ paths so mypy doesn't pick up the

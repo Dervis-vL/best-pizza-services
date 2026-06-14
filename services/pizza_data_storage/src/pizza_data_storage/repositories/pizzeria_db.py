@@ -67,14 +67,8 @@ class PizzeriaRepository(BaseDatabase):
         only_unscraped: bool = False,
         only_unparsed: bool = False,
     ) -> list[models.Webpages]:
-        """Return all webpages of pizzerias, optionally filtering scraped/parsed status.
-
-        Relationships are eagerly loaded so objects remain usable after
-        the session closes.
-        """
-        query = select(models.Webpages).options(
-            sa_orm.joinedload(models.Webpages.pizzeria),
-        )
+        """Return all webpages of pizzerias, optionally filtering scraped/parsed status."""
+        query = select(models.Webpages)
         if only_unscraped:
             query = query.where(models.Webpages.scraped_at.is_(None))
         if only_unparsed:
@@ -86,8 +80,12 @@ class PizzeriaRepository(BaseDatabase):
         """Return all pizzerias with their relationships."""
         query = select(models.Pizzerias).options(
             sa_orm.selectinload(models.Pizzerias.locations),
-            sa_orm.selectinload(models.Pizzerias.rankings),
-            sa_orm.selectinload(models.Pizzerias.awards),
+            sa_orm.selectinload(models.Pizzerias.rankings)
+            .selectinload(models.Rankings.edition)
+            .selectinload(models.Editions.category),
+            sa_orm.selectinload(models.Pizzerias.awards)
+            .selectinload(models.Awards.edition)
+            .selectinload(models.Editions.category),
             sa_orm.selectinload(models.Pizzerias.webpages),
         )
 
@@ -220,7 +218,7 @@ class PizzeriaRepository(BaseDatabase):
         if lat is not None and lon is not None:
             existing = session.scalar(
                 select(models.Locations)
-                .where(models.Locations.pizzeria_id == location_config.pizzaria_id)
+                .where(models.Locations.pizzeria_id == location_config.pizzeria_id)
                 .where(
                     models.Locations.latitude.between(
                         lat - constants.Coordinate.LOC_DELTA,
@@ -242,7 +240,7 @@ class PizzeriaRepository(BaseDatabase):
                 return existing
 
         location = models.Locations(
-            pizzeria_id=location_config.pizzaria_id,
+            pizzeria_id=location_config.pizzeria_id,
             address=location_config.address,
             city=location_config.city,
             country=location_config.country,

@@ -9,7 +9,7 @@ _api_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d 
 _app_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
 
 # Run podman compose up
-compose action="up" env_file=".env":
+compose env_file=".env":
     podman compose --env-file {{env_file}} up --build
 
 # Run podman compose down

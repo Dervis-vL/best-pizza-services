@@ -1,5 +1,6 @@
 """Modules containing scraper settings."""
 
+from collections.abc import Callable
 from functools import cache
 from typing import TYPE_CHECKING
 
@@ -24,7 +25,6 @@ def _pizza_db() -> PizzaDatabaseSettings:
     return PizzaDatabaseSettings()
 
 
-@cache
 def _maintenance_db() -> MaintenanceDatabaseSettings:
     """Load (lazy) the maintenance database settings."""
     return MaintenanceDatabaseSettings()
@@ -36,7 +36,7 @@ def _pizza_storage() -> PizzaStorageSettings:
     return PizzaStorageSettings()
 
 
-_loaders = {
+_loaders: dict[str, Callable[[], pyd_settings.BaseSettings]] = {
     "pizza_db": _pizza_db,
     "maintenance_db": _maintenance_db,
     "pizza_strg": _pizza_storage,
@@ -51,4 +51,9 @@ def __getattr__(name: str) -> pyd_settings.BaseSettings:
     raise AttributeError(msg)
 
 
-__all__ = ["DatabaseSettings", "maintenance_db", "pizza_db", "pizza_strg"]
+__all__ = [
+    "DatabaseSettings",
+    "maintenance_db",
+    "pizza_db",
+    "pizza_strg",
+]

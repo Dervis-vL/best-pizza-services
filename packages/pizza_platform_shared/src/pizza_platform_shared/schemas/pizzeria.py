@@ -3,10 +3,11 @@
 import pydantic as pyd
 
 from pizza_platform_shared import constants
-from pizza_platform_shared import schemas as shared_schemas
+from pizza_platform_shared.schemas.award import AwardReadSchema, AwardSchema
 from pizza_platform_shared.schemas.base import BaseReadSchema
-from pizza_platform_shared.schemas.ranking import RankingSchema
-from pizza_platform_shared.schemas.webpage import WebpageSchema
+from pizza_platform_shared.schemas.location import LocationReadSchema
+from pizza_platform_shared.schemas.ranking import RankingReadSchema, RankingSchema
+from pizza_platform_shared.schemas.webpage import WebpageReadSchema, WebpageSchema
 
 
 class PizzeriaBaseSchema(pyd.BaseModel):
@@ -17,18 +18,6 @@ class PizzeriaBaseSchema(pyd.BaseModel):
         max_length=500,
         description="Pizzeria description",
     )
-    rankings: list[RankingSchema] = pyd.Field(
-        default_factory=list,
-        description="List of rankings linking to this pizzeria",
-    )
-    webpages: list[WebpageSchema] = pyd.Field(
-        default_factory=list,
-        description="List of webpages linked to this pizzeria",
-    )
-    awards: list[shared_schemas.AwardSchema] = pyd.Field(
-        default_factory=list,
-        description="List of awards received by the pizzeria",
-    )
 
 
 class PizzeriaSchema(PizzeriaBaseSchema):
@@ -38,6 +27,18 @@ class PizzeriaSchema(PizzeriaBaseSchema):
         ...,
         max_length=constants.ModelColumnLengths.SLUG,
         description="Slug for the pizzeria",
+    )
+    rankings: list[RankingSchema] = pyd.Field(
+        default_factory=list,
+        description="List of rankings linking to this pizzeria",
+    )
+    webpages: list[WebpageSchema] = pyd.Field(
+        default_factory=list,
+        description="List of webpages linked to this pizzeria",
+    )
+    awards: list[AwardSchema] = pyd.Field(
+        default_factory=list,
+        description="List of awards received by the pizzeria",
     )
 
     @pyd.computed_field  # type: ignore[prop-decorator]
@@ -64,4 +65,21 @@ class PizzeriaReadSchema(PizzeriaBaseSchema, BaseReadSchema):
         ...,
         max_length=constants.ModelColumnLengths.NAME,
         description="Name for pizzeria",
+    )
+
+    webpages: list[WebpageReadSchema] = pyd.Field(
+        default_factory=list,
+        description="List of webpages linked to this pizzeria",
+    )
+    locations: list[LocationReadSchema] = pyd.Field(
+        default_factory=list,
+        description="List of locations for the pizzeria",
+    )
+    rankings: list[RankingReadSchema] = pyd.Field(
+        default_factory=list,
+        description="List of rankings linking to this pizzeria",
+    )
+    awards: list[AwardReadSchema] = pyd.Field(
+        default_factory=list,
+        description="List of awards received by the pizzeria",
     )
