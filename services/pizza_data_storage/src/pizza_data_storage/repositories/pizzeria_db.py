@@ -218,7 +218,7 @@ class PizzeriaRepository(BaseDatabase):
         if lat is not None and lon is not None:
             existing = session.scalar(
                 select(models.Locations)
-                .where(models.Locations.pizzeria_id == location_config.pizzaria_id)
+                .where(models.Locations.pizzeria_id == location_config.pizzeria_id)
                 .where(
                     models.Locations.latitude.between(
                         lat - constants.Coordinate.LOC_DELTA,
@@ -240,7 +240,7 @@ class PizzeriaRepository(BaseDatabase):
                 return existing
 
         location = models.Locations(
-            pizzeria_id=location_config.pizzaria_id,
+            pizzeria_id=location_config.pizzeria_id,
             address=location_config.address,
             city=location_config.city,
             country=location_config.country,

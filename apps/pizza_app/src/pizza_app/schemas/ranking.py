@@ -4,6 +4,7 @@ import pandas as pd
 import pandera.pandas as pa
 from pandera import typing as pa_typing
 
+from pizza_app import enums
 from pizza_platform_shared import enums as shared_enums
 from pizza_platform_shared import schemas as shared_schemas
 
@@ -30,7 +31,7 @@ class RankingSchema(pa.DataFrameModel):
     category: pa_typing.Series[str] = pa.Field(
         nullable=False,
         str_length={"min_value": 1},
-        isin=shared_enums.BaseCategories.list(),
+        isin=enums.BaseCategories.list(),
     )
 
     @classmethod

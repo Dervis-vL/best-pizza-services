@@ -32,7 +32,7 @@ class PizzeriaParser:  # pylint: disable=too-few-public-methods
         phone = self._phones.extract(html)
 
         return LocationSchema(
-            pizzaria_id=pizzeria_id,
+            pizzeria_id=pizzeria_id,
             address=address,
             city=None,
             country=None,

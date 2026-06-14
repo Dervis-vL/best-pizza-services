@@ -32,7 +32,7 @@ def sample_pizzerias() -> list[shared_schemas.PizzeriaReadSchema]:
             locations=[
                 shared_schemas.LocationReadSchema(
                     id=1,
-                    pizzaria_id=1,
+                    pizzeria_id=1,
                     city="Naples",
                     country="Italy",
                     latitude=40.8518,
@@ -65,7 +65,7 @@ def sample_pizzerias() -> list[shared_schemas.PizzeriaReadSchema]:
             locations=[
                 shared_schemas.LocationReadSchema(
                     id=2,
-                    pizzaria_id=2,
+                    pizzeria_id=2,
                     city="Naples",
                     country="Italy",
                     latitude=40.8530,
