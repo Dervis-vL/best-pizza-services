@@ -5,6 +5,7 @@ import 'just/setup.just'
 import 'just/check.just'
 import 'just/test.just'
 import 'just/build.just'
+import 'just/security.just'
 import 'just/version.just'
 import 'just/git.just'
 
