@@ -5,7 +5,7 @@ from __future__ import annotations
 import streamlit as st
 from pandera import typing as pa_typing
 
-from pizza_app import constants, schemas, utils
+from pizza_app import constants, enums, schemas, utils
 from pizza_platform_shared import enums as shared_enums
 
 
@@ -34,7 +34,7 @@ def render_filters(
         pre_categories = (
             [
                 cat.value
-                for cat in shared_enums.Categories
+                for cat in enums.Categories
                 if st.session_state.get(
                     f"{constants.QueryParam.CATEGORY}{cat.name}",
                     True,
@@ -42,7 +42,7 @@ def render_filters(
             ]
             + [
                 cat.value
-                for cat in shared_enums.CategoriesExcellent
+                for cat in enums.CategoriesExcellent
                 if st.session_state.get(
                     f"{constants.QueryParam.CATEGORY}{cat.name}",
                     False,
@@ -50,7 +50,7 @@ def render_filters(
             ]
             + [
                 cat.value
-                for cat in shared_enums.CategoriesSpecial
+                for cat in enums.CategoriesSpecial
                 if st.session_state.get(
                     f"{constants.QueryParam.CATEGORY}{cat.name}",
                     False,
@@ -116,7 +116,7 @@ def render_filters(
         st.subheader(constants.Filters.CATEGORIES)
         selected_categories = [
             cat.value
-            for cat in shared_enums.Categories
+            for cat in enums.Categories
             if st.checkbox(
                 label=cat.value,
                 value=True,
@@ -126,7 +126,7 @@ def render_filters(
         ]
 
         st.subheader(constants.Filters.EXCELLENT_CATEGORIES)
-        for cat in shared_enums.CategoriesExcellent:
+        for cat in enums.CategoriesExcellent:
             if st.checkbox(
                 label=cat.value,
                 value=False,
@@ -136,7 +136,7 @@ def render_filters(
                 selected_categories.append(cat.value)  # noqa: PERF401
 
         st.subheader(constants.Filters.SPECIAL_AWARDS)
-        for cat_special in shared_enums.CategoriesSpecial:
+        for cat_special in enums.CategoriesSpecial:
             if st.checkbox(
                 label=cat_special.value,
                 value=False,
