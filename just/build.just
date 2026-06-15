@@ -16,9 +16,9 @@ compose env_file=".env":
 compose-down env_file=".env":
     podman compose --env-file {{env_file}} down
 
-# Alembic upgrade
-alembic-upgrade:
-    {{run}} alembic upgrade head
+# Alembic upgrade: env_file arg selects the dotenv to load (default .env)
+alembic-upgrade env_file=".env":
+    set -a && . ./{{env_file}} && set +a && {{run}} alembic upgrade head
 
 # Alembic revision: message arg sets the revision message
 alembic-revision m:
