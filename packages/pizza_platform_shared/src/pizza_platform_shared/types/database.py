@@ -1,9 +1,8 @@
 """Database types used across the pizza app/services."""
 
-from typing import Annotated
+from typing import Annotated, Self
 
 import pydantic
-
 
 PostgresName = Annotated[
     str,
@@ -20,11 +19,28 @@ SchemaName = Annotated[
 
 TableName = PostgresName
 
+BucketName = Annotated[
+    str,
+    pydantic.StringConstraints(
+        pattern=r"^[a-z0-9][a-z0-9\-]*[a-z0-9]$",
+        min_length=3,
+        max_length=63,
+    ),
+]
+
+Region = Annotated[
+    str,
+    pydantic.StringConstraints(
+        pattern=r"^[a-z]{2}-[a-z]{3}$",
+        max_length=6,
+    ),
+]
+
 
 class TableNames(pydantic.BaseModel):
-    """Base model for table names. 
+    """Base model for table names.
 
-    Subclasses should define fields for each table name, 
+    Subclasses should define fields for each table name,
     and validation will ensure at least one is defined.
     """
 
@@ -32,7 +48,8 @@ class TableNames(pydantic.BaseModel):
 
     def __getitem__(self, key: str) -> str:
         """Allow dict-like access to table names."""
-        return getattr(self, key)
+        result: str = getattr(self, key)
+        return result
 
     def __contains__(self, key: str) -> bool:
         """Check if table name exists."""
@@ -40,13 +57,12 @@ class TableNames(pydantic.BaseModel):
 
     def values(self) -> list[TableName]:
         """Get all table names."""
-        return [
-            field_info.default for field_info in self.__class__.model_fields.values()
-        ]
+        return [field_info.default for field_info in self.__class__.model_fields.values()]
 
     @pydantic.model_validator(mode="after")
-    def validate_at_least_one_table(self) -> "TableNames":
+    def validate_at_least_one_table(self) -> Self:
         """Ensure at least one table is defined."""
         if not self.__class__.model_fields:
-            raise ValueError(f"{self.__class__.__name__} must define at least one table name field.")
+            msg = f"{self.__class__.__name__} must define at least one table name field."
+            raise ValueError(msg)
         return self

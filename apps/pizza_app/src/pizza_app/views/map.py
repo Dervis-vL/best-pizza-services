@@ -12,16 +12,15 @@ from pizza_app import schemas
 
 
 def render_map(
-    filtered: pa_typing.DataFrame[schemas.PizzeriaSchema],
+    filtered: pa_typing.DataFrame[schemas.LocationSchema],
     rankings_df: pa_typing.DataFrame[schemas.RankingSchema],
 ) -> None:
     """Build and render the Folium pizzeria map."""
-
     if filtered.empty:
-        avg_lat, avg_lng = 0, 0
+        avg_lat, avg_lng = 0.0, 0.0
     else:
-        avg_lat = filtered[schemas.PizzeriaSchema.latitude].mean()
-        avg_lng = filtered[schemas.PizzeriaSchema.longitude].mean()
+        avg_lat = filtered[schemas.LocationSchema.latitude].mean()
+        avg_lng = filtered[schemas.LocationSchema.longitude].mean()
 
     m = folium.Map(
         location=[avg_lat, avg_lng],
@@ -30,23 +29,23 @@ def render_map(
     )
 
     # Cluster plugin keeps the map readable with many markers
-    cluster = fo_plugins.MarkerCluster().add_to(m)
+    cluster = fo_plugins.MarkerCluster().add_to(m)  # type: ignore[no-untyped-call]
 
     for _, row in filtered.iterrows():
-        row: pa_typing.DataFrame[schemas.PizzeriaSchema]
         pizzeria_rankings = rankings_df[
-            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.PizzeriaSchema.slug]
+            rankings_df[schemas.RankingSchema.pizzeria_name] == row[schemas.LocationSchema.slug]
         ]
         table_rows = ""
         for category, group in pizzeria_rankings.groupby(
-            schemas.RankingSchema.category, sort=False
+            schemas.RankingSchema.category,
+            sort=False,
         ):
             entries = list(group.itertuples())
             for i, entry in enumerate(entries):
                 pos = f"#{int(entry.position)}" if not pd.isna(entry.position) else "—"
+                style = "padding-right:8px;vertical-align:top"
                 category_cell = (
-                    f'<td rowspan="{len(entries)}" style="padding-right:8px;vertical-align:top">'
-                    f"<b>{category}:</b></td>"
+                    f'<td rowspan="{len(entries)}" style="{style}"><b>{category}:</b></td>'
                     if i == 0
                     else ""
                 )
@@ -56,11 +55,14 @@ def render_map(
                     f"<td>{pos}</td></tr>"
                 )
         folium.Marker(
-            location=[row[schemas.PizzeriaSchema.latitude], row[schemas.PizzeriaSchema.longitude]],
+            location=[
+                row[schemas.LocationSchema.latitude],
+                row[schemas.LocationSchema.longitude],
+            ],
             popup=folium.Popup(f"<table>{table_rows}</table>", max_width=300),
-            tooltip=row[schemas.PizzeriaSchema.name],
+            tooltip=row[schemas.LocationSchema.name],
             icon=folium.Icon(color="red", icon="cutlery", prefix="fa"),
         ).add_to(cluster)
 
-    fo_plugins.LocateControl(auto_start=False, keepCurrentZoomLevel=True).add_to(m)
+    fo_plugins.LocateControl(auto_start=False, keepCurrentZoomLevel=True).add_to(m)  # type: ignore[no-untyped-call]
     st_folium(m, width="stretch", height=650, returned_objects=[])

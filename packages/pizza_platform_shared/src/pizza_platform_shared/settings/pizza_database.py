@@ -4,8 +4,8 @@ from typing import ClassVar
 
 import pydantic_settings
 
-from pizza_platform_shared.settings.base_database import DatabaseSettings
 from pizza_platform_shared import constants
+from pizza_platform_shared.settings.base_database import DatabaseSettings
 
 
 class PizzaDatabaseSettings(DatabaseSettings):

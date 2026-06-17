@@ -1,0 +1,195 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - name: Run checks
+        run: just check
+
+  build-dev:
+    if: github.ref == 'refs/heads/development'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      sha: ${{ steps.sha.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - id: sha
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push dev images
+        run: just push-ghcr-dev ${{ steps.sha.outputs.sha }}
+
+  scan:
+    if: github.ref == 'refs/heads/development'
+    needs: build-dev
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set lowercase owner
+        id: owner
+        run: echo "value=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Scan pizza-api
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-api:${{ needs.build-dev.outputs.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Scan pizza-app
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-app:${{ needs.build-dev.outputs.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/development'
+    needs: [scan, build-dev]
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Deploy to staging
+        run: |
+          echo "TODO: deploy ghcr.io/${{ github.repository_owner }}/pizza-api:${{ needs.build-dev.outputs.sha }}"
+
+  smoke-tests:
+    if: github.ref == 'refs/heads/development'
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Smoke test
+        run: |
+          echo "TODO: curl https://staging.your-domain.com/health"
+
+  release:
+    if: github.ref == 'refs/heads/main'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    outputs:
+      api_version: ${{ steps.versions.outputs.api }}
+      app_version: ${{ steps.versions.outputs.app }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          # Use GITHUB_TOKEN so the version-bump push does not re-trigger this workflow
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/setup
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump versions for changed projects
+        run: just version "${{ github.event.before }}"
+
+      - name: Capture bumped image versions
+        id: versions
+        run: |
+          echo "api=$(grep '^version' apps/pizza_api/pyproject.toml | head -1 | sed 's/.*= "//;s/"//')" >> "$GITHUB_OUTPUT"
+          echo "app=$(grep '^version' apps/pizza_app/pyproject.toml | head -1 | sed 's/.*= "//;s/"//')" >> "$GITHUB_OUTPUT"
+
+      - name: Push version bumps and tags
+        run: git push origin main --follow-tags
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push
+        run: just push-ghcr
+
+  scan-prod:
+    if: github.ref == 'refs/heads/main'
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set lowercase owner
+        id: owner
+        run: echo "value=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Scan pizza-api
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-api:${{ needs.release.outputs.api_version }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Scan pizza-app
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-app:${{ needs.release.outputs.app_version }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+  migrate:
+    if: github.ref == 'refs/heads/main'
+    needs: [release, scan-prod]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - name: Run database migrations
+        env:
+          PIZZA_DB_HOST: ${{ secrets.PIZZA_DB_HOST }}
+          PIZZA_DB_PORT: ${{ vars.PIZZA_DB_PORT }}
+          PIZZA_DB_USER_NAME: ${{ secrets.PIZZA_DB_USER_NAME }}
+          PIZZA_DB_NAME: ${{ vars.PIZZA_DB_NAME }}
+          PIZZA_DB_SCHEMA_NAME: ${{ vars.PIZZA_DB_SCHEMA_NAME }}
+          PIZZA_DB_PASSWORD: ${{ secrets.PIZZA_DB_PASSWORD }}
+          PIZZA_DB_SSL_ENABLED: ${{ vars.PIZZA_DB_SSL_ENABLED }}
+          MAINTENANCE_DB_HOST: ${{ secrets.PIZZA_DB_HOST }}
+          MAINTENANCE_DB_PORT: ${{ vars.PIZZA_DB_PORT }}
+          MAINTENANCE_DB_USER_NAME: ${{ secrets.PIZZA_DB_USER_NAME }}
+          MAINTENANCE_DB_NAME: ${{ vars.PIZZA_DB_NAME }}
+          MAINTENANCE_DB_SCHEMA_NAME: ${{ vars.PIZZA_DB_SCHEMA_NAME }}
+          MAINTENANCE_DB_PASSWORD: ${{ secrets.PIZZA_DB_PASSWORD }}
+          MAINTENANCE_DB_SSL_ENABLED: ${{ vars.PIZZA_DB_SSL_ENABLED }}
+        run: just alembic-upgrade

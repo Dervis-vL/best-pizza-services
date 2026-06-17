@@ -1,9 +1,8 @@
 """Settings for the pizza app."""
 
+from pizza_app.settings.pizza_api import PizzaAPISettings
 from pizza_platform_shared.settings import pizza_db
 
-from pizza_app.settings.application import Application
+pizza_api = PizzaAPISettings()
 
-app_settings = Application()
-
-__all__ = ["pizza_db", "app_settings"]
+__all__ = ["pizza_api", "pizza_db"]

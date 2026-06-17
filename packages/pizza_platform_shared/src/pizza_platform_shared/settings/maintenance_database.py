@@ -1,13 +1,13 @@
 """Settings for maintenance database (used for Alembic migrations)."""
 
-from pizza_platform_shared.settings.base_database import DatabaseSettings
 from pizza_platform_shared import config
+from pizza_platform_shared.settings.base_database import DatabaseSettings
 
 
 class MaintenanceDatabaseSettings(DatabaseSettings):
-    """Maintenance database settings for Alembic migrations. 
+    """Maintenance database settings for Alembic migrations.
 
-    Inherits from DatabaseSettings but does not require tables to be defined, 
+    Inherits from DatabaseSettings but does not require tables to be defined,
     since it's only used for connection info during migrations.
     """
 

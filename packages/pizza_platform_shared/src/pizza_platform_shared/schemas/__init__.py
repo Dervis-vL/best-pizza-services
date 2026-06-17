@@ -1,23 +1,30 @@
-"""Pizza platform pandera schemas."""
+"""Pizza platform pydantic schemas."""
 
-from pizza_platform_shared.schemas.category import CategorySchema
-from pizza_platform_shared.schemas.endpoints import (
-    RankingEndpointsSchema,
-    PizzeriaEndpointsSchema,
-)
-from pizza_platform_shared.schemas.locations import LocationSchema
-from pizza_platform_shared.schemas.pizzeria import PizzeriaSchema
-from pizza_platform_shared.schemas.ranked_edition import RankedEditionSchema
-from pizza_platform_shared.schemas.ranking_position import RankingPositionSchema
-from pizza_platform_shared.schemas.webpages import WebpagesSchema
+from pizza_platform_shared.schemas.award import AwardReadSchema, AwardSchema
+from pizza_platform_shared.schemas.category import CategoryReadSchema, CategorySchema
+from pizza_platform_shared.schemas.edition import EditionReadSchema, EditionSchema
+from pizza_platform_shared.schemas.location import LocationReadSchema, LocationSchema
+from pizza_platform_shared.schemas.pizzeria import PizzeriaReadSchema, PizzeriaSchema
+from pizza_platform_shared.schemas.ranking import RankingReadSchema, RankingSchema
+from pizza_platform_shared.schemas.webpage import WebpageReadSchema, WebpageSchema
+
+# Resolve forward references from TYPE_CHECKING-only imports
+CategorySchema.model_rebuild()
+EditionReadSchema.model_rebuild()
 
 __all__ = [
+    "AwardReadSchema",
+    "AwardSchema",
+    "CategoryReadSchema",
     "CategorySchema",
+    "EditionReadSchema",
+    "EditionSchema",
+    "LocationReadSchema",
     "LocationSchema",
-    "RankedEditionSchema",
-    "RankingEndpointsSchema",
-    "RankingPositionSchema",
-    "PizzeriaEndpointsSchema",
+    "PizzeriaReadSchema",
     "PizzeriaSchema",
-    "WebpagesSchema",
+    "RankingReadSchema",
+    "RankingSchema",
+    "WebpageReadSchema",
+    "WebpageSchema",
 ]

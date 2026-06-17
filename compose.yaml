@@ -1,0 +1,75 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"  # exposed to run alembic from your host
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET}
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"  # API port
+      - "9001:9001"  # Console port
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pizza_api:
+    build:
+      context: .
+      dockerfile: apps/pizza_api/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PIZZA_DB_HOST: db
+      STORAGE_ENDPOINT: http://minio:9000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+
+  pizza_app:
+    build:
+      context: .
+      dockerfile: apps/pizza_app/Dockerfile
+    env_file: .env
+    environment:
+      API_BASE_URL: http://pizza_api:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      pizza_api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+    name: pizza_pgdata
+  minio_data:
+    name: pizza_minio_data
