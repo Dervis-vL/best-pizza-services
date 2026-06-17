@@ -45,7 +45,10 @@ bump-project project:
         exit 1
     fi
     echo "Bumping {{project}} ($SCOPE)..."
-    (cd "{{project}}" && uv run bump-my-version bump "$SCOPE")
+    # --no-sync: the env is already synced by CI setup; without it, `uv run`
+    # rewrites uv.lock (member versions change) and dirties the tree, which
+    # makes the next project's bump-my-version abort on its clean-tree check.
+    (cd "{{project}}" && uv run --no-sync bump-my-version bump "$SCOPE")
 
 # Reset SCOPE to placeholder after a successful bump
 reset-scope project:
@@ -102,8 +105,16 @@ version base_sha="HEAD^":
     while IFS= read -r project; do
         just check-changelog "$project"
     done <<< "$changed"
-    # Bump all projects and reset their scope
+    # Bump all projects (each makes its own clean commit + tag)
     while IFS= read -r project; do
         just bump-project "$project"
-        just reset-scope "$project"
     done <<< "$changed"
+    # Reset scopes and refresh the lockfile once, in a single follow-up commit.
+    # Doing this inside the bump loop would dirty the tree and abort the next bump.
+    while IFS= read -r project; do
+        just reset-scope "$project"
+        git add "$project/release_scope.env"
+    done <<< "$changed"
+    uv lock
+    git add uv.lock
+    git commit --no-verify -m "chore: reset release scopes and refresh lockfile"
