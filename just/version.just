@@ -14,6 +14,70 @@ changed-projects base_sha="HEAD^":
         fi
     done
 
+# Projects that need a release: the directly-changed ones plus any project whose
+# (transitive) workspace dependencies changed. Dependencies are read from each
+# project's [project] dependencies, so this stays in sync with the tomls.
+affected-projects base_sha="HEAD^":
+    #!/usr/bin/env bash
+    # No associative arrays here so this also runs on macOS's default bash 3.2.
+    set -euo pipefail
+    changed="$(just changed-projects "{{base_sha}}")"
+    if [[ -z "$changed" ]]; then
+        exit 0
+    fi
+    # Resolve a workspace package name to its project dir (empty if not a member).
+    # Always returns 0 so a "not found" does not trip set -e via `d=$(...)`.
+    dir_of_name() {
+        local n="$1" dir name
+        for dir in {{_projects}}; do
+            name="$(grep -m1 '^name' "$dir/pyproject.toml" | sed -E 's/^name *= *"//; s/".*//')"
+            if [[ "$name" == "$n" ]]; then
+                echo "$dir"
+                return 0
+            fi
+        done
+        return 0
+    }
+    # List the workspace-member dirs that a project directly depends on, parsed
+    # from its [project] dependencies.
+    deps_of_dir() {
+        local dir="$1" block entry base d
+        block="$(awk '/^dependencies *= *\[/{f=1;next} /^[[:space:]]*\]/{f=0} f{print}' "$dir/pyproject.toml")"
+        while IFS= read -r entry; do
+            base="$(sed -E 's/[][<>=!~ ].*//' <<<"$entry")"
+            d="$(dir_of_name "$base")"
+            if [[ -n "$d" ]]; then
+                echo "$d"
+            fi
+        done < <(grep -oE '"[^"]+"' <<<"$block" | tr -d '"')
+    }
+    is_in() { grep -qxF "$1" <<<"$2"; }
+    # Seed with directly-changed projects, then mark a project affected whenever
+    # one of its deps is affected. Repeat to a fixpoint for transitive chains.
+    affected="$changed"
+    progress=1
+    while (( progress )); do
+        progress=0
+        for dir in {{_projects}}; do
+            if is_in "$dir" "$affected"; then
+                continue
+            fi
+            for d in $(deps_of_dir "$dir"); do
+                if is_in "$d" "$affected"; then
+                    affected="$affected"$'\n'"$dir"
+                    progress=1
+                    break
+                fi
+            done
+        done
+    done
+    # Emit in canonical _projects order.
+    for dir in {{_projects}}; do
+        if is_in "$dir" "$affected"; then
+            echo "$dir"
+        fi
+    done
+
 # Fail if CHANGELOG.md in project does not contain an [Unreleased] section
 check-changelog project:
     #!/usr/bin/env bash
@@ -66,12 +130,12 @@ version-check base_sha="":
     if [[ -z "$base" ]]; then
         base=$(git merge-base HEAD main 2>/dev/null || echo "HEAD^")
     fi
-    changed=$(just changed-projects "$base")
+    changed=$(just affected-projects "$base")
     if [[ -z "$changed" ]]; then
         echo "No project changes detected; nothing to check"
         exit 0
     fi
-    echo "Changed projects:"
+    echo "Affected projects (changed + dependents):"
     echo "$changed"
     while IFS= read -r project; do
         just check-changelog "$project"
@@ -94,12 +158,12 @@ version-check base_sha="":
 version base_sha="HEAD^":
     #!/usr/bin/env bash
     set -euo pipefail
-    changed=$(just changed-projects "{{base_sha}}")
+    changed=$(just affected-projects "{{base_sha}}")
     if [[ -z "$changed" ]]; then
         echo "No project changes detected; nothing to bump"
         exit 0
     fi
-    echo "Changed projects:"
+    echo "Affected projects (changed + dependents):"
     echo "$changed"
     # Validate all changelogs before touching anything
     while IFS= read -r project; do
