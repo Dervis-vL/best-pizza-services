@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          # Full history + tags so version-check can diff each project
+          # against its last release tag (<name>/v*).
+          fetch-depth: 0
       - uses: ./.github/actions/setup
 
       - name: Run checks
@@ -114,7 +118,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump versions for changed projects
-        run: just version "${{ github.event.before }}"
+        run: just version
 
       - name: Capture bumped image versions
         id: versions
