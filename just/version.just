@@ -1,15 +1,19 @@
 # Projects tracked for per-project versioning
 _projects := "apps/pizza_api apps/pizza_app packages/pizza_platform_shared services/geolocation services/pizza_data_collector services/pizza_data_storage"
 
-# Print which projects have changes between base_sha and HEAD (default: HEAD^)
-changed-projects base_sha="HEAD^":
+# Print which projects have changed since their last release tag (<name>/v*).
+# A project with no tag yet is treated as needing its first release. The
+# release_scope.env is excluded: it is release metadata (and the release flow
+# rewrites it after tagging), not a source change that should trigger a release.
+changed-projects:
     #!/usr/bin/env bash
     set -euo pipefail
-    if [[ "{{base_sha}}" == "0000000000000000000000000000000000000000" ]]; then
-        exit 0
-    fi
     for project in {{_projects}}; do
-        if git diff --name-only "{{base_sha}}" HEAD -- "$project" | grep -q .; then
+        name="$(grep -m1 '^name' "$project/pyproject.toml" | sed -E 's/^name *= *"//; s/".*//')"
+        last_tag="$(git describe --tags --match "$name/v*" --abbrev=0 2>/dev/null || true)"
+        if [[ -z "$last_tag" ]]; then
+            echo "$project"
+        elif git diff --name-only "$last_tag" HEAD -- "$project" ":(exclude)$project/release_scope.env" | grep -q .; then
             echo "$project"
         fi
     done
@@ -17,11 +21,11 @@ changed-projects base_sha="HEAD^":
 # Projects that need a release: the directly-changed ones plus any project whose
 # (transitive) workspace dependencies changed. Dependencies are read from each
 # project's [project] dependencies, so this stays in sync with the tomls.
-affected-projects base_sha="HEAD^":
+affected-projects:
     #!/usr/bin/env bash
     # No associative arrays here so this also runs on macOS's default bash 3.2.
     set -euo pipefail
-    changed="$(just changed-projects "{{base_sha}}")"
+    changed="$(just changed-projects)"
     if [[ -z "$changed" ]]; then
         exit 0
     fi
@@ -123,14 +127,10 @@ reset-scope project:
     echo "✓ Reset SCOPE to placeholder in $env_file"
 
 # Validate changelogs and release scopes for changed projects; no bumping
-version-check base_sha="":
+version-check:
     #!/usr/bin/env bash
     set -euo pipefail
-    base="{{base_sha}}"
-    if [[ -z "$base" ]]; then
-        base=$(git merge-base HEAD main 2>/dev/null || echo "HEAD^")
-    fi
-    changed=$(just affected-projects "$base")
+    changed=$(just affected-projects)
     if [[ -z "$changed" ]]; then
         echo "No project changes detected; nothing to check"
         exit 0
@@ -155,10 +155,10 @@ version-check base_sha="":
     @echo "{{bold}}{{green}}✓ Version check passed for all changed projects.{{nc}}"
 
 # CI entry point: detect changed projects, validate changelogs, bump versions
-version base_sha="HEAD^":
+version:
     #!/usr/bin/env bash
     set -euo pipefail
-    changed=$(just affected-projects "{{base_sha}}")
+    changed=$(just affected-projects)
     if [[ -z "$changed" ]]; then
         echo "No project changes detected; nothing to bump"
         exit 0
