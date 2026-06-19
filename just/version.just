@@ -152,7 +152,7 @@ version-check:
         fi
         echo "✓ SCOPE=$SCOPE in $env_file"
     done <<< "$changed"
-    @echo "{{bold}}{{green}}✓ Version check passed for all changed projects.{{nc}}"
+    echo "{{bold}}{{green}}✓ Version check passed for all changed projects.{{nc}}"
 
 # CI entry point: detect changed projects, validate changelogs, bump versions
 version:

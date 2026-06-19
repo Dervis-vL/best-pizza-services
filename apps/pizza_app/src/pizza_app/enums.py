@@ -20,7 +20,7 @@ class Categories(BaseCategories):
     """Enum for best pizza categories."""
 
     ITALY = "Top Pizza Italia"
-    WORLD = "Top World"
+    WORLD = "Top Pizza World"
     EUROPE = "Top Pizza Europa"
     LATIN_AMERICA = "Top Pizza Latin America"
     ASIA_PACIFIC = "Top Pizza Asia-Pacific"
