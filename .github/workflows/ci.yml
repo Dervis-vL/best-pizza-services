@@ -2,6 +2,10 @@ name: CI
 
 on:
   push:
+    # sync/** are throwaway back-merge branches (main -> development); they carry
+    # no new work, so don't spend a CI run on them. All other branches still run.
+    branches-ignore:
+      - 'sync/**'
 
 jobs:
   check:
@@ -199,3 +203,41 @@ jobs:
           MAINTENANCE_DB_PASSWORD: ${{ secrets.PIZZA_DB_PASSWORD }}
           MAINTENANCE_DB_SSL_ENABLED: ${{ vars.PIZZA_DB_SSL_ENABLED }}
         run: just alembic-upgrade
+
+  back-merge:
+    # After release lands on main, open a PR syncing the version bumps back into
+    # development so it doesn't fall behind. Uses a throwaway sync/ branch as the
+    # PR head so main is NEVER a deletable head branch (auto-delete-on-merge once
+    # deleted main itself). `needs: release` means this only runs on a real
+    # release, not on the bot's bump-commit re-trigger (release is skipped then).
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # The freshly bumped main tip that `release` just pushed (not the
+          # commit that triggered this run, which predates the bump).
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - name: Open back-merge PR (main -> development)
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          git push --force origin HEAD:refs/heads/sync/main-to-dev
+          if gh pr view sync/main-to-dev --json state --jq .state 2>/dev/null | grep -qx OPEN; then
+            echo "Back-merge PR already open; force-push updated it."
+          else
+            # [skip ci] in the title lands in the merge commit, so merging this
+            # PR into development does not re-run the full pipeline. Merge with a
+            # merge commit or squash (not rebase) so the marker is preserved.
+            gh pr create \
+              --base development \
+              --head sync/main-to-dev \
+              --title "[skip ci] chore: back-merge release into development" \
+              --body "Automated sync of version bumps, changelog, and tags from main into development. Resolve any CHANGELOG / release_scope.env conflicts on merge."
+          fi

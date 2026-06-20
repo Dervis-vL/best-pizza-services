@@ -4,7 +4,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Final
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.openapi.docs import (
     get_redoc_html,
     get_swagger_ui_html,
@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 
 from pizza_api import constants, routers, settings
 from pizza_api.dependencies.engine import create_engine
+from pizza_api.dependencies.security import require_api_key
 
 
 @asynccontextmanager
@@ -40,8 +41,8 @@ app.mount(
     name="static",
 )
 
-app.include_router(routers.categories.router)
-app.include_router(routers.maintenance.router)
+app.include_router(routers.categories.router, dependencies=[Depends(require_api_key)])
+app.include_router(routers.maintenance.router, dependencies=[Depends(require_api_key)])
 app.include_router(routers.pizzerias.router)
 
 
