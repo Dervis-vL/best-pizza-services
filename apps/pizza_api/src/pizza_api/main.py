@@ -44,16 +44,11 @@ app.mount(
 app.include_router(routers.categories.router, dependencies=[Depends(require_api_key)])
 app.include_router(routers.maintenance.router, dependencies=[Depends(require_api_key)])
 app.include_router(routers.pizzerias.router)
+app.include_router(routers.health.router)
 
 
 _OPENAPI_URL: Final[str] = app.openapi_url or "/openapi.json"
 _OAUTH2_REDIRECT_URL: Final[str] = app.swagger_ui_oauth2_redirect_url or "/docs/oauth2-redirect"
-
-
-@app.get("/health")
-async def health() -> dict[str, str]:
-    """Health check endpoint."""
-    return {"status": "ok"}
 
 
 @app.get("/docs", include_in_schema=False)
