@@ -7,9 +7,11 @@ This is to avoid circular imports and to keep the dependency graph clean.
 from pizza_api.dependencies.categories import AddCategoryUCDep
 from pizza_api.dependencies.maintenance import ProcessPendingUCDep
 from pizza_api.dependencies.pizzerias import ReadPizzeriasUCDep
+from pizza_api.dependencies.security import RequireApiKeyDep
 
 __all__ = [
     "AddCategoryUCDep",
     "ProcessPendingUCDep",
     "ReadPizzeriasUCDep",
+    "RequireApiKeyDep",
 ]

@@ -34,3 +34,10 @@ class ApplicationSettings(pyd_settings.BaseSettings):
         bool,
         pyd.Field(description="Whether to enable debug mode.", default=False),
     ]
+    key: Annotated[
+        pyd.SecretStr,
+        pyd.Field(
+            description="Shared secret required for all update and write operations.",
+            default=pyd.SecretStr(""),
+        ),
+    ]
