@@ -2,9 +2,7 @@
 
 from typing import Final
 
-import yarl
-
-URL_HOME: Final = yarl.URL("https://www.50toppizza.it/")
+RETRYABLE_STATUS: Final[frozenset[int]] = frozenset({500, 502, 503, 504})
 
 
 class Coordinate:

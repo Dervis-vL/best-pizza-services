@@ -12,6 +12,10 @@ class PizzaDataScraperError(Exception):
         super().__init__(self.message)
 
 
+class TransientFetchError(Exception):
+    """Retryable upstream failure (5xx / timeout)."""
+
+
 class URLExtractionError(PizzaDataScraperError):
     """Exception raised when URL extraction from a card element fails."""
 
