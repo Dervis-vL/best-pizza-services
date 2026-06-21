@@ -1248,6 +1248,7 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "pizza-platform-shared" },
     { name = "pydantic" },
+    { name = "tenacity" },
     { name = "yarl" },
 ]
 
@@ -1256,6 +1257,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
     { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "tenacity", specifier = ">=9.1.4" },
     { name = "yarl", specifier = ">=1.22.0" },
 ]
 
