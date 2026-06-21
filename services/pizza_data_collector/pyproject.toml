@@ -13,8 +13,9 @@ requires-python = ">=3.14"
 dependencies = [
     "beautifulsoup4>=4.14.3",
     "pydantic>=2.12.5",
-    "yarl>=1.22.0",
     "pizza-platform-shared",
+    "tenacity>=9.1.4",
+    "pydantic-settings>=2.13.1",
 ]
 
 [tool.hatch.build.targets.wheel]
