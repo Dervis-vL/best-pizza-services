@@ -39,8 +39,11 @@ class HttpClient:  # pylint: disable=too-few-public-methods
                 raise TransientFetchError(msg) from e
             logger.warning("Non-retryable HTTP %s fetching %s", e.code, url)
             raise  # 4xx etc. so do not retry
+        except URLError as e:
+            msg = f"connection error fetching {url}: {e.reason}"
+            raise TransientFetchError(msg) from e
         except TimeoutError as e:
-            msg = "Timeout"
+            msg = f"Timeout fetching {url}"
             raise TransientFetchError(msg) from e
 
     def fetch(self, url: str) -> bytes | None:
@@ -63,8 +66,5 @@ class HttpClient:  # pylint: disable=too-few-public-methods
         except RetryError:
             logger.warning("Giving up on %s after %d attempts", url, self._cfg.max_attempts)
             return None
-        except HTTPError as e:
-            logger.warning("HTTP %s fetching %s", e.code, url)
-        except URLError as e:
-            logger.warning("URL error fetching %s: %s", url, e.reason)
-        return None
+        except HTTPError:
+            return None
