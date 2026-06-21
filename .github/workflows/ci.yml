@@ -10,13 +10,14 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      UV_FROZEN: "1"  # CI should fail if any dependencies are missing or mismatched
     steps:
       - uses: actions/checkout@v6
         with:
           # Full history + tags so version-check can diff each project
           fetch-depth: 0
       - uses: ./.github/actions/setup
-
       - name: Run checks
         run: just check
 
