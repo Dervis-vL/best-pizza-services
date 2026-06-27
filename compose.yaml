@@ -68,6 +68,23 @@ services:
       pizza_api:
         condition: service_healthy
 
+  # WIP
+  pizza_worker:
+    build:
+      context: .
+      dockerfile: apps/pizza_worker/Dockerfile
+    profiles:
+      - worker
+    env_file: .env
+    environment:
+      PIZZA_DB_HOST: db
+      STORAGE_ENDPOINT: http://minio:9000
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
 volumes:
   pgdata:
     name: pizza_pgdata
