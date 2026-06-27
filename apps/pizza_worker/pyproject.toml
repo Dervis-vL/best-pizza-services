@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "pizza-worker"
 version = "0.0.0"
-description = "A Streamlit pizza platform data updating/adding worker"
+description = "Background batch worker that runs the pizza platform scrape + parse pipelines as a Scaleway Job"
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.14"
