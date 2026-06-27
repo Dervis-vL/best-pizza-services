@@ -1,12 +1,15 @@
 api_config    := "apps/pizza_api/pyproject.toml"
 app_config    := "apps/pizza_app/pyproject.toml"
+worker_config := "apps/pizza_worker/pyproject.toml"
 
 _github_user  := `git remote get-url origin | sed 's/.*github\.com[:/]\([^/]*\)\/.*/\1/' | tr '[:upper:]' '[:lower:]'`
 _api_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
 _app_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
+_worker_image := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", worker_config)
 _registry_ghcr := "ghcr.io/" + _github_user
 _api_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
 _app_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
+_worker_version := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", worker_config)
 
 # Run podman compose up
 compose env_file=".env":
@@ -41,21 +44,30 @@ build-api:
 build-app:
     podman build -f apps/pizza_app/Dockerfile -t {{_registry_ghcr}}/{{_app_image}}:{{_app_version}} .
 
-# Build both app and api service images
-build: build-api build-app
+# Build the batch worker image
+build-worker:
+    podman build -f apps/pizza_worker/Dockerfile -t {{_registry_ghcr}}/{{_worker_image}}:{{_worker_version}} .
+
+# Build all deployable images (api, app, worker)
+build: build-api build-app build-worker
 
 # Build and push dev images to GHCR tagged with a given SHA (e.g. `just push-ghcr-dev abc1234`)
 push-ghcr-dev sha:
     podman build -f apps/pizza_api/Dockerfile -t {{_registry_ghcr}}/{{_api_image}}:{{sha}} .
     podman build -f apps/pizza_app/Dockerfile -t {{_registry_ghcr}}/{{_app_image}}:{{sha}} .
+    podman build -f apps/pizza_worker/Dockerfile -t {{_registry_ghcr}}/{{_worker_image}}:{{sha}} .
     podman push {{_registry_ghcr}}/{{_api_image}}:{{sha}}
     podman push {{_registry_ghcr}}/{{_app_image}}:{{sha}}
+    podman push {{_registry_ghcr}}/{{_worker_image}}:{{sha}}
 
-# Build and push both images to GHCR, also tagging latest
+# Build and push all images to GHCR, also tagging latest
 push-ghcr: build
     podman push {{_registry_ghcr}}/{{_api_image}}:{{_api_version}}
     podman push {{_registry_ghcr}}/{{_app_image}}:{{_app_version}}
+    podman push {{_registry_ghcr}}/{{_worker_image}}:{{_worker_version}}
     podman tag  {{_registry_ghcr}}/{{_api_image}}:{{_api_version}} {{_registry_ghcr}}/{{_api_image}}:latest
     podman tag  {{_registry_ghcr}}/{{_app_image}}:{{_app_version}} {{_registry_ghcr}}/{{_app_image}}:latest
+    podman tag  {{_registry_ghcr}}/{{_worker_image}}:{{_worker_version}} {{_registry_ghcr}}/{{_worker_image}}:latest
     podman push {{_registry_ghcr}}/{{_api_image}}:latest
     podman push {{_registry_ghcr}}/{{_app_image}}:latest
+    podman push {{_registry_ghcr}}/{{_worker_image}}:latest
