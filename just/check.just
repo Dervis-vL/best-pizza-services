@@ -26,7 +26,7 @@ lint:
     @echo "{{bold}}{{green}}✓ All lint checks passed.{{nc}}"
 
 
-# Check dependecies for all workspace members
+# Check dependencies for all workspace members
 deps-check:
     @echo "{{bold}}{{green}}🔍 Checking dependencies...{{nc}}"
     {{run}} --directory apps/pizza_api deptry .
@@ -43,3 +43,7 @@ spell-check:
     @echo "{{bold}}{{green}}🔍 Spell checking...{{nc}}"
     {{run}} codespell apps packages services README.md
     @echo "{{bold}}{{green}}✓ All spelling is valid.{{nc}}"
+
+# Check for stale lock files
+lock-check:
+    uv lock --check
