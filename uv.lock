@@ -14,6 +14,7 @@ members = [
     "pizza-data-collector",
     "pizza-data-storage",
     "pizza-platform-shared",
+    "pizza-worker",
 ]
 
 [manifest.dependency-groups]
@@ -1319,6 +1320,23 @@ requires-dist = [
 dev = [
     { name = "boto3-stubs", extras = ["essential"], specifier = ">=1.43.8" },
     { name = "pandas-stubs", specifier = ">=3.0.0.260204" },
+]
+
+[[package]]
+name = "pizza-worker"
+version = "0.0.0"
+source = { editable = "apps/pizza_worker" }
+dependencies = [
+    { name = "pizza-platform-shared" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
+    { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "pydantic-settings", specifier = ">=2.12.0" },
 ]
 
 [[package]]

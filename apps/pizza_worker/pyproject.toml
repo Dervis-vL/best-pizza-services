@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pizza-worker"
+version = "0.0.0"
+description = "A Streamlit pizza platform data updating/adding worker"
+authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.14"
+
+dependencies = [
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
+    "pizza-platform-shared",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pizza_worker"]
+
+[tool.uv.sources]
+pizza-platform-shared = { workspace = true }
+
+[tool.deptry]
+ignore_notebooks = true
+per_rule_ignores = { DEP002 = [
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-xdist"
+], DEP003 = [
+    "pizza_worker",
+    "pizza_platform_shared",
+] }
+
+[tool.bumpversion]
+current_version = "0.0.0"
+commit          = true
+tag             = true
+tag_name        = "pizza-worker/v{new_version}"
+tag_message     = "Release pizza-worker {new_version}"
+message         = "chore(pizza-worker): bump {current_version} → {new_version}"
+commit_args     = "--no-verify"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search   = 'version = "{current_version}"'
+replace  = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search   = "[Unreleased]"
+replace  = "## [{new_version}] - {now:%Y-%m-%d}"
