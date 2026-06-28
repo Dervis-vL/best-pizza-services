@@ -13,4 +13,4 @@ class WorkerSettings(pyd_settings.BaseSettings):
         extra="ignore",
     )
 
-    job_id: int = pyd.Field(..., description="Worker job execution ID.")
+    log_level: str = pyd.Field(default="INFO", description="Logging level for the worker run.")
