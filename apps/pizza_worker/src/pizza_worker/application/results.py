@@ -1,4 +1,4 @@
-"""Pizza API use case dataclasses."""
+"""Pizza worker use case dataclasses."""
 
 from __future__ import annotations
 
