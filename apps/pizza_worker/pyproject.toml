@@ -16,6 +16,9 @@ dependencies = [
     "pizza-platform-shared",
 ]
 
+[project.scripts]
+pizza-worker = "pizza_worker.cli:app"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/pizza_worker"]
 
