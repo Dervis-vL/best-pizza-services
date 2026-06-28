@@ -18,7 +18,6 @@ green := `tput setaf 2 2>/dev/null || true`
 default:
     @just --list
 
-
 # Run all checks: fmt, test, typecheck, lint, deps-check, version-check
 check: fmt lock-check typecheck lint deps-check spell-check test version-check
     @echo "{{bold}}{{green}}✓ All checks passed.{{nc}}"

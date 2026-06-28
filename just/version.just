@@ -1,5 +1,5 @@
 # Projects tracked for per-project versioning
-_projects := "apps/pizza_api apps/pizza_app packages/pizza_platform_shared services/geolocation services/pizza_data_collector services/pizza_data_storage"
+_projects := "apps/pizza_api apps/pizza_app apps/pizza_worker packages/pizza_platform_shared services/geolocation services/pizza_data_collector services/pizza_data_storage"
 
 # Print which projects have changed since their last release tag (<name>/v*).
 # A project with no tag yet is treated as needing its first release. The

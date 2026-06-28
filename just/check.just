@@ -16,6 +16,7 @@ typecheck:
     {{run}} mypy --package pizza_platform_shared --strict
     {{run}} mypy --package pizza_app --strict
     {{run}} mypy --package pizza_api --strict
+    {{run}} mypy --package pizza_worker --strict
     @echo "{{bold}}{{green}}✓ All type checks passed.{{nc}}"
 
 
@@ -31,6 +32,7 @@ deps-check:
     @echo "{{bold}}{{green}}🔍 Checking dependencies...{{nc}}"
     {{run}} --directory apps/pizza_api deptry .
     {{run}} --directory apps/pizza_app deptry .
+    {{run}} --directory apps/pizza_worker deptry .
     {{run}} --directory packages/pizza_platform_shared deptry .
     {{run}} --directory services/geolocation deptry .
     {{run}} --directory services/pizza_data_collector deptry .
