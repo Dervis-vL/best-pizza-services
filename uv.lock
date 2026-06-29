@@ -1191,8 +1191,6 @@ version = "0.4.0"
 source = { editable = "apps/pizza_api" }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
-    { name = "geolocation" },
-    { name = "pizza-data-collector" },
     { name = "pizza-data-storage" },
     { name = "pizza-platform-shared" },
     { name = "pydantic" },
@@ -1204,8 +1202,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.136.1" },
-    { name = "geolocation", editable = "services/geolocation" },
-    { name = "pizza-data-collector", editable = "services/pizza_data_collector" },
     { name = "pizza-data-storage", editable = "services/pizza_data_storage" },
     { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
@@ -1329,6 +1325,9 @@ name = "pizza-worker"
 version = "0.0.0"
 source = { editable = "apps/pizza_worker" }
 dependencies = [
+    { name = "geolocation" },
+    { name = "pizza-data-collector" },
+    { name = "pizza-data-storage" },
     { name = "pizza-platform-shared" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
@@ -1336,6 +1335,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "geolocation", editable = "services/geolocation" },
+    { name = "pizza-data-collector", editable = "services/pizza_data_collector" },
+    { name = "pizza-data-storage", editable = "services/pizza_data_storage" },
     { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },

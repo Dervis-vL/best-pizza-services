@@ -14,6 +14,9 @@ dependencies = [
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "pizza-platform-shared",
+    "pizza-data-collector",
+    "pizza-data-storage",
+    "geolocation",
 ]
 
 [project.scripts]
@@ -24,6 +27,9 @@ packages = ["src/pizza_worker"]
 
 [tool.uv.sources]
 pizza-platform-shared = { workspace = true }
+pizza-data-collector = { workspace = true }
+pizza-data-storage = { workspace = true }
+geolocation = { workspace = true }
 
 [tool.deptry]
 ignore_notebooks = true
@@ -34,6 +40,9 @@ per_rule_ignores = { DEP002 = [
 ], DEP003 = [
     "pizza_worker",
     "pizza_platform_shared",
+    "pizza-data-collector",
+    "pizza-data-storage",
+    "geolocation",
 ] }
 
 [tool.bumpversion]
