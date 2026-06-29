@@ -17,6 +17,8 @@ dependencies = [
     "pizza-data-collector",
     "pizza-data-storage",
     "geolocation",
+    "typer>=0.25.0",
+    "sqlalchemy>=2.0.47",
 ]
 
 [project.scripts]

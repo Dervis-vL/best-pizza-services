@@ -1331,6 +1331,8 @@ dependencies = [
     { name = "pizza-platform-shared" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
+    { name = "sqlalchemy" },
+    { name = "typer" },
 ]
 
 [package.metadata]
@@ -1341,6 +1343,8 @@ requires-dist = [
     { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
+    { name = "sqlalchemy", specifier = ">=2.0.47" },
+    { name = "typer", specifier = ">=0.25.0" },
 ]
 
 [[package]]
