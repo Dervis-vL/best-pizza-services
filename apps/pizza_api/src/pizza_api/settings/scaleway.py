@@ -11,8 +11,13 @@ class ScalewaySettings(pyd_settings.BaseSettings):
         env_prefix="SCW_",
         env_file=".env",
         extra="ignore",
+        validate_default=True,
     )
 
+    api_url: pyd.HttpUrl = pyd.Field(
+        default=pyd.HttpUrl("https://api.scaleway.com"), description="API endpoint."
+    )
+    api_allow_insecure: bool = pyd.Field(default=False, description="Allow plain HTTP.")
     access_key: pyd.SecretStr = pyd.Field(description="Scaleway API access key.")
     secret_key: pyd.SecretStr = pyd.Field(description="Scaleway API secret key.")
     default_project_id: str = pyd.Field(description="Scaleway project id.")

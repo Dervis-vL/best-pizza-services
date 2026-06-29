@@ -15,6 +15,8 @@ class WorkerJobsTrigger:
 
     def __init__(self) -> None:
         client = Client(
+            api_url=settings.scw.api_url,
+            api_allow_insecure=settings.scw.api_allow_insecure,
             access_key=settings.scw.access_key.get_secret_value(),  # pylint: disable=no-member
             secret_key=settings.scw.secret_key.get_secret_value(),  # pylint: disable=no-member
             default_project_id=settings.scw.default_project_id,
