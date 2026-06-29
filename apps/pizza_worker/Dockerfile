@@ -7,3 +7,54 @@ WORKDIR /app
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     UV_PYTHON_DOWNLOADS=0
+
+# Copy workspace first; this layer is cached unless deps change
+COPY pyproject.toml uv.lock ./
+COPY apps/pizza_api/pyproject.toml apps/pizza_api/pyproject.toml
+COPY apps/pizza_api/README.md apps/pizza_api/README.md
+COPY apps/pizza_app/pyproject.toml apps/pizza_app/pyproject.toml
+COPY apps/pizza_app/README.md apps/pizza_app/README.md
+COPY apps/pizza_worker/pyproject.toml apps/pizza_worker/pyproject.toml
+COPY apps/pizza_worker/README.md apps/pizza_worker/README.md
+COPY packages/pizza_platform_shared/pyproject.toml packages/pizza_platform_shared/pyproject.toml
+COPY packages/pizza_platform_shared/README.md packages/pizza_platform_shared/README.md
+COPY services/pizza_data_collector/pyproject.toml services/pizza_data_collector/pyproject.toml
+COPY services/pizza_data_collector/README.md services/pizza_data_collector/README.md
+COPY services/pizza_data_storage/pyproject.toml services/pizza_data_storage/pyproject.toml
+COPY services/pizza_data_storage/README.md services/pizza_data_storage/README.md
+COPY services/geolocation/pyproject.toml services/geolocation/pyproject.toml
+COPY services/geolocation/README.md services/geolocation/README.md
+
+# Install external dependencies without the workspace packages themselves
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --package pizza_worker --no-dev --frozen --no-install-workspace
+
+# Copy only the source trees needed by pizza_worker and its workspace deps
+COPY apps/pizza_worker/src apps/pizza_worker/src
+COPY packages/pizza_platform_shared/src packages/pizza_platform_shared/src
+COPY services/pizza_data_storage/src services/pizza_data_storage/src
+COPY services/pizza_data_collector/src services/pizza_data_collector/src
+COPY services/geolocation/src services/geolocation/src
+
+# Install workspace packages as non-editable wheels so only .venv is needed at runtime
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --package pizza_worker --no-dev --locked --no-editable
+
+
+FROM python:3.14-slim AS production
+
+WORKDIR /app
+
+COPY --from=builder /app/.venv /app/.venv
+
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
+
+RUN groupadd --system appgroup && \
+    useradd --system --gid appgroup --no-create-home appuser
+
+USER appuser
+
+# Run-to-completion job: ENTRYPOINT is the CLI, default mode is run-pending.
+ENTRYPOINT ["pizza-worker"]
+CMD ["run-pending"]

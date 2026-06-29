@@ -14,6 +14,8 @@ COPY apps/pizza_api/pyproject.toml apps/pizza_api/pyproject.toml
 COPY apps/pizza_api/README.md apps/pizza_api/README.md
 COPY apps/pizza_app/pyproject.toml apps/pizza_app/pyproject.toml
 COPY apps/pizza_app/README.md apps/pizza_app/README.md
+COPY apps/pizza_worker/pyproject.toml apps/pizza_worker/pyproject.toml
+COPY apps/pizza_worker/README.md apps/pizza_worker/README.md
 COPY packages/pizza_platform_shared/pyproject.toml packages/pizza_platform_shared/pyproject.toml
 COPY packages/pizza_platform_shared/README.md packages/pizza_platform_shared/README.md
 COPY services/pizza_data_collector/pyproject.toml services/pizza_data_collector/pyproject.toml
