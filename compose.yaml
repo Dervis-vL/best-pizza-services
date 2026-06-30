@@ -97,7 +97,7 @@ services:
       PIZZA_DB_HOST: db
       STORAGE_ENDPOINT: http://minio:9000
     volumes:
-      - ${SCW_MOCK_SCRIPT:-./dev/scaleway-mock/serve.py}:/mock/serve.py:ro
+      - ${SCW_MOCK_SCRIPT:-./scripts/serve_local.py}:/mock/serve.py:ro
     entrypoint: ["python", "/mock/serve.py"]
     ports: ["8080:8080"]
     depends_on:
