@@ -15,7 +15,7 @@ logger = logging.getLogger("pizza_api")
 @router.post(
     "/all",
     status_code=status.HTTP_200_OK,
-    response_model=responses.ProcessPendingResponse,
+    response_model=responses.JobTriggerResponse,
     summary="Trigger a worker run that scrapes + parses all pending items",
 )
 def process_pending(
