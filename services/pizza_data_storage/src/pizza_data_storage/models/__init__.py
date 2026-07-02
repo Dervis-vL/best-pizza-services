@@ -3,6 +3,7 @@
 from pizza_data_storage.models.awards import Awards
 from pizza_data_storage.models.base import BaseModel
 from pizza_data_storage.models.categories import Categories
+from pizza_data_storage.models.category_payload import CategoryPayloadStaging
 from pizza_data_storage.models.editions import Editions
 from pizza_data_storage.models.locations import Locations
 from pizza_data_storage.models.pizzerias import Pizzerias
@@ -13,6 +14,7 @@ __all__ = [
     "Awards",
     "BaseModel",
     "Categories",
+    "CategoryPayloadStaging",
     "Editions",
     "Locations",
     "Pizzerias",
