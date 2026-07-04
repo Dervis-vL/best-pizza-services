@@ -5,11 +5,13 @@ import logging
 import typer
 
 from pizza_worker import settings
+from pizza_worker.cli.add_category import add_category
 from pizza_worker.cli.run_pending import run_pending
 
 app = typer.Typer(help="Pizza platform batch worker.", no_args_is_help=True)
 
 app.command(name="run-pending")(run_pending)
+app.command(name="add-category")(add_category)
 
 
 @app.callback()
