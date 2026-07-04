@@ -138,7 +138,7 @@ mypy_path = [
 ]
 
 [[tool.mypy.overrides]]
-module = "streamlit_folium"
+module = ["streamlit_folium", "scaleway", "scaleway.*"]
 ignore_missing_imports = true
 
 
