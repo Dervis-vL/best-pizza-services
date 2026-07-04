@@ -24,11 +24,20 @@ class WorkerJobsTrigger:
         )
         self._api = JobsV1Alpha2API(client)
         self._run_pending_job_id = settings.scw.run_pending_job_id
+        self._add_category_job_id = settings.scw.add_category_job_id
 
     def start_run_pending(self) -> JobRun:
         """Start a worker run that scrapes + parses all pending items."""
         response = self._api.start_job_definition(
             job_definition_id=self._run_pending_job_id,
+        )
+        return response.job_runs[0]
+
+    def start_add_category(self, payload_id: int) -> JobRun:
+        """Start a worker run that adds a new category and scrapes + parses all its items."""
+        response = self._api.start_job_definition(
+            job_definition_id=self._add_category_job_id,
+            environment_variables={"WORKER_PAYLOAD_ID": str(payload_id)},
         )
         return response.job_runs[0]
 
