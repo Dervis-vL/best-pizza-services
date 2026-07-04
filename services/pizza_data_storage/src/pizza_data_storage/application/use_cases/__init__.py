@@ -1,8 +1,15 @@
 """Use cases for pizza data storage service."""
 
+from pizza_data_storage.application.use_cases.get_category_payload import (
+    GetCategoryPayloadUseCase,
+)
 from pizza_data_storage.application.use_cases.get_editions import GetEditionsUseCase
 from pizza_data_storage.application.use_cases.get_pizzerias import GetPizzeriasUseCase
 from pizza_data_storage.application.use_cases.get_webpages import GetWebpagesUseCase
+from pizza_data_storage.application.use_cases.mark_category_payload import (
+    MarkCategoryPayloadAsConsumedUseCase,
+    MarkCategoryPayloadAsFailedUseCase,
+)
 from pizza_data_storage.application.use_cases.mark_edition import (
     MarkEditionAsParsedUseCase,
     MarkEditionAsScrapedUseCase,
@@ -17,6 +24,9 @@ from pizza_data_storage.application.use_cases.seed_categories_editions import (
 from pizza_data_storage.application.use_cases.seed_location import SeedLocationUseCase
 from pizza_data_storage.application.use_cases.seed_pizzerias_webpages_rating import (
     SeedPizzeriasWebpagesRatingsUseCase,
+)
+from pizza_data_storage.application.use_cases.stage_category_payload import (
+    StageCategoryPayloadUseCase,
 )
 from pizza_data_storage.application.use_cases.use_edition_storage import (
     EditionHtmlExistsUseCase,
@@ -33,6 +43,7 @@ from pizza_data_storage.application.use_cases.use_webpage_storage import (
 
 __all__ = [
     "EditionHtmlExistsUseCase",
+    "GetCategoryPayloadUseCase",
     "GetEditionHtmlUseCase",
     "GetEditionsUseCase",
     "GetPizzeriasUseCase",
@@ -40,6 +51,8 @@ __all__ = [
     "GetWebpagesUseCase",
     "ListEditionKeysUseCase",
     "ListWebpageKeysUseCase",
+    "MarkCategoryPayloadAsConsumedUseCase",
+    "MarkCategoryPayloadAsFailedUseCase",
     "MarkEditionAsParsedUseCase",
     "MarkEditionAsScrapedUseCase",
     "MarkWebpageAsParsedUseCase",
@@ -47,6 +60,7 @@ __all__ = [
     "SeedCategoriesAndEditionsUseCase",
     "SeedLocationUseCase",
     "SeedPizzeriasWebpagesRatingsUseCase",
+    "StageCategoryPayloadUseCase",
     "StoreEditionHtmlUseCase",
     "StoreWebpageHtmlUseCase",
     "WebpageHtmlExistsUseCase",
