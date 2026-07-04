@@ -34,7 +34,7 @@ alembic-upgrade env_file=".env":
 
 # Alembic revision: message arg sets the revision message
 alembic-revision m:
-    {{run}} alembic revision -m "{{m}}"
+    {{run}} alembic revision --autogenerate -m "{{m}}"
 
 # Build the FastAPI image
 build-api:
