@@ -23,3 +23,6 @@ class ScalewaySettings(pyd_settings.BaseSettings):
     run_pending_job_id: str = pyd.Field(
         description="Job Definition id for the worker run-pending job.",
     )
+    add_category_job_id: str = pyd.Field(
+        description="Job Definition id for the worker add-category job.",
+    )
