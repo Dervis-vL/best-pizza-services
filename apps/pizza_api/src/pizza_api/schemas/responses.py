@@ -3,6 +3,13 @@
 import pydantic as pyd
 
 
+class JobTriggerResponse(pyd.BaseModel):
+    """Returned when a worker job run is triggered."""
+
+    job_run_id: str
+    status: str
+
+
 class ScrapeResultSchema(pyd.BaseModel):
     """Counts from a scraping pass."""
 

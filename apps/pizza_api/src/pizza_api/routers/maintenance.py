@@ -5,34 +5,23 @@ import logging
 from fastapi import APIRouter, status
 
 from pizza_api import dependencies
-from pizza_api.application.logging import WarningCaptureHandler
 from pizza_api.schemas import responses
 
 router = APIRouter(prefix="/maintenance", tags=["Data entry"])
 
-_pizza_api_logger = logging.getLogger("pizza_api")
+logger = logging.getLogger("pizza_api")
 
 
 @router.post(
     "/all",
-    status_code=status.HTTP_200_OK,
-    response_model=responses.ProcessPendingResponse,
-    summary="Run a full scrape + parse cycle for all pending editions and webpages",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=responses.JobTriggerResponse,
+    summary="Trigger a worker run that scrapes + parses all pending items",
 )
 def process_pending(
-    use_case: dependencies.ProcessPendingUCDep,
-) -> responses.ProcessPendingResponse:
-    """Scrape and parse all pending editions and pizzeria webpages."""
-    handler = WarningCaptureHandler()
-    _pizza_api_logger.addHandler(handler)
-    try:
-        result = use_case.execute()
-    finally:
-        _pizza_api_logger.removeHandler(handler)
-
-    response = responses.ProcessPendingResponse.model_validate(
-        result,
-        from_attributes=True,
-    )
-    response.warnings = handler.warnings
-    return response
+    jobs: dependencies.JobsTriggerDep,
+) -> responses.JobTriggerResponse:
+    """Start a pizza_worker job to scrape and parse all pending editions and pizzeria webpages."""
+    run = jobs.start_run_pending()
+    logger.info("Triggered run-pending job run %s", run.id)
+    return responses.JobTriggerResponse(job_run_id=run.id, status=str(run.state))

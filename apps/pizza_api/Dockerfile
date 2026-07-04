@@ -14,6 +14,8 @@ COPY apps/pizza_api/pyproject.toml apps/pizza_api/pyproject.toml
 COPY apps/pizza_api/README.md apps/pizza_api/README.md
 COPY apps/pizza_app/pyproject.toml apps/pizza_app/pyproject.toml
 COPY apps/pizza_app/README.md apps/pizza_app/README.md
+COPY apps/pizza_worker/pyproject.toml apps/pizza_worker/pyproject.toml
+COPY apps/pizza_worker/README.md apps/pizza_worker/README.md
 COPY packages/pizza_platform_shared/pyproject.toml packages/pizza_platform_shared/pyproject.toml
 COPY packages/pizza_platform_shared/README.md packages/pizza_platform_shared/README.md
 COPY services/pizza_data_collector/pyproject.toml services/pizza_data_collector/pyproject.toml
@@ -30,9 +32,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Copy only the source trees needed by pizza_api and its workspace deps
 COPY apps/pizza_api/src apps/pizza_api/src
 COPY packages/pizza_platform_shared/src packages/pizza_platform_shared/src
-COPY services/pizza_data_collector/src services/pizza_data_collector/src
 COPY services/pizza_data_storage/src services/pizza_data_storage/src
-COPY services/geolocation/src services/geolocation/src
 
 # Install workspace packages as non-editable wheels so only .venv is needed at runtime
 RUN --mount=type=cache,target=/root/.cache/uv \

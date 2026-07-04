@@ -18,6 +18,7 @@ dependencies = [
     "sqlalchemy>=2.0.46",
     "yarl>=1.22.0",
     "pizza-platform-shared",
+    "pydantic>=2.12.5",
 ]
 
 [tool.hatch.build.targets.wheel]

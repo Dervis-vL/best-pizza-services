@@ -4,14 +4,14 @@ Only dependencies that are used outside of the dependencies folder are defined h
 This is to avoid circular imports and to keep the dependency graph clean.
 """
 
-from pizza_api.dependencies.categories import AddCategoryUCDep
-from pizza_api.dependencies.maintenance import ProcessPendingUCDep
+from pizza_api.dependencies.payload import StageCategoryPayloadUCDep
 from pizza_api.dependencies.pizzerias import ReadPizzeriasUCDep
+from pizza_api.dependencies.scaleway import JobsTriggerDep
 from pizza_api.dependencies.security import RequireApiKeyDep
 
 __all__ = [
-    "AddCategoryUCDep",
-    "ProcessPendingUCDep",
+    "JobsTriggerDep",
     "ReadPizzeriasUCDep",
     "RequireApiKeyDep",
+    "StageCategoryPayloadUCDep",
 ]

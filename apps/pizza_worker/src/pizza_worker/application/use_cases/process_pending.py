@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pizza_api.application import results
+from pizza_worker.application import results
 
 if TYPE_CHECKING:
-    from pizza_api.application.use_cases.parse_editions import ParseEditionsUseCase
-    from pizza_api.application.use_cases.parse_webpages import ParseWebpagesUseCase
-    from pizza_api.application.use_cases.scrape_editions import ScrapeEditionsUseCase
-    from pizza_api.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
+    from pizza_worker.application.use_cases.parse_editions import ParseEditionsUseCase
+    from pizza_worker.application.use_cases.parse_webpages import ParseWebpagesUseCase
+    from pizza_worker.application.use_cases.scrape_editions import ScrapeEditionsUseCase
+    from pizza_worker.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
 
 
 class ProcessPendingUseCase:  # pylint: disable=too-few-public-methods

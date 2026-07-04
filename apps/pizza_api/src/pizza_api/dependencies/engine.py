@@ -6,6 +6,7 @@ import sqlalchemy as sa
 from fastapi import Depends, Request
 from sqlalchemy.engine import Engine
 
+from pizza_api import settings
 from pizza_platform_shared import settings as shared_settings
 
 
@@ -14,6 +15,10 @@ def create_engine() -> Engine:
     return sa.create_engine(
         shared_settings.pizza_db.connection_string,
         pool_pre_ping=True,
+        pool_size=settings.pool.size,
+        max_overflow=settings.pool.max_overflow,
+        pool_recycle=settings.pool.recycle_seconds,
+        pool_timeout=settings.pool.timeout_seconds,
     )
 
 

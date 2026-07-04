@@ -16,6 +16,7 @@ typecheck:
     {{run}} mypy --package pizza_platform_shared --strict
     {{run}} mypy --package pizza_app --strict
     {{run}} mypy --package pizza_api --strict
+    {{run}} mypy --package pizza_worker --strict
     @echo "{{bold}}{{green}}✓ All type checks passed.{{nc}}"
 
 
@@ -26,11 +27,12 @@ lint:
     @echo "{{bold}}{{green}}✓ All lint checks passed.{{nc}}"
 
 
-# Check dependecies for all workspace members
+# Check dependencies for all workspace members
 deps-check:
     @echo "{{bold}}{{green}}🔍 Checking dependencies...{{nc}}"
     {{run}} --directory apps/pizza_api deptry .
     {{run}} --directory apps/pizza_app deptry .
+    {{run}} --directory apps/pizza_worker deptry .
     {{run}} --directory packages/pizza_platform_shared deptry .
     {{run}} --directory services/geolocation deptry .
     {{run}} --directory services/pizza_data_collector deptry .
@@ -43,3 +45,7 @@ spell-check:
     @echo "{{bold}}{{green}}🔍 Spell checking...{{nc}}"
     {{run}} codespell apps packages services README.md
     @echo "{{bold}}{{green}}✓ All spelling is valid.{{nc}}"
+
+# Check for stale lock files
+lock-check:
+    uv lock --check
