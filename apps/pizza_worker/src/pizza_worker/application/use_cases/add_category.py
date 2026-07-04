@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pizza_api.application import results
 from pizza_data_storage.application import use_cases as storage_use_cases
 from pizza_platform_shared import schemas as shared_schemas
+from pizza_worker.application import results
 
 if TYPE_CHECKING:
-    from pizza_api.application.use_cases.parse_editions import ParseEditionsUseCase
-    from pizza_api.application.use_cases.parse_webpages import ParseWebpagesUseCase
-    from pizza_api.application.use_cases.scrape_editions import ScrapeEditionsUseCase
-    from pizza_api.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
+    from pizza_worker.application.use_cases.parse_editions import ParseEditionsUseCase
+    from pizza_worker.application.use_cases.parse_webpages import ParseWebpagesUseCase
+    from pizza_worker.application.use_cases.scrape_editions import ScrapeEditionsUseCase
+    from pizza_worker.application.use_cases.scrape_webpages import ScrapeWebpagesUseCase
 
 
 class AddCategoryUseCase:  # pylint: disable=too-few-public-methods

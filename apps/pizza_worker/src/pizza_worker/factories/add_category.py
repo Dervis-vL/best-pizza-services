@@ -1,29 +1,26 @@
-"""Maintenance dependency providers."""
+"""Add category factory."""
 
-from typing import Annotated
-
-from fastapi import Depends
+from sqlalchemy.engine import Engine
 
 from geolocation import GeolocationService
 from geolocation.application import use_cases as geo_use_cases
-from pizza_api.application import use_cases
-from pizza_api.dependencies.repositories import (
-    HtmlRepoDep,
-    PizzeriaRepoDep,
-    RankingRepoDep,
-)
 from pizza_data_collector import models as collector_models
 from pizza_data_collector import parsers, scrapers
 from pizza_data_collector.application import use_cases as collector_use_cases
+from pizza_data_storage import repositories as storage_repos
 from pizza_data_storage.application import use_cases as storage_use_cases
+from pizza_platform_shared import settings as shared_settings
+from pizza_worker.application import use_cases
 
 
-def get_process_pending_uc(
-    ranking_repo: RankingRepoDep,
-    pizzeria_repo: PizzeriaRepoDep,
-    html_repo: HtmlRepoDep,
-) -> use_cases.ProcessPendingUseCase:
-    """Build and wire the ProcessPendingUseCase with all its dependencies."""
+def build_add_category_uc(engine: Engine) -> use_cases.AddCategoryUseCase:
+    """Build and wire the AddCategoryUseCase from worker engine"""
+    ranking_repo = storage_repos.RankingsRepository.from_engine(engine=engine)
+    pizzeria_repo = storage_repos.PizzeriaRepository.from_engine(engine=engine)
+    html_repo = storage_repos.HtmlStorageRepository.from_settings(
+        storage_settings=shared_settings.pizza_strg,
+    )
+
     scrape_uc = collector_use_cases.ScrapeUseCase(
         scraper=scrapers.Scraper(http_client=scrapers.HttpClient()),
     )
@@ -46,7 +43,10 @@ def get_process_pending_uc(
         geolocation_service=GeolocationService(user_agent="best-pizza-services/1.0"),
     )
 
-    return use_cases.ProcessPendingUseCase(
+    return use_cases.AddCategoryUseCase(
+        seed_uc=storage_use_cases.SeedCategoriesAndEditionsUseCase(
+            ranking_repository=ranking_repo,
+        ),
         scrape_editions_uc=use_cases.ScrapeEditionsUseCase(
             get_editions_uc=storage_use_cases.GetEditionsUseCase(
                 ranking_repository=ranking_repo,
@@ -103,9 +103,3 @@ def get_process_pending_uc(
             ),
         ),
     )
-
-
-ProcessPendingUCDep = Annotated[
-    use_cases.ProcessPendingUseCase,
-    Depends(get_process_pending_uc),
-]

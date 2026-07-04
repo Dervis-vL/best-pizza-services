@@ -19,6 +19,14 @@ class PizzeriaInclude(StrEnum):
     AWARDS = "awards"
 
 
+class PayloadStatus(StrEnum):
+    """Enum for payload staging row status."""
+
+    PENDING = "pending"
+    CONSUMED = "consumed"
+    FAILED = "failed"
+
+
 class Year(IntEnum):
     """Enum for years of pizza rankings."""
 

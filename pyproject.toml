@@ -45,6 +45,7 @@ addopts = """
     -n auto
     --cov=pizza_app
     --cov=pizza_api
+    --cov=pizza_worker
     --cov=pizza_data_collector
     --cov=pizza_data_storage
     --cov=geolocation
@@ -93,12 +94,14 @@ ignore  = [
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**/*.py" = ["S101", "S106", "PLR2004", "INP001"]
+"scripts/*.py" = ["INP001"]  # standalone dev/ops scripts, intentionally not a package
 
 [tool.ruff.lint.isort]
 known-first-party = [
     "pizza_platform_shared",
     "pizza_app",
     "pizza_api",
+    "pizza_worker",
     "pizza_data_collector",
     "pizza_data_storage",
     "geolocation",
@@ -128,6 +131,7 @@ plugins = [
 mypy_path = [
     "apps/pizza_app/src",
     "apps/pizza_api/src",
+    "apps/pizza_worker/src",
     "packages/pizza_platform_shared/src",
     "services/geolocation/src",
     "services/pizza_data_collector/src",
@@ -135,7 +139,7 @@ mypy_path = [
 ]
 
 [[tool.mypy.overrides]]
-module = "streamlit_folium"
+module = ["streamlit_folium", "scaleway", "scaleway.*"]
 ignore_missing_imports = true
 
 

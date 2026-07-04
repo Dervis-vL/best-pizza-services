@@ -19,6 +19,7 @@ class PizzaTableNames(types.TableNames):
     rankings: types.TableName = "rankings"
     webpages: types.TableName = "webpages"
     locations: types.TableName = "locations"
+    payload_staging: types.TableName = "payload_staging"
 
 
 class ModelColumnLengths:

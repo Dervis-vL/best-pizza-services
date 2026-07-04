@@ -1,4 +1,4 @@
-# Build both images and scan them with Trivy.
+# Build all images and scan them with Trivy.
 # Mirrors the CI `scan` job: HIGH/CRITICAL only, fixable vulnerabilities only.
 security: build
     #!/usr/bin/env bash
@@ -16,4 +16,5 @@ security: build
     }
     scan {{_registry_ghcr}}/{{_api_image}}:{{_api_version}}
     scan {{_registry_ghcr}}/{{_app_image}}:{{_app_version}}
+    scan {{_registry_ghcr}}/{{_worker_image}}:{{_worker_version}}
     @echo "{{bold}}{{green}}✓ Security scan passed.{{nc}}"

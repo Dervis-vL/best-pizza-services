@@ -39,6 +39,8 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
+      SCW_API_URL: http://scaleway-jobs-mock:8080
+      SCW_API_ALLOW_INSECURE: "true"
       PIZZA_DB_HOST: db
       STORAGE_ENDPOINT: http://minio:9000
     ports:
@@ -49,7 +51,7 @@ services:
       minio:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')"]
       interval: 10s
       timeout: 5s
       start_period: 15s
@@ -66,6 +68,42 @@ services:
       - "8501:8501"
     depends_on:
       pizza_api:
+        condition: service_healthy
+
+  pizza_worker:
+    build:
+      context: .
+      dockerfile: apps/pizza_worker/Dockerfile
+    image: pizza-worker:local
+    profiles:
+      - worker
+    env_file: .env
+    environment:
+      PIZZA_DB_HOST: db
+      STORAGE_ENDPOINT: http://minio:9000
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  scaleway-jobs-mock:
+    build:
+      context: .
+      dockerfile: apps/pizza_worker/Dockerfile
+    image: pizza-worker:local
+    env_file: .env
+    environment:
+      PIZZA_DB_HOST: db
+      STORAGE_ENDPOINT: http://minio:9000
+    volumes:
+      - ${SCW_MOCK_SCRIPT:-./scripts/serve_local.py}:/mock/serve.py:ro
+    entrypoint: ["python", "/mock/serve.py"]
+    ports: ["8080:8080"]
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
         condition: service_healthy
 
 volumes:

@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Configurable API pool settings for db connection(s)
 
+### Changed
+
+- Removed add category logic from API (migrated to worker app)
+- Removed process pending logic from API (migrated to worker app)
+
 ## [0.4.0] - 2026-06-21
 
 ### Changed
