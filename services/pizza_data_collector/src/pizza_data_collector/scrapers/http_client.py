@@ -35,6 +35,16 @@ class HttpClient:  # pylint: disable=too-few-public-methods
                 return content
         except HTTPError as e:
             if e.code in constants.RETRYABLE_STATUS:
+                # Some pages render a full, valid body under a 500 status
+                body: bytes = e.read()
+                if len(body) >= self._cfg.salvage_min_bytes:
+                    logger.warning(
+                        "Salvaged %d-byte body from HTTP %s fetching %s",
+                        len(body),
+                        e.code,
+                        url,
+                    )
+                    return body
                 msg = f"{e.code} fetching {url}"
                 raise TransientFetchError(msg) from e
             logger.warning("Non-retryable HTTP %s fetching %s", e.code, url)
