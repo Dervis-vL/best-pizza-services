@@ -587,7 +587,7 @@ wheels = [
 
 [[package]]
 name = "geolocation"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "services/geolocation" }
 dependencies = [
     { name = "pizza-platform-shared" },
@@ -1187,7 +1187,7 @@ wheels = [
 
 [[package]]
 name = "pizza-api"
-version = "0.4.0"
+version = "0.5.0"
 source = { editable = "apps/pizza_api" }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
@@ -1212,7 +1212,7 @@ requires-dist = [
 
 [[package]]
 name = "pizza-app"
-version = "0.1.1"
+version = "0.1.2"
 source = { editable = "apps/pizza_app" }
 dependencies = [
     { name = "folium" },
@@ -1241,7 +1241,7 @@ requires-dist = [
 
 [[package]]
 name = "pizza-data-collector"
-version = "0.2.0"
+version = "0.2.1"
 source = { editable = "services/pizza_data_collector" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -1262,7 +1262,7 @@ requires-dist = [
 
 [[package]]
 name = "pizza-data-storage"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "services/pizza_data_storage" }
 dependencies = [
     { name = "alembic" },
@@ -1289,7 +1289,7 @@ requires-dist = [
 
 [[package]]
 name = "pizza-platform-shared"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "packages/pizza_platform_shared" }
 dependencies = [
     { name = "boto3" },
@@ -1324,7 +1324,7 @@ dev = [
 
 [[package]]
 name = "pizza-worker"
-version = "0.0.0"
+version = "0.1.0"
 source = { editable = "apps/pizza_worker" }
 dependencies = [
     { name = "geolocation" },
