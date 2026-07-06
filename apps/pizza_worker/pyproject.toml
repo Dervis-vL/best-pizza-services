@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pizza-worker"
-version = "0.1.0"
+version = "0.1.1"
 description = "Background batch worker that runs the pizza platform scrape + parse pipelines as a Scaleway Job"
 authors = [{ name = "DerpVis Codes", email = "dervis.vanleersum@gmail.com" }]
 readme = "README.md"
@@ -48,7 +48,7 @@ per_rule_ignores = { DEP002 = [
 ] }
 
 [tool.bumpversion]
-current_version = "0.1.0"
+current_version = "0.1.1"
 commit          = true
 tag             = true
 tag_name        = "pizza-worker/v{new_version}"
