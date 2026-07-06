@@ -8,7 +8,7 @@ from pizza_worker.application import results
 
 logger = logging.getLogger(__name__)
 
-_MIN_PIZZERIAS_THRESHOLD = 35
+_MIN_PIZZERIAS_THRESHOLD = 5
 
 
 class ParseEditionsUseCase:  # pylint: disable=too-few-public-methods
