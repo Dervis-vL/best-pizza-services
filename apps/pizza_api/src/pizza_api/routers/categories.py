@@ -7,7 +7,7 @@ from fastapi import APIRouter, status
 from pizza_api import dependencies
 from pizza_api.schemas import requests, responses
 
-router = APIRouter(prefix="/categories", tags=["Data entry"])
+router = APIRouter(prefix="/categories", tags=["Jobs"])
 
 logger = logging.getLogger("pizza_api")
 
