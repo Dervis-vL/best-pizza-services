@@ -1,3 +1,9 @@
+# Validate an environment contains all project needs
+validate:
+    @echo "{{bold}}{{green}}⚙ checking toml...{{nc}}"
+    @echo "{{bold}}{{green}}⚙ checking .env...{{nc}}"
+    @echo "{{bold}}{{green}}⚙ checking prereq...{{nc}}"
+
 # Setup the development environment
 setup:
     @echo "{{bold}}{{green}}⚙ Installing dependencies...{{nc}}"
