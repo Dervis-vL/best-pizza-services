@@ -1,5 +1,7 @@
 # Build all images and scan them with Trivy.
 # Mirrors the CI `scan` job: HIGH/CRITICAL only, fixable vulnerabilities only.
+[doc("Build all images and scan them with Trivy.")]
+[group("Security")]
 security: build
     #!/usr/bin/env bash
     set -euo pipefail

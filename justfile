@@ -15,9 +15,13 @@ bold := `tput bold 2>/dev/null || true`
 nc   := `tput sgr0 2>/dev/null || true`
 green := `tput setaf 2 2>/dev/null || true`
 
+[doc("Default target: list all available targets.")]
+[private]
 default:
     @just --list
 
 # Run all checks: fmt, test, typecheck, lint, deps-check, version-check
+[doc("Run all qualitychecks")]
+[group("Quality Checks")]
 check: fmt lock-check typecheck lint deps-check spell-check test version-check
     @echo "{{bold}}{{green}}✓ All checks passed.{{nc}}"

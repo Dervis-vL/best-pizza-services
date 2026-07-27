@@ -1,4 +1,6 @@
 # Clean up local branches that are merged into the default branch or whose remote is gone
+[doc("Clean up local branches that are merged into the default branch or whose remote is gone.")]
+[group("Git")]
 git-cleanup:
     #!/usr/bin/env bash
     set -euo pipefail
