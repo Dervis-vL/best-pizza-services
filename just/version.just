@@ -1,6 +1,3 @@
-# Projects tracked for per-project versioning
-_projects := "apps/pizza_api apps/pizza_app apps/pizza_worker packages/pizza_platform_shared services/geolocation services/pizza_data_collector services/pizza_data_storage"
-
 # Print which projects have changed since their last release tag (<name>/v*).
 # A project with no tag yet is treated as needing its first release. The
 # release_scope.env is excluded: it is release metadata (and the release flow
@@ -10,7 +7,7 @@ _projects := "apps/pizza_api apps/pizza_app apps/pizza_worker packages/pizza_pla
 changed-projects:
     #!/usr/bin/env bash
     set -euo pipefail
-    for project in {{_projects}}; do
+    for project in {{_members}}; do
         name="$(grep -m1 '^name' "$project/pyproject.toml" | sed -E 's/^name *= *"//; s/".*//')"
         last_tag="$(git describe --tags --match "$name/v*" --abbrev=0 2>/dev/null || true)"
         if [[ -z "$last_tag" ]]; then
@@ -37,7 +34,7 @@ affected-projects:
     # Always returns 0 so a "not found" does not trip set -e via `d=$(...)`.
     dir_of_name() {
         local n="$1" dir name
-        for dir in {{_projects}}; do
+        for dir in {{_members}}; do
             name="$(grep -m1 '^name' "$dir/pyproject.toml" | sed -E 's/^name *= *"//; s/".*//')"
             if [[ "$name" == "$n" ]]; then
                 echo "$dir"
@@ -66,7 +63,7 @@ affected-projects:
     progress=1
     while (( progress )); do
         progress=0
-        for dir in {{_projects}}; do
+        for dir in {{_members}}; do
             if is_in "$dir" "$affected"; then
                 continue
             fi
@@ -79,8 +76,8 @@ affected-projects:
             done
         done
     done
-    # Emit in canonical _projects order.
-    for dir in {{_projects}}; do
+    # Emit in canonical _members order.
+    for dir in {{_members}}; do
         if is_in "$dir" "$affected"; then
             echo "$dir"
         fi

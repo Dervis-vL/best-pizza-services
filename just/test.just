@@ -3,5 +3,5 @@
 [group("Quality Checks")]
 test:
     @echo "{{bold}}{{green}}🔍 Running tests...{{nc}}"
-    {{run}} pytest
+    {{run}} pytest {{ prepend('--cov=', _modules) }} --cov-report=term-missing
     @echo "{{bold}}{{green}}✓ All tests passed.{{nc}}"

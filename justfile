@@ -1,6 +1,8 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
+# set minimum-version := '1.57.0'
 
 # --- IMPORTS --------------------------------------------
+import 'just/vars.just'
 import 'just/setup.just'
 import 'just/check.just'
 import 'just/test.just'

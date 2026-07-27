@@ -1,8 +1,16 @@
+[doc("Show all available targets/members.")]
+[group("Setup")]
+show:
+    @echo "{{bold}}{{green}}⚙ Workspace members:{{nc}}"
+    @for m in {{_members}}; do \
+        echo "{{bold}}{{green}}  - $m{{nc}}"; \
+    done
+
 # Validate an environment contains all project needs
 [doc("Validate the development environment.")]
 [group("Setup")]
 validate:
-    @echo "{{bold}}{{green}}⚙ checking toml...{{nc}}"
+    @echo "{{bold}}{{green}}⚙ checking toml members...{{nc}}"
     @echo "{{bold}}{{green}}⚙ checking .env...{{nc}}"
     @echo "{{bold}}{{green}}⚙ checking prereq...{{nc}}"
 

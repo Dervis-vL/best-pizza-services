@@ -14,13 +14,7 @@ fmt:
 [group("Quality Checks")]
 typecheck:
     @echo "{{bold}}{{green}}🔍 Type checking...{{nc}}"
-    {{run}} mypy --package pizza_data_collector --strict
-    {{run}} mypy --package pizza_data_storage --strict
-    {{run}} mypy --package geolocation --strict
-    {{run}} mypy --package pizza_platform_shared --strict
-    {{run}} mypy --package pizza_app --strict
-    {{run}} mypy --package pizza_api --strict
-    {{run}} mypy --package pizza_worker --strict
+    {{run}} mypy {{ prepend('-p', _modules) }}
     @echo "{{bold}}{{green}}✓ All type checks passed.{{nc}}"
 
 
@@ -38,13 +32,7 @@ lint:
 [group("Quality Checks")]
 deps-check:
     @echo "{{bold}}{{green}}🔍 Checking dependencies...{{nc}}"
-    {{run}} --directory apps/pizza_api deptry .
-    {{run}} --directory apps/pizza_app deptry .
-    {{run}} --directory apps/pizza_worker deptry .
-    {{run}} --directory packages/pizza_platform_shared deptry .
-    {{run}} --directory services/geolocation deptry .
-    {{run}} --directory services/pizza_data_collector deptry .
-    {{run}} --directory services/pizza_data_storage deptry .
+    @for d in {{_members}}; do echo "→ $d"; {{run}} --directory "$d" deptry .; done
     @echo "{{bold}}{{green}}✓ All dependencies are valid.{{nc}}"
 
 
