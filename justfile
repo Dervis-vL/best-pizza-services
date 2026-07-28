@@ -17,10 +17,27 @@ bold := `tput bold 2>/dev/null || true`
 nc   := `tput sgr0 2>/dev/null || true`
 green := `tput setaf 2 2>/dev/null || true`
 
+# Read a field out of a member's pyproject.toml
+[private]
+_meta dir field:
+    @grep -m1 '^{{field}}' {{dir}}/pyproject.toml | sed -E 's/^{{field}} *= *"//; s/".*//'
+
 [doc("Default target: list all available targets.")]
 [private]
 default:
     @just --list
+
+[doc("Show all available targets/members.")]
+[group("Setup")]
+show:
+    @echo "{{bold}}{{green}}⚙ Workspace members:{{nc}}"
+    @for m in {{_members}}; do \
+        echo "{{bold}}{{green}}  - $m{{nc}}"; \
+    done
+    @echo "{{bold}}{{green}}⚙ Workspace deployables:{{nc}}"
+    @for m in {{_deployables}}; do \
+        echo "{{bold}}{{green}}  - $m{{nc}}"; \
+    done
 
 # Run all checks: fmt, test, typecheck, lint, deps-check, version-check
 [doc("Run all qualitychecks")]
