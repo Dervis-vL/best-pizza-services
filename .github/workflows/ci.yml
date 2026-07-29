@@ -79,6 +79,15 @@ jobs:
           ignore-unfixed: true
           severity: CRITICAL,HIGH
 
+      - name: Scan pizza-worker
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-worker:${{ needs.build-dev.outputs.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
   deploy-staging:
     if: github.ref == 'refs/heads/development'
     needs: [scan, build-dev]
@@ -111,6 +120,7 @@ jobs:
     outputs:
       api_version: ${{ steps.versions.outputs.api }}
       app_version: ${{ steps.versions.outputs.app }}
+      worker_version: ${{ steps.versions.outputs.worker }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -132,6 +142,7 @@ jobs:
         run: |
           echo "api=$(grep '^version' apps/pizza_api/pyproject.toml | head -1 | sed 's/.*= "//;s/"//')" >> "$GITHUB_OUTPUT"
           echo "app=$(grep '^version' apps/pizza_app/pyproject.toml | head -1 | sed 's/.*= "//;s/"//')" >> "$GITHUB_OUTPUT"
+          echo "worker=$(grep '^version' apps/pizza_worker/pyproject.toml | head -1 | sed 's/.*= "//;s/"//')" >> "$GITHUB_OUTPUT"
 
       - name: Push version bumps and tags
         run: git push origin main --follow-tags
@@ -173,6 +184,15 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-app:${{ needs.release.outputs.app_version }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - name: Scan pizza-worker
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-worker:${{ needs.release.outputs.worker_version }}
           format: table
           exit-code: '1'
           ignore-unfixed: true

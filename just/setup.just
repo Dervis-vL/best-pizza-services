@@ -1,6 +1,8 @@
+# WIP
 # Validate an environment contains all project needs
 [doc("Validate the development environment.")]
 [group("Setup")]
+[private]
 validate:
     @echo "{{bold}}{{green}}⚙ checking toml members...{{nc}}"
     @echo "{{bold}}{{green}}⚙ checking .env...{{nc}}"
@@ -20,8 +22,10 @@ setup:
     fi
     @echo "{{bold}}{{green}}✓ Environment ready.{{nc}}"
 
+# WIP
 [doc("Add a new workspace member to the project.")]
 [group("Setup")]
+[private]
 add:
     @echo "{{bold}}{{green}}⚙ Adding new workspace member...{{nc}}"
     @echo "{{bold}}{{green}}⚙ Updating pyproject.toml...{{nc}}"

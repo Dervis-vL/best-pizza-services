@@ -1,16 +1,3 @@
-api_config    := "apps/pizza_api/pyproject.toml"
-app_config    := "apps/pizza_app/pyproject.toml"
-worker_config := "apps/pizza_worker/pyproject.toml"
-
-
-_api_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
-_app_image    := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
-_worker_image := shell("grep '^name'    $1 | sed 's/.*= \"//' | tr -d '\"'", worker_config)
-
-_api_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", api_config)
-_app_version  := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", app_config)
-_worker_version := shell("grep '^version' $1 | head -1 | sed 's/.*= \"//' | tr -d '\"'", worker_config)
-
 # Run podman compose up
 [doc("Run podman compose up.")]
 [group("Build & Deploy")]
@@ -56,7 +43,7 @@ build-image dir tag="":
         tag="$(just _meta {{dir}} version)"
     fi
     echo "{{bold}}{{green}}🐋 {{dir}} → $name:$tag{{nc}}"
-    {{container}} build -f "{{dir}}/Dockerfile" -t "{{_registry_ghcr}}/$name:$tag" .
+    {{container}} build -f "{{dir}}/Dockerfile" -t "{{_registry}}/$name:$tag" .
 
 # Build all deployable images
 [doc("Build all deployable images.")]
@@ -72,7 +59,7 @@ push-ghcr-dev sha:
     set -euo pipefail
     for d in {{_deployables}}; do
         just build-image "$d" "{{sha}}"
-        {{container}} push "{{_registry_ghcr}}/$(just _meta "$d" name):{{sha}}"
+        {{container}} push "{{_registry}}/$(just _meta "$d" name):{{sha}}"
     done
 
 # Build and push all images to GHCR, also tagging latest
@@ -84,7 +71,7 @@ push-ghcr: build
     for d in {{_deployables}}; do
         name="$(just _meta "$d" name)"
         version="$(just _meta "$d" version)"
-        {{container}} push "{{_registry_ghcr}}/$name:$version"
-        {{container}} tag  "{{_registry_ghcr}}/$name:$version" "{{_registry_ghcr}}/$name:latest"
-        {{container}} push "{{_registry_ghcr}}/$name:latest"
+        {{container}} push "{{_registry}}/$name:$version"
+        {{container}} tag  "{{_registry}}/$name:$version" "{{_registry}}/$name:latest"
+        {{container}} push "{{_registry}}/$name:latest"
     done

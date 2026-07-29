@@ -14,7 +14,7 @@ fmt:
 [group("Quality Checks")]
 typecheck:
     @echo "{{bold}}{{green}}🔍 Type checking...{{nc}}"
-    {{run}} mypy {{ prepend('-p', _modules) }}
+    {{run}} mypy {{ prepend('-p ', _modules) }}
     @echo "{{bold}}{{green}}✓ All type checks passed.{{nc}}"
 
 
