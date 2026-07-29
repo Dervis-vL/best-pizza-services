@@ -1,5 +1,7 @@
 # Build all images and scan them with Trivy.
 # Mirrors the CI `scan` job: HIGH/CRITICAL only, fixable vulnerabilities only.
+[doc("Build all images and scan them with Trivy.")]
+[group("Security")]
 security: build
     #!/usr/bin/env bash
     set -euo pipefail
@@ -9,12 +11,15 @@ security: build
         local ref="$1"
         local tar; tar="$(mktemp).tar"
         trap 'rm -f "$tar"' RETURN
-        podman save "$ref" -o "$tar"
+        {{container}} save "$ref" -o "$tar"
         trivy image --input "$tar" \
             --severity HIGH,CRITICAL --ignore-unfixed \
             --scanners vuln --skip-version-check --exit-code 1
     }
-    scan {{_registry_ghcr}}/{{_api_image}}:{{_api_version}}
-    scan {{_registry_ghcr}}/{{_app_image}}:{{_app_version}}
-    scan {{_registry_ghcr}}/{{_worker_image}}:{{_worker_version}}
-    @echo "{{bold}}{{green}}✓ Security scan passed.{{nc}}"
+    for dir in {{_deployables}}; do
+        name="$(just _meta "$dir" name)"
+        version="$(just _meta "$dir" version)"
+        echo "{{bold}}{{green}}🔒 Scanning $name:$version...{{nc}}"
+        scan "{{_registry}}/$name:$version"
+    done
+    echo "{{bold}}{{green}}✓ Security scan passed.{{nc}}"

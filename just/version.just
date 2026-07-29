@@ -1,14 +1,13 @@
-# Projects tracked for per-project versioning
-_projects := "apps/pizza_api apps/pizza_app apps/pizza_worker packages/pizza_platform_shared services/geolocation services/pizza_data_collector services/pizza_data_storage"
-
 # Print which projects have changed since their last release tag (<name>/v*).
 # A project with no tag yet is treated as needing its first release. The
 # release_scope.env is excluded: it is release metadata (and the release flow
 # rewrites it after tagging), not a source change that should trigger a release.
+[doc("List projects that have changes since their last release tag.")]
+[group("Versioning")]
 changed-projects:
     #!/usr/bin/env bash
     set -euo pipefail
-    for project in {{_projects}}; do
+    for project in {{_members}}; do
         name="$(grep -m1 '^name' "$project/pyproject.toml" | sed -E 's/^name *= *"//; s/".*//')"
         last_tag="$(git describe --tags --match "$name/v*" --abbrev=0 2>/dev/null || true)"
         if [[ -z "$last_tag" ]]; then
@@ -21,6 +20,8 @@ changed-projects:
 # Projects that need a release: the directly-changed ones plus any project whose
 # (transitive) workspace dependencies changed. Dependencies are read from each
 # project's [project] dependencies, so this stays in sync with the tomls.
+[doc("List all projects that are affected by changes.")]
+[group("Versioning")]
 affected-projects:
     #!/usr/bin/env bash
     # No associative arrays here so this also runs on macOS's default bash 3.2.
@@ -33,7 +34,7 @@ affected-projects:
     # Always returns 0 so a "not found" does not trip set -e via `d=$(...)`.
     dir_of_name() {
         local n="$1" dir name
-        for dir in {{_projects}}; do
+        for dir in {{_members}}; do
             name="$(grep -m1 '^name' "$dir/pyproject.toml" | sed -E 's/^name *= *"//; s/".*//')"
             if [[ "$name" == "$n" ]]; then
                 echo "$dir"
@@ -62,7 +63,7 @@ affected-projects:
     progress=1
     while (( progress )); do
         progress=0
-        for dir in {{_projects}}; do
+        for dir in {{_members}}; do
             if is_in "$dir" "$affected"; then
                 continue
             fi
@@ -75,14 +76,16 @@ affected-projects:
             done
         done
     done
-    # Emit in canonical _projects order.
-    for dir in {{_projects}}; do
+    # Emit in canonical _members order.
+    for dir in {{_members}}; do
         if is_in "$dir" "$affected"; then
             echo "$dir"
         fi
     done
 
 # Fail if CHANGELOG.md in project does not contain an [Unreleased] section
+[doc("Check that the project's changelog has an [Unreleased] section.")]
+[group("Quality Checks")]
 check-changelog project:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -98,6 +101,8 @@ check-changelog project:
     echo "✓ [Unreleased] found in $changelog"
 
 # Bump version for a project — reads scope from project's release_scope.env
+[doc("Bump the version for a project.")]
+[group("Versioning")]
 bump-project project:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -119,6 +124,8 @@ bump-project project:
     (cd "{{project}}" && uv run --no-sync bump-my-version bump "$SCOPE")
 
 # Reset SCOPE to placeholder after a successful bump
+[doc("Reset the release scope for a project to placeholder.")]
+[group("Versioning")]
 reset-scope project:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -127,6 +134,8 @@ reset-scope project:
     echo "✓ Reset SCOPE to placeholder in $env_file"
 
 # Validate changelogs and release scopes for changed projects; no bumping
+[doc("Validate changelogs and release scopes for changed projects.")]
+[group("Quality Checks")]
 version-check:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -155,6 +164,8 @@ version-check:
     echo "{{bold}}{{green}}✓ Version check passed for all changed projects.{{nc}}"
 
 # CI entry point: detect changed projects, validate changelogs, bump versions
+[doc("Run versioning flow for changed projects.")]
+[group("Versioning")]
 version:
     #!/usr/bin/env bash
     set -euo pipefail

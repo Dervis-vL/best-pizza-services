@@ -43,14 +43,6 @@ asyncio_mode     = "auto"
 addopts = """
     --import-mode=importlib
     -n auto
-    --cov=pizza_app
-    --cov=pizza_api
-    --cov=pizza_worker
-    --cov=pizza_data_collector
-    --cov=pizza_data_storage
-    --cov=geolocation
-    --cov=pizza_platform_shared
-    --cov-report=term-missing
 """
 
 [tool.codespell]
@@ -73,6 +65,7 @@ exclude_lines = [
 ]
 
 [tool.ruff]
+src = ["apps/*/src", "packages/*/src", "services/*/src"]
 line-length    = 100
 indent-width   = 4
 target-version = "py314"
@@ -96,17 +89,6 @@ ignore  = [
 "**/tests/**/*.py" = ["S101", "S106", "PLR2004", "INP001"]
 "scripts/*.py" = ["INP001"]  # standalone dev/ops scripts, intentionally not a package
 
-[tool.ruff.lint.isort]
-known-first-party = [
-    "pizza_platform_shared",
-    "pizza_app",
-    "pizza_api",
-    "pizza_worker",
-    "pizza_data_collector",
-    "pizza_data_storage",
-    "geolocation",
-]
-
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 100
 
@@ -124,18 +106,6 @@ plugins = [
     "sqlalchemy.ext.mypy.plugin",
     "pydantic.mypy",
     "pandera.mypy",
-]
-
-# Monorepo: src-layout requires explicit src/ paths so mypy doesn't pick up the
-# project-root directories as namespace packages and shadow the real source.
-mypy_path = [
-    "apps/pizza_app/src",
-    "apps/pizza_api/src",
-    "apps/pizza_worker/src",
-    "packages/pizza_platform_shared/src",
-    "services/geolocation/src",
-    "services/pizza_data_collector/src",
-    "services/pizza_data_storage/src",
 ]
 
 [[tool.mypy.overrides]]
