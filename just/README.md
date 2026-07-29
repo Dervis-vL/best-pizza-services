@@ -20,7 +20,7 @@ Run `just` for the grouped recipe list, `just --groups` for group names alone, a
 
 ## Nothing is hardcoded per member
 
-`vars.just` derives the workspace layout from the root `pyproject.toml`, so adding a
+`justfile` derives the workspace layout from the root `pyproject.toml`, so adding a
 member requires **no edits here**:
 
 | Variable | Contents | Derived from |
@@ -43,7 +43,7 @@ constraint — just one worth knowing when it breaks.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `CONTAINER_ENGINE` | `podman` | Engine used by the build and compose recipes |
+| `CONTAINER_ENGINE` | `docker` | Engine used by the build and compose recipes |
 
 Override per invocation or export it:
 
@@ -59,18 +59,6 @@ just compose dev/env/.env       # uses another dotenv
 just alembic-upgrade .env.local
 ```
 
-## Common tasks
-
-```bash
-just setup                      # sync deps, install pre-commit hooks, create .env
-just check                      # everything CI runs
-just test                       # pytest with coverage for all members
-just typecheck                  # mypy --strict across all members
-just build                      # build every deployable image
-just changed-projects           # members changed since their last release tag
-just affected-projects          # the above plus dependents
-```
-
 ## Adding a workspace member
 
 Membership itself is automatic — `[tool.uv.workspace] members` uses globs, so a new
@@ -81,30 +69,11 @@ What the member must contain for the recipes to work:
 
 - `pyproject.toml` with `[project]` name/version/requires-python and
   `build-backend = "uv_build"`
-- `src/<module>/__init__.py` and `src/<module>/py.typed` — the marker is required, since
-  `typecheck` resolves members as installed packages
-- `README.md` — declared as `readme`, and copied by the Dockerfiles
+- `src/<module>/__init__.py` and `src/<module>/py.typed`
+- `README.md` declared as `readme`, and copied by the Dockerfiles
 - `CHANGELOG.md` containing an `[Unreleased]` section
 - `release_scope.env` with `SCOPE=patch|minor|major`
 - `[tool.bumpversion]` with `tag_name = "<dist-name>/v{new_version}"`
 - a `Dockerfile`, only if it should produce a deployable image
 
 Run `uv lock` afterwards, or `lock-check` will fail.
-
-## Conventions
-
-- Recipes carry `[doc(...)]` and `[group(...)]` so `just --list` stays readable.
-- Helpers are `[private]` or prefixed with `_`.
-- The root justfile sets `bash -euo pipefail`, so a failing command aborts the recipe.
-  Use `if ...; then ...; fi` rather than `cond && action`, which aborts when the
-  condition is false.
-- Multi-line logic uses a `#!/usr/bin/env bash` shebang recipe; single commands do not.
-- Bash 3.2 (macOS default) is the floor — no `mapfile`, no associative arrays.
-
-## Not yet implemented
-
-- `validate` — placeholder. Intended to check toolchain versions, workspace integrity,
-  per-member structure, and `.env` against `.env.example`.
-- `add` — placeholder. Intended to scaffold a new member from a template.
-- `build.just` still uses per-project variables; the parametrised version driven by a
-  `_deployables` variable is designed but not applied.

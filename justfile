@@ -16,6 +16,13 @@ run  := "uv run"
 bold := `tput bold 2>/dev/null || true`
 nc   := `tput sgr0 2>/dev/null || true`
 green := `tput setaf 2 2>/dev/null || true`
+# Read from [tool.uv.workspace] members in the root pyproject.toml
+# TODO: include tomlib reader scripts so excludes can be parsed too
+_globs   := shell('awk "/^\[tool.uv.workspace\]/{f=1;next} /^\[/{f=0} f" pyproject.toml | grep -oE "\"[^\"]+\"" | tr -d "\"" | tr "\n" " "')
+_members := shell('for p in $1; do ls -d $p/ 2>/dev/null; done | sed "s#/\$##" | tr "\n" " "', _globs)
+_modules := shell('for d in $1; do basename "$d"; done | tr "\n" " "', _members)
+_deployables := shell('for d in $1; do [ -f "$d/Dockerfile" ] && printf "%s " "$d"; done; true', _members)
+
 
 # Read a field out of a member's pyproject.toml
 [private]
