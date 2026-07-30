@@ -12,7 +12,7 @@ fmt:
 # Type check all workspace members (strict)
 [doc("Run type checking for all workspace members.")]
 [group("Quality Checks")]
-typecheck:
+check-type:
     @echo "{{bold}}{{green}}🔍 Type checking...{{nc}}"
     {{run}} mypy {{ prepend('-p ', _modules) }}
     @echo "{{bold}}{{green}}✓ All type checks passed.{{nc}}"
@@ -30,7 +30,7 @@ lint:
 # Check dependencies for all workspace members
 [doc("Check dependencies for all workspace members.")]
 [group("Quality Checks")]
-deps-check:
+check-deps:
     @echo "{{bold}}{{green}}🔍 Checking dependencies...{{nc}}"
     @for d in {{_members}}; do echo "→ $d"; {{run}} --directory "$d" deptry .; done
     @echo "{{bold}}{{green}}✓ All dependencies are valid.{{nc}}"
@@ -39,7 +39,7 @@ deps-check:
 # Spell check
 [doc("Run spell checking.")]
 [group("Quality Checks")]
-spell-check:
+check-spelling:
     @echo "{{bold}}{{green}}🔍 Spell checking...{{nc}}"
     {{run}} codespell apps packages services README.md
     @echo "{{bold}}{{green}}✓ All spelling is valid.{{nc}}"
@@ -47,5 +47,5 @@ spell-check:
 # Check for stale lock files
 [doc("Check for stale lock files.")]
 [group("Quality Checks")]
-lock-check:
+check-lock:
     uv lock --check

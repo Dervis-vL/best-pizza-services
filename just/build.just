@@ -1,35 +1,14 @@
-# Run podman compose up
-[doc("Run podman compose up.")]
+# Run dockerpodman compose
+[doc("Run images from compose file.")]
 [group("Build & Deploy")]
 compose env_file=".env":
     {{container}} compose --env-file {{env_file}} up --build
 
-# Run podman compose down
-[doc("Run podman compose down.")]
+# Stop docker/podman compose
+[doc("Stop images from compose file.")]
 [group("Build & Deploy")]
-compose-down env_file=".env":
-    {{container}} compose --env-file {{env_file}} down
-
-# Alembic upgrade: env_file arg selects the dotenv to load (default .env)
-[doc("Run alembic upgrade head.")]
-[group("Build & Deploy")]
-alembic-upgrade env_file=".env":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    # Source the env file when present (local dev); in CI the vars are already
-    # injected into the environment, so a missing file is not an error.
-    set -a
-    if [[ -f "{{env_file}}" ]]; then
-        source "{{env_file}}"
-    fi
-    set +a
-    {{run}} alembic upgrade head
-
-# Alembic revision: message arg sets the revision message
-[doc("Create a new alembic revision.")]
-[group("Build & Deploy")]
-alembic-revision m:
-    {{run}} alembic revision --autogenerate -m "{{m}}"
+compose-down:
+    {{container}} compose down
 
 # Build one image (e.g. `just build-image apps/pizza_api`); tag defaults to project version
 [doc("Build a single deployable image.")]
@@ -52,9 +31,9 @@ build:
     @for d in {{_deployables}}; do just build-image "$d"; done
 
 # Build and push dev images to registry tagged with a given SHA
-[doc("Build and push dev images to GHCR tagged with a given SHA.")]
+[doc("Build and push dev images to registry tagged with a given SHA.")]
 [group("Build & Deploy")]
-push-ghcr-dev sha:
+push-to-registry-dev sha:
     #!/usr/bin/env bash
     set -euo pipefail
     for d in {{_deployables}}; do
@@ -62,10 +41,10 @@ push-ghcr-dev sha:
         {{container}} push "{{_registry}}/$(just _meta "$d" name):{{sha}}"
     done
 
-# Build and push all images to GHCR, also tagging latest
-[doc("Build and push all images to GHCR, also tagging latest.")]
+# Build and push all images to registry, also tagging latest
+[doc("Build and push all images to registry, also tagging latest.")]
 [group("Build & Deploy")]
-push-ghcr: build
+push-to-registry: build
     #!/usr/bin/env bash
     set -euo pipefail
     for d in {{_deployables}}; do

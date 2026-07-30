@@ -136,7 +136,7 @@ reset-scope project:
 # Validate changelogs and release scopes for changed projects; no bumping
 [doc("Validate changelogs and release scopes for changed projects.")]
 [group("Quality Checks")]
-version-check:
+check-version:
     #!/usr/bin/env bash
     set -euo pipefail
     changed=$(just affected-projects)

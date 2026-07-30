@@ -112,7 +112,6 @@ plugins = [
 module = ["streamlit_folium", "scaleway", "scaleway.*"]
 ignore_missing_imports = true
 
-
 [tool.alembic]
 script_location  = "services/pizza_data_storage/alembic"
 prepend_sys_path = "."
