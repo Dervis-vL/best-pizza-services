@@ -1,4 +1,3 @@
-# CONFIG
 # Container engine
 container := env_var_or_default("CONTAINER_ENGINE", "docker")
 # Container registry
