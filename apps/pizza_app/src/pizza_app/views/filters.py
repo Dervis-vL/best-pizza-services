@@ -1,7 +1,5 @@
 """All Streamlit app related filters logic."""
 
-from __future__ import annotations
-
 import streamlit as st
 from pandera import typing as pa_typing
 

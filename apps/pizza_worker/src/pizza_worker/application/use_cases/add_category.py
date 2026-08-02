@@ -1,7 +1,5 @@
 """Add a new category and run the full scrape + parse cycle use case."""
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from pizza_data_storage.application import use_cases as storage_use_cases

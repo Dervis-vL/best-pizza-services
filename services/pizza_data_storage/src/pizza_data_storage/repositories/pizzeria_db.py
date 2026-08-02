@@ -8,8 +8,6 @@ Repository for the following models/schemas:
     locations.
 """
 
-from __future__ import annotations
-
 import logging
 
 import sqlalchemy as sa

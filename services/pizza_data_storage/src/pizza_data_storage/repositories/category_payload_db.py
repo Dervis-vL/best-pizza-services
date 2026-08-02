@@ -5,8 +5,6 @@ Handles the hand-off of a category payload from the API (producer) to the worker
 worker, which reads it back, processes it, and marks it ``consumed`` or ``failed``.
 """
 
-from __future__ import annotations
-
 import datetime
 import logging
 

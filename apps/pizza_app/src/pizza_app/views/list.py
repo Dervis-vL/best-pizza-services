@@ -1,7 +1,5 @@
 """List view module for displaying pizzerias as cards."""
 
-from __future__ import annotations
-
 import pandas as pd
 import streamlit as st
 from pandera import typing as pa_typing

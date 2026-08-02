@@ -1,7 +1,5 @@
 """Base model definitions for pizza_data_scraper models."""
 
-from __future__ import annotations
-
 import datetime
 
 import sqlalchemy as sa

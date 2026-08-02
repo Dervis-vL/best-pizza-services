@@ -1,7 +1,5 @@
 """Streamlit interactive map app of the best pizzerias."""
 
-from __future__ import annotations
-
 import subprocess
 import sys
 
