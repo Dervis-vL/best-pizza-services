@@ -1,7 +1,5 @@
 """Schema for validating pizzeria location data."""
 
-from __future__ import annotations
-
 import pydantic as pyd
 
 from pizza_platform_shared import constants

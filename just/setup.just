@@ -1,12 +1,20 @@
 # WIP
 # Validate an environment contains all project needs
-[doc("Validate the development environment.")]
+[doc("WIP: Validate the development environment.")]
 [group("Setup")]
-[private]
 validate:
     @echo "{{bold}}{{green}}⚙ checking toml members...{{nc}}"
     @echo "{{bold}}{{green}}⚙ checking .env...{{nc}}"
     @echo "{{bold}}{{green}}⚙ checking prereq...{{nc}}"
+
+# Initialize the monorepo with a new project
+[doc("WIP: Initialize the monorepo with a new project.")]
+[group("Setup")]
+init:
+    @echo "{{bold}}{{green}}⚙ Initializing new project...{{nc}}"
+    @echo "{{bold}}{{green}}⚙ updating pyproject.toml...{{nc}}"
+    @echo "{{bold}}{{green}}⚙ updating pre-commit hooks...{{nc}}"
+    @echo "{{bold}}{{green}}✓ New project initialized.{{nc}}"
 
 # Setup the development environment
 [doc("Initialize the development environment.")]
@@ -23,9 +31,8 @@ setup:
     @echo "{{bold}}{{green}}✓ Environment ready.{{nc}}"
 
 # WIP
-[doc("Add a new workspace member to the project.")]
+[doc("WIP: Add a new workspace member template to the monorepo.")]
 [group("Setup")]
-[private]
 add:
     @echo "{{bold}}{{green}}⚙ Adding new workspace member...{{nc}}"
     @echo "{{bold}}{{green}}⚙ Updating pyproject.toml...{{nc}}"

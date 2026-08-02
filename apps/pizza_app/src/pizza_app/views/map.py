@@ -1,7 +1,5 @@
 """Map module containing building and marker logic."""
 
-from __future__ import annotations
-
 import folium
 import pandas as pd
 from folium import plugins as fo_plugins

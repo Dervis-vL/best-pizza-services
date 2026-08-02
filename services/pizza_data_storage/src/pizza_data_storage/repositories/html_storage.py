@@ -1,7 +1,5 @@
 """HTML file storage repository using S3-compatible object storage."""
 
-from __future__ import annotations
-
 import logging
 
 from botocore.exceptions import ClientError
