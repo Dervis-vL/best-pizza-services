@@ -103,10 +103,10 @@ check-changelog project:
 # Bump version for a project — reads scope from project's release_scope.env
 [doc("Bump the version for a project.")]
 [group("Versioning")]
-bump-project project:
+bump-project name:
     #!/usr/bin/env bash
     set -euo pipefail
-    env_file="{{project}}/release_scope.env"
+    env_file="{{name}}/release_scope.env"
     if [[ ! -f "$env_file" ]]; then
         echo "ERROR: $env_file not found; create it with SCOPE=patch|minor|major"
         exit 1
@@ -117,42 +117,60 @@ bump-project project:
         echo "ERROR: SCOPE is not set in $env_file; set it to patch, minor, or major"
         exit 1
     fi
-    echo "Bumping {{project}} ($SCOPE)..."
+    echo "Bumping {{name}} ($SCOPE)..."
     # --no-sync: the env is already synced by CI setup; without it, `uv run`
     # rewrites uv.lock (member versions change) and dirties the tree, which
-    # makes the next project's bump-my-version abort on its clean-tree check.
-    (cd "{{project}}" && uv run --no-sync bump-my-version bump "$SCOPE")
+    # makes the next name's bump-my-version abort on its clean-tree check.
+    (cd "{{name}}" && uv run --no-sync bump-my-version bump "$SCOPE")
 
 # Reset SCOPE to placeholder after a successful bump
 [doc("Reset the release scope for a project to placeholder.")]
 [group("Versioning")]
-reset-scope project:
+reset-scope name:
     #!/usr/bin/env bash
     set -euo pipefail
-    env_file="{{project}}/release_scope.env"
+    env_file="{{name}}/release_scope.env"
     perl -i -pe 's/^SCOPE=.*/SCOPE=placeholder/' "$env_file"
     echo "✓ Reset SCOPE to placeholder in $env_file"
 
-# Validate changelogs and release scopes for changed projects; no bumping
-[doc("Validate changelogs and release scopes for changed projects.")]
+# Validate changelogs and release scopes; no bumping. With no arguments this
+# checks every affected project (changed + dependents), which is what CI wants.
+# Given explicit project dirs it checks only those, so `check-changed` can reuse
+# it with its own, narrower set.
+[doc("Validate changelogs and release scopes for the affected (or given) projects.")]
 [group("Quality Checks")]
-check-version:
+check-version *projects:
     #!/usr/bin/env bash
     set -euo pipefail
-    changed=$(just affected-projects)
-    if [[ -z "$changed" ]]; then
+
+    dirs=({{projects}})
+    if [[ ${#dirs[@]} -eq 0 ]]; then
+        while IFS= read -r line; do
+            if [[ -n "$line" ]]; then
+                dirs+=("$line")
+            fi
+        done < <(just affected-projects)
+        echo "Affected projects (changed + dependents):"
+    else
+        echo "Checking projects:"
+    fi
+
+    if [[ ${#dirs[@]} -eq 0 ]]; then
         echo "No project changes detected; nothing to check"
         exit 0
     fi
-    echo "Affected projects (changed + dependents):"
-    echo "$changed"
-    while IFS= read -r project; do
+    printf '%s\n' "${dirs[@]}"
+
+    for project in "${dirs[@]}"; do
         just check-changelog "$project"
         env_file="$project/release_scope.env"
         if [[ ! -f "$env_file" ]]; then
             echo "ERROR: $env_file not found; create it with SCOPE=patch|minor|major"
             exit 1
         fi
+        # Clear first: `source` leaves SCOPE set, so a project whose env file is
+        # missing the line would otherwise silently inherit the previous one.
+        unset SCOPE
         # shellcheck source=/dev/null
         source "$env_file"
         if [[ ! "${SCOPE:-}" =~ ^(patch|minor|major)$ ]]; then
@@ -160,8 +178,8 @@ check-version:
             exit 1
         fi
         echo "✓ SCOPE=$SCOPE in $env_file"
-    done <<< "$changed"
-    echo "{{bold}}{{green}}✓ Version check passed for all changed projects.{{nc}}"
+    done
+    echo "{{bold}}{{green}}✓ Version check passed for: ${dirs[*]}{{nc}}"
 
 # CI entry point: detect changed projects, validate changelogs, bump versions
 [doc("Run versioning flow for changed projects.")]
