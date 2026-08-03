@@ -54,7 +54,7 @@ This README is for **developers, testers, contributors, and people studying the 
 - [uv](https://docs.astral.sh/uv/) — `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - [Podman](https://podman.io/) with Podman Compose (or Docker Compose)
 - [just](https://just.systems/)
-- [Trivy](https://trivy.dev/) — only needed for security checks (`just security`)
+- [Trivy](https://trivy.dev/) — only needed for security checks (`just audit` or `just audit-image`)
 
 ### 1.1.2. Setup
 
