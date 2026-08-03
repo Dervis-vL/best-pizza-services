@@ -1,7 +1,5 @@
 """Process all unscraped and unparsed items use case."""
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from pizza_worker.application import results

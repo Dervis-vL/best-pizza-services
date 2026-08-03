@@ -5,8 +5,6 @@ Repository for the following models/schemas:
     editions.
 """
 
-from __future__ import annotations
-
 import logging
 
 import sqlalchemy as sa

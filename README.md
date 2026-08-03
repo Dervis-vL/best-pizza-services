@@ -1,4 +1,10 @@
-[![CI](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml/badge.svg)](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml)  ![Python](https://img.shields.io/badge/python-3.14-blue)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)  [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![CI](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml/badge.svg)](https://github.com/Dervis-vL/best-pizza-services/actions/workflows/ci.yml)  ![Python](https://img.shields.io/badge/python-3.14-blue)  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)  [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)  [![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
+
+`Pizza API`: [![ghcr](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2FDervis-vL%2Fbest-pizza-services%2Fmain%2Fapps%2Fpizza_api%2Fpyproject.toml&query=%24.project.version&label=ghcr&prefix=v&color=blue&logo=github)](https://github.com/Dervis-vL/best-pizza-services/pkgs/container/pizza-api)
+
+`Pizza APP`: [![ghcr](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2FDervis-vL%2Fbest-pizza-services%2Fmain%2Fapps%2Fpizza_app%2Fpyproject.toml&query=%24.project.version&label=ghcr&prefix=v&color=blue&logo=github)](https://github.com/Dervis-vL/best-pizza-services/pkgs/container/pizza-app)
+
+`Pizza Worker`: [![ghcr](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2FDervis-vL%2Fbest-pizza-services%2Fmain%2Fapps%2Fpizza_worker%2Fpyproject.toml&query=%24.project.version&label=ghcr&prefix=v&color=blue&logo=github)](https://github.com/Dervis-vL/best-pizza-services/pkgs/container/pizza-worker)
 
 ## Table of Content
 
@@ -48,7 +54,7 @@ This README is for **developers, testers, contributors, and people studying the 
 - [uv](https://docs.astral.sh/uv/) — `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - [Podman](https://podman.io/) with Podman Compose (or Docker Compose)
 - [just](https://just.systems/)
-- [Trivy](https://trivy.dev/) — only needed for security checks (`just security`)
+- [Trivy](https://trivy.dev/) — only needed for security checks (`just audit` or `just audit-image`)
 
 ### 1.1.2. Setup
 

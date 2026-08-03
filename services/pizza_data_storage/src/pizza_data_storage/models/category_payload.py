@@ -1,7 +1,5 @@
 """Model for staging category-ingestion payloads handed from the API to the worker."""
 
-from __future__ import annotations
-
 import datetime
 from typing import Any
 

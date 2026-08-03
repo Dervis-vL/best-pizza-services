@@ -1,7 +1,5 @@
 """Tests for LocationSchema and LocationReadSchema."""
 
-from __future__ import annotations
-
 import pydantic as pyd
 import pytest
 from hypothesis import given
