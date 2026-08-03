@@ -4,15 +4,16 @@ All repo tasks live here. The root `justfile` sets the shell, defines shared dis
 variables, and imports every module in this directory.
 
 ```
-justfile          shell settings, colours, `check` aggregate, imports
-just/vars.just    derived workspace variables + configurable knobs
-just/setup.just   environment setup, validation, member scaffolding
-just/check.just   fmt, typecheck, lint, deps-check, spell-check, lock-check
-just/test.just    pytest with per-member coverage
-just/build.just   container images, compose, alembic
-just/security.just security scanning
-just/version.just per-project change detection, changelog checks, version bumps
-just/git.just     branch cleanup
+justfile            shell settings, colours, `check` aggregate, imports
+just/vars.just      derived workspace variables + configurable knobs
+just/database.just  alembic revision and migration recipes
+just/setup.just     environment setup, validation, member scaffolding
+just/check.just     fmt, typecheck, lint, deps-check, spell-check, lock-check
+just/test.just      pytest with per-member coverage
+just/build.just     container images, compose
+just/security.just  security scanning
+just/version.just   per-project change detection, changelog checks, version bumps
+just/git.just       branch cleanup
 ```
 
 Run `just` for the grouped recipe list, `just --groups` for group names alone, and
