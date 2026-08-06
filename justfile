@@ -58,3 +58,10 @@ show:
 [group("Quality Checks")]
 check: fmt check-lock check-type lint check-deps check-spelling test check-version
     @echo "{{bold}}{{green}}✓ All checks passed.{{nc}}"
+
+
+# Run all checks and security scans
+[doc("Run all quality checks and security scans")]
+[group("Quality Checks")]
+check-all: check audit
+    @echo "{{bold}}{{green}}✓ All checks and security scans passed.{{nc}}"
