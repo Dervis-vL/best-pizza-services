@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-07-30T05:30:15.145761Z"
+exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
 exclude-newer-span = "P1W"
 
 [manifest]
@@ -22,9 +22,7 @@ members = [
 ]
 constraints = [
     { name = "gitpython", specifier = ">=3.1.54" },
-    { name = "msgpack", specifier = ">=1.2.1" },
     { name = "pillow", specifier = ">=12.3.0" },
-    { name = "setuptools", specifier = ">=78.1.1" },
     { name = "soupsieve", specifier = ">=2.8.4" },
 ]
 
