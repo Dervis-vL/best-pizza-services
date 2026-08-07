@@ -20,6 +20,7 @@ dependencies = [
     "streamlit-folium>=0.26.1",
     "pizza-platform-shared",
     "requests>=2.32.5",
+    "tenacity>=9.1.4",
 ]
 
 [project.scripts]
