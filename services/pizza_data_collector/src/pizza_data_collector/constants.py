@@ -2,8 +2,6 @@
 
 from typing import Final
 
-RETRYABLE_STATUS: Final[frozenset[int]] = frozenset({500, 502, 503, 504})
-
 
 class Coordinate:
     """Coordinate constant values for models."""

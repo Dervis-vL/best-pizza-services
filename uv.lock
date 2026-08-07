@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
+exclude-newer = "2026-07-31T13:37:52.229641Z"
 exclude-newer-span = "P1W"
 
 [manifest]
@@ -1223,6 +1223,7 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "scaleway" },
     { name = "sqlalchemy" },
+    { name = "tenacity" },
 ]
 
 [package.metadata]
@@ -1234,6 +1235,7 @@ requires-dist = [
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "scaleway", specifier = ">=2.11.0" },
     { name = "sqlalchemy", specifier = ">=2.0.46" },
+    { name = "tenacity", specifier = ">=9.1.4" },
 ]
 
 [[package]]

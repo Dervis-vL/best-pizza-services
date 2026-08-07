@@ -14,8 +14,9 @@ from tenacity import (
     wait_random_exponential,
 )
 
-from pizza_data_collector import constants, settings
+from pizza_data_collector import settings
 from pizza_data_collector.exceptions import TransientFetchError
+from pizza_platform_shared import constants as shared_consts
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ class HttpClient:  # pylint: disable=too-few-public-methods
                 content: bytes = response.read()
                 return content
         except HTTPError as e:
-            if e.code in constants.RETRYABLE_STATUS:
+            if e.code in shared_consts.RETRYABLE_STATUS:
                 # Some pages render a full, valid body under a 500 status
                 body: bytes = e.read()
                 if len(body) >= self._cfg.salvage_min_bytes:
