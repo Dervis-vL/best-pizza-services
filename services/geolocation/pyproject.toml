@@ -41,3 +41,9 @@ replace  = 'version = "{new_version}"'
 filename = "CHANGELOG.md"
 search   = "[Unreleased]"
 replace  = "## [{new_version}] - {now:%Y-%m-%d}"
+
+[[tool.bumpversion.files]]
+filename = "release_scope.env"
+search   = "SCOPE=(patch|minor|major)"
+replace  = "SCOPE=placeholder"
+regex    = true

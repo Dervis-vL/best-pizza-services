@@ -130,8 +130,17 @@ module = ["streamlit_folium", "scaleway", "scaleway.*"]
 ignore_missing_imports = true
 
 [tool.pytest_env]
-env_files = ["vars.env"]
-env_files_skip_if_set = true
+# Paths are resolved against rootdir (this file's directory), and missing
+# files are skipped silently -- keep these in sync when adding a workspace member.
+env_files = [
+    "packages/pizza_platform_shared/tests/vars.env",
+    "services/pizza_data_storage/tests/vars.env",
+    "services/pizza_data_collector/tests/vars.env",
+    "services/geolocation/tests/vars.env",
+    "apps/pizza_api/tests/vars.env",
+    "apps/pizza_app/tests/vars.env",
+    "apps/pizza_worker/tests/vars.env",
+]
 
 [tool.alembic]
 script_location  = "services/pizza_data_storage/alembic"
