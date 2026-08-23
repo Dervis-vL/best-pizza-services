@@ -104,3 +104,34 @@ version:
 [group("Build & Deploy")]
 publish: build push-to-registry
     @echo "{{yellow}}✓ All images built and pushed to registry.{{nc}}"
+
+
+[doc("Full local gate: fixes, quality checks, security audit and image builds.")]
+[group("Local")]
+preflight:
+    #!/usr/bin/env bash
+    # No -e on purpose: tox-style, every stage runs and failures are reported together.
+    set -uo pipefail
+
+    stages=(fix check audit)
+
+    failed=() summary=() started=$SECONDS
+    for stage in "${stages[@]}"; do
+        echo; echo "{{yellow}}━━━ just $stage ━━━{{nc}}"
+        elapsed=$SECONDS
+        if just "$stage"; then
+            summary+=("{{green}}  ✓ $stage{{nc}} ($((SECONDS - elapsed))s)")
+        else
+            summary+=("{{style('error')}}  ✗ $stage{{nc}} ($((SECONDS - elapsed))s)")
+            failed+=("$stage")
+        fi
+    done
+
+    echo; echo "{{yellow}}━━━ preflight summary ($((SECONDS - started))s) ━━━{{nc}}"
+    printf '%s\n' "${summary[@]}"
+
+    if (( ${#failed[@]} )); then
+        echo "{{style('error')}}✗ preflight failed: ${failed[*]}{{nc}}" >&2
+        exit 1
+    fi
+    echo "{{green}}✓ preflight passed.{{nc}}"
