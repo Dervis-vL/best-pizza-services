@@ -96,13 +96,30 @@ check-changelog project:
     fi
     echo "✓ [Unreleased] found in $changelog"
 
-# Bump version for a project — reads scope from project's release_scope.env
+[doc("Check that the project has a valid scope.")]
+[group("Quality Checks")]
+check-scope project:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    env_file="{{project}}/release_scope.env"
+    if [[ ! -f "$env_file" ]]; then
+        echo "ERROR: $env_file not found; create it with SCOPE=patch|minor|major"
+        exit 1
+    fi
+    # shellcheck source=/dev/null
+    source "$env_file"
+    if [[ ! "${SCOPE:-}" =~ ^(patch|minor|major)$ ]]; then
+        echo "ERROR: SCOPE is not set in $env_file; set it to patch, minor, or major"
+        exit 1
+    fi
+    echo "✓ SCOPE=$SCOPE in $env_file"
+
+# Bump version for a project
 [doc("Bump the version for a project.")]
 [group("Versioning")]
 bump-project name:
     #!/usr/bin/env bash
-    set -euo pipefail
-    env_file="{{name}}/release_scope.env"
+    env_file="{{project}}/release_scope.env"
     if [[ ! -f "$env_file" ]]; then
         echo "ERROR: $env_file not found; create it with SCOPE=patch|minor|major"
         exit 1
@@ -149,20 +166,6 @@ check-version *projects:
 
     for project in "${dirs[@]}"; do
         just check-changelog "$project"
-        env_file="$project/release_scope.env"
-        if [[ ! -f "$env_file" ]]; then
-            echo "ERROR: $env_file not found; create it with SCOPE=patch|minor|major"
-            exit 1
-        fi
-        # Clear first: `source` leaves SCOPE set, so a project whose env file is
-        # missing the line would otherwise silently inherit the previous one.
-        unset SCOPE
-        # shellcheck source=/dev/null
-        source "$env_file"
-        if [[ ! "${SCOPE:-}" =~ ^(patch|minor|major)$ ]]; then
-            echo "ERROR: SCOPE in $env_file must be patch, minor, or major (got: '${SCOPE:-unset}')"
-            exit 1
-        fi
-        echo "✓ SCOPE=$SCOPE in $env_file"
+        just check-scope "$project"
     done
     echo "{{green}}✓ Version check passed for: ${dirs[*]}{{nc}}"
