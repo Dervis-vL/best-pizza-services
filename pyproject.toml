@@ -15,14 +15,23 @@ members = [
     "services/*",
 ]
 
+[tool.uv.audit]
+# Suppressed only while upstream has no fix
+ignore-until-fixed = []
+# Permanent suppressions. Every entry needs a comment: why it can't reach us.
+ignore = []
+
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "pytest-cov>=7.1.0",
     "pytest-xdist>=3.8.0",
+    "pytest-env>=1.7.0",
     "mypy>=2.0.0",
     "ruff>=0.15.12",
+    "rust-just>=1.58",
     "deptry>=0.25.1",
     "python-dotenv>=1.2.1",
     "bump-my-version>=1.3.0",
@@ -89,6 +98,7 @@ ignore  = [
     "TC002",  # Type checking imports
     "TC003",  # Type checking imports
     "COM812", # Conflicts with ruff formatter
+    "PLR0917",# Too many positional arguments
 ]
 
 
@@ -118,6 +128,10 @@ plugins = [
 [[tool.mypy.overrides]]
 module = ["streamlit_folium", "scaleway", "scaleway.*"]
 ignore_missing_imports = true
+
+[tool.pytest_env]
+env_files = ["vars.env"]
+env_files_skip_if_set = true
 
 [tool.alembic]
 script_location  = "services/pizza_data_storage/alembic"
