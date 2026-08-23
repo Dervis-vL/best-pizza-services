@@ -45,6 +45,11 @@ WORKDIR /app
 
 COPY --from=builder /app/.venv /app/.venv
 
+# No installer needed at runtime
+RUN rm -rf /usr/local/lib/python3.14/site-packages/pip \
+    /usr/local/lib/python3.14/site-packages/pip-*.dist-info \
+    /usr/local/bin/pip /usr/local/bin/pip3*
+
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1
 
