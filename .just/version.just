@@ -24,14 +24,12 @@ changed-projects:
 [group("Versioning")]
 affected-projects:
     #!/usr/bin/env bash
-    # No associative arrays here so this also runs on macOS's default bash 3.2.
     set -euo pipefail
     changed="$(just changed-projects)"
     if [[ -z "$changed" ]]; then
         exit 0
     fi
-    # Resolve a workspace package name to its project dir (empty if not a member).
-    # Always returns 0 so a "not found" does not trip set -e via `d=$(...)`.
+    # Resolve a workspace package name to its project dir (empty if not a member), always returns 0
     dir_of_name() {
         local n="$1" dir name
         for dir in {{_members}}; do
@@ -43,8 +41,7 @@ affected-projects:
         done
         return 0
     }
-    # List the workspace-member dirs that a project directly depends on, parsed
-    # from its [project] dependencies.
+    # List the workspace-member dirs that a project directly depends on from its [project] dependencies.
     deps_of_dir() {
         local dir="$1" block entry base d
         block="$(awk '/^dependencies *= *\[/{f=1;next} /^[[:space:]]*\]/{f=0} f{print}' "$dir/pyproject.toml")"
@@ -57,8 +54,7 @@ affected-projects:
         done < <(grep -oE '"[^"]+"' <<<"$block" | tr -d '"')
     }
     is_in() { grep -qxF "$1" <<<"$2"; }
-    # Seed with directly-changed projects, then mark a project affected whenever
-    # one of its deps is affected. Repeat to a fixpoint for transitive chains.
+    # Seed with directly-changed projects, then mark a project affected whenever one of its deps is affected
     affected="$changed"
     progress=1
     while (( progress )); do
@@ -123,20 +119,10 @@ bump-project name:
     # makes the next name's bump-my-version abort on its clean-tree check.
     (cd "{{name}}" && uv run --no-sync bump-my-version bump "$SCOPE")
 
-# Reset SCOPE to placeholder after a successful bump
-[doc("Reset the release scope for a project to placeholder.")]
-[group("Versioning")]
-reset-scope name:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    env_file="{{name}}/release_scope.env"
-    perl -i -pe 's/^SCOPE=.*/SCOPE=placeholder/' "$env_file"
-    echo "✓ Reset SCOPE to placeholder in $env_file"
 
 # Validate changelogs and release scopes; no bumping. With no arguments this
-# checks every affected project (changed + dependents), which is what CI wants.
-# Given explicit project dirs it checks only those, so `check-changed` can reuse
-# it with its own, narrower set.
+# checks every affected project (changed + dependents), which is what CI needs.
+# Given explicit project dirs it checks only those, so `check-changed` can be reused with smaller set.
 [doc("Validate changelogs and release scopes for the affected (or given) projects.")]
 [group("Quality Checks")]
 check-version *projects:
@@ -179,35 +165,4 @@ check-version *projects:
         fi
         echo "✓ SCOPE=$SCOPE in $env_file"
     done
-    echo "{{bold}}{{green}}✓ Version check passed for: ${dirs[*]}{{nc}}"
-
-# CI entry point: detect changed projects, validate changelogs, bump versions
-[doc("Run versioning flow for changed projects.")]
-[group("Versioning")]
-version:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    changed=$(just affected-projects)
-    if [[ -z "$changed" ]]; then
-        echo "No project changes detected; nothing to bump"
-        exit 0
-    fi
-    echo "Affected projects (changed + dependents):"
-    echo "$changed"
-    # Validate all changelogs before touching anything
-    while IFS= read -r project; do
-        just check-changelog "$project"
-    done <<< "$changed"
-    # Bump all projects (each makes its own clean commit + tag)
-    while IFS= read -r project; do
-        just bump-project "$project"
-    done <<< "$changed"
-    # Reset scopes and refresh the lockfile once, in a single follow-up commit.
-    # Doing this inside the bump loop would dirty the tree and abort the next bump.
-    while IFS= read -r project; do
-        just reset-scope "$project"
-        git add "$project/release_scope.env"
-    done <<< "$changed"
-    uv lock
-    git add uv.lock
-    git commit --no-verify -m "chore: reset release scopes and refresh lockfile"
+    echo "{{green}}✓ Version check passed for: ${dirs[*]}{{nc}}"

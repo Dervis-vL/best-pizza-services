@@ -13,6 +13,7 @@ alembic-upgrade env_file=".env":
     set +a
     {{run}} alembic upgrade head
 
+
 # Alembic revision: message arg sets the revision message
 [doc("Create a new alembic revision.")]
 [group("Database")]

@@ -1,17 +1,17 @@
-# `just/` — task runner
+# `.just/` — task runner
 
 All repo tasks live here. The root `justfile` sets the shell, defines shared display
 variables, and imports every module in this directory.
 
 ```
-justfile            shell settings, colours, `check` aggregate, imports
-just/vars.just      derived workspace variables + configurable knobs
+justfile            config, constants and main recipes
+just/vars.just      variables + configurables
 just/database.just  alembic revision and migration recipes
-just/setup.just     environment setup, validation, member scaffolding
-just/check.just     fmt, typecheck, lint, deps-check, spell-check, lock-check
+just/setup.just     environment setup and template creating
+just/check.just     all quality gate checks and fixers
 just/test.just      pytest with per-member coverage
-just/build.just     container images, compose
-just/security.just  security scanning
+just/build.just     container images, compose, publish
+just/security.just  security gate
 just/version.just   per-project change detection, changelog checks, version bumps
 just/git.just       branch cleanup
 ```
