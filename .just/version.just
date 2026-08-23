@@ -119,7 +119,7 @@ check-scope project:
 [group("Versioning")]
 bump-project name:
     #!/usr/bin/env bash
-    env_file="{{project}}/release_scope.env"
+    env_file="{{name}}/release_scope.env"
     if [[ ! -f "$env_file" ]]; then
         echo "ERROR: $env_file not found; create it with SCOPE=patch|minor|major"
         exit 1
