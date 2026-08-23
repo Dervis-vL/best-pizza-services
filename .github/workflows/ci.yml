@@ -159,7 +159,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
-        run: just push-to-registry
+        run: just publish
 
   scan-prod:
     if: github.ref == 'refs/heads/main'
