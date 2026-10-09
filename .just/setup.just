@@ -5,7 +5,7 @@ setup:
     @echo "{{green}}⚙ Installing dependencies...{{nc}}"
     uv sync
     @echo "{{green}}⚙ Installing pre-commit hooks...{{nc}}"
-    {{run}} prek install
+    {{run}} prek install --prepare-hooks
     @if [ ! -f .env ]; then \
         cp .env.example .env; \
         echo "{{green}}⚙ Created .env from .env.example; update credentials as needed.{{nc}}"; \
