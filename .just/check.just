@@ -1,138 +1,154 @@
-[doc("Run formatting fixes.")]
-[group("Local")]
-fmt:
-    @echo "{{green}}🔍 Ruff format...{{nc}}"
-    {{run}} ruff format .
-    @echo "{{green}}✓ All formatting done.{{nc}}"
-
-
-[doc("Run safe linting fixes.")]
-[group("Local")]
-lint-fix:
-    @echo "{{green}}🔍 Ruff lint fix...{{nc}}"
-    {{run}} ruff check . --fix
-    @echo "{{green}}✓ All safe fixes done.{{nc}}"
-
-
-# Type check all workspace members (strict)
-[doc("Run type checking for all workspace members.")]
+[doc("Format and apply safe lint fixes (ruff).")]
 [group("Quality Checks")]
-check-type:
-    @echo "{{green}}🔍 Type checking...{{nc}}"
-    {{run}} mypy {{ prepend('-p ', _modules) }}
-    @echo "{{green}}✓ All type checks passed.{{nc}}"
+fix *members=".":
+    @echo "{{ green }}🔍 Ruff format + fix...{{ nc }}"
+    {{ run }} ruff format {{ members }}
+    {{ run }} ruff check {{ members }} --fix
+    @echo "{{ green }}✓ All fixing done{{ nc }}"
 
 
-# Lint all workspace members
-[doc("Run linting checks for all workspace members.")]
+[doc("Lint every member (ruff).")]
 [group("Quality Checks")]
-check-lint:
-    @echo "{{green}}🔍 Ruff check...{{nc}}"
-    {{run}} ruff check .
-    @echo "{{green}}✓ All lint checks passed.{{nc}}"
+check-lint *members=".":
+    @echo "{{ green }}🔍 Ruff check...{{ nc }}"
+    {{ run }} ruff check {{ members }}
+    {{ run }} ruff format --check {{ members }}
+    @echo "{{ green }}✓ Lint passed.{{ nc }}"
 
-
-# Check dependencies for all workspace members
-[doc("Check dependencies for all workspace members.")]
+[doc("Type check every member (mypy).")]
 [group("Quality Checks")]
-check-deps:
-    @echo "{{green}}🔍 Checking dependencies...{{nc}}"
-    @for d in {{_members}}; do echo "→ $d"; {{run}} --directory "$d" deptry .; done
-    @echo "{{green}}✓ All dependencies are valid.{{nc}}"
+check-type *members=_modules:
+    @echo "{{ green }}🔍 Type checking...{{ nc }}"
+    {{ run }} mypy {{ prepend('-p ', members) }}
+    @echo "{{ green }}✓ Types passed.{{ nc }}"
 
 
-# Check for stale lock files
-[doc("Check for stale lock files.")]
+[doc("Check dependencies per member (deptry).")]
+[group("Quality Checks")]
+[script]
+check-deps *members=_members:
+    #!/usr/bin/env bash
+    echo "{{ green }}🔍 Checking dependencies...{{ nc }}"
+    for d in {{ members }}; do
+        echo "→ $d"
+        {{ run }} --directory "$d" deptry .
+    done
+    echo "{{ green }}✓ Dependencies are honest.{{ nc }}"
+
+
+[doc("Check for stale lock files (uv).")]
 [group("Quality Checks")]
 check-lock:
+    @echo "{{ green }}🔍 Checking lock files...{{ nc }}"
     uv lock --check
+    @echo "{{ green }}✓ Lock files are up to date.{{ nc }}"
 
 
-# Spell check
-[doc("Run spell checking.")]
+[doc("Fail unless the member's CHANGELOG.md has an [Unreleased] section.")]
 [group("Quality Checks")]
-check-spelling:
-    @echo "{{green}}🔍 Spell checking...{{nc}}"
-    {{run}} codespell apps packages services README.md
-    @echo "{{green}}✓ All spelling is valid.{{nc}}"
-
-
-# Run fmt / mypy / deptry / pytest scoped to a subset of projects given as arg or from changed-projects.
-[doc("Run formatting, type, dependency and test checks for the changed (or given) projects.")]
-[group("Quality Checks")]
-check-changed *projects: check-lock
+[script]
+check-changelog member:
     #!/usr/bin/env bash
-    set -euo pipefail
 
-    dirs=({{projects}})
+    echo "{{ green }}🔍 Checking changelog...{{ nc }}"
+    changelog="{{member}}/CHANGELOG.md"
+    if [[ ! -f "$changelog" ]]; then
+        echo "ERROR: $changelog not found"
+        exit 1
+    fi
+    if ! grep -q '\[Unreleased\]' "$changelog"; then
+        echo "ERROR: No [Unreleased] section in $changelog; add changelog entries before merging"
+        exit 1
+    fi
+    echo "{{ green }}✓ [Unreleased] found in $changelog{{ nc }}"
+
+
+[doc("Fail unless the member's release_scope.env says patch, minor or major.")]
+[group("Quality Checks")]
+[script]
+check-scope member:
+    #!/usr/bin/env bash
+
+    echo "{{ green }}🔍 Checking release scope...{{ nc }}"
+    var="{{ _release_scope }}"
+    env_file="{{member}}/release_scope.env"
+    if [[ ! -f "$env_file" ]]; then
+        echo -e "{{ red }}💥 $env_file not found{{ nc }}" >&2
+        exit 1
+    fi
+
+    source "$env_file"
+    scope="${!var:-}"
+    if [[ ! "$scope" =~ ^(patch|minor|major)$ ]]; then
+        echo -e "{{ red }}💥 SCOPE in $env_file must be patch, minor or major (got '${scope:-}'){{ nc }}" >&2
+        exit 1
+    fi
+    echo -e "{{ green }}✓ $var=$scope in $env_file{{ nc }}"
+
+
+[doc("Validate changelogs and release scopes for the affected (or given) projects.")]
+[group("Quality Checks")]
+[script]
+check-release *members:
+    #!/usr/bin/env bash
+
+    echo "{{ yellow }}🔍 Checking release information...{{ nc }}"
+    dirs=({{ members }})
     if [[ ${#dirs[@]} -eq 0 ]]; then
         while IFS= read -r line; do
             if [[ -n "$line" ]]; then
                 dirs+=("$line")
             fi
-        done < <(just affected-projects)
+        done < <({{ just_executable() }} affected-members)
+        echo "Affected members (changed + dependents):"
+    else
+        echo "Checking members:"
     fi
 
     if [[ ${#dirs[@]} -eq 0 ]]; then
-        echo "{{green}}✓ No changed projects; nothing to check.{{nc}}"
+        echo "No members changes detected; nothing to check"
+        exit 0
+    fi
+    printf '%s\n' "${dirs[@]}"
+
+    for member in "${dirs[@]}"; do
+        {{ just_executable() }} check-changelog "$member"
+        {{ just_executable() }} check-scope "$member"
+    done
+    echo "{{ yellow }}✓ Release information check passed for: ${dirs[*]}{{ nc }}"
+
+
+[doc("The whole quality gate: fmt, lock, lint, types, deps, tests.")]
+[group("Quality Checks")]
+check: fix check-lock check-release check-lint check-type check-deps test
+    @echo "{{ yellow }}👍 Quality gate passed{{nc}}"
+
+
+[doc("Quality gate for changed members: fmt, lock, lint, types, deps, tests.")]
+[group("Quality Checks")]
+[script]
+check-changed *members: check-lock
+    #!/usr/bin/env bash
+    echo "{{ green }}🔍 Checking changed members...{{ nc }}"
+    dirs=({{ members }})
+    if [[ ${#dirs[@]} -eq 0 ]]; then
+        dirs=($({{ just_executable() }} affected-members))
+    fi
+
+    if [[ ${#dirs[@]} -eq 0 ]]; then
+        echo "{{ green }}✓ No changed members to check.{{ nc }}"
         exit 0
     fi
 
-    # pass validation recipe when ready
-    mypy_args=()
-    for d in "${dirs[@]}"; do
-        if [[ ! -f "$d/pyproject.toml" ]]; then
-            echo "ERROR: '$d' is not a workspace member directory" >&2
-            exit 1
-        fi
-        mypy_args+=(-p "$(basename "$d")")
-    done
+    echo "Checking: ${dirs[*]}"
 
-    echo "{{green}}⚙ Checking: ${dirs[*]}{{nc}}"
+    modules=("${dirs[@]##*/}")
 
-    echo "{{green}}🔍 Ruff format + check fix...{{nc}}"
-    {{run}} ruff format "${dirs[@]}"
-    {{run}} ruff check "${dirs[@]}" --fix
+    {{ just_executable() }} check-release "${dirs[@]}"
+    {{ just_executable() }} fix "${dirs[@]}"
+    {{ just_executable() }} check-lint "${dirs[@]}"
+    {{ just_executable() }} check-type "${modules[@]}"
+    {{ just_executable() }} check-deps "${dirs[@]}"
+    {{ just_executable() }} test "${dirs[@]}"
 
-    echo "{{green}}🔍 Type checking...{{nc}}"
-    {{run}} mypy "${mypy_args[@]}"
-
-    echo "{{green}}🔍 Checking dependencies...{{nc}}"
-    for d in "${dirs[@]}"; do
-        echo "→ $d"
-        {{run}} --directory "$d" deptry .
-    done
-
-    echo "{{green}}🔍 Checking spelling...{{nc}}"
-    for d in "${dirs[@]}"; do
-        echo "→ $d"
-        {{run}} codespell "$d"
-    done
-
-    echo "→ README.md"
-    {{run}} codespell README.md
-
-    echo "{{green}}🔍 Checking versions...{{nc}}"
-    just check-version "${dirs[@]}"
-
-    # Every project must carry tests; pytest alone would not catch this, because
-    # one test-less project is masked by the others in a combined run.
-    for d in "${dirs[@]}"; do
-        if ! find "$d/tests" -name '__pycache__' -prune -o -name 'test_*.py' -print 2>/dev/null | grep -q .; then
-            echo "ERROR: '$d' has no test_*.py files under tests/" >&2
-            exit 1
-        fi
-    done
-
-    echo "{{green}}🔍 Running tests...{{nc}}"
-    # --cov takes the module name, not the path: --cov=apps/pizza_app would
-    test_dirs=()
-    cov_args=()
-    for d in "${dirs[@]}"; do
-        echo "→ $d"
-        test_dirs+=("$d/tests")
-        cov_args+=("--cov=$(basename "$d")")
-    done
-    {{run}} pytest "${test_dirs[@]}" "${cov_args[@]}" --cov-report=term-missing
-
-    echo "{{green}}✓ All checks passed for: ${dirs[*]}{{nc}}"
+    echo "{{ yellow }}👍 All checks passed for: ${dirs[*]}{{ nc }}"

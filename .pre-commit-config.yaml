@@ -1,3 +1,6 @@
+exclude: \.env(\..+)?$
+default_install_hook_types: [pre-commit, pre-push]
+
 repos:
   # File hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -11,18 +14,27 @@ repos:
       - id: check-added-large-files
       - id: detect-private-key
 
-  - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.11.14
+  - repo: local
     hooks:
-      - id: uv-lock
-
-  # Ruff: uses the pre-built binary, no uv env needed, faster then using just recipe
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.13
-    hooks:
-      - id: ruff-format          # ruff format
-      - id: ruff-check                 # ruff check
-        args: [--fix]
+    -   id: check-lock
+        name: check-lock
+        entry: uv run --no-sync just check-lock
+        language: system
+        files: (^|/)(pyproject\.toml|uv\.lock)$
+        pass_filenames: false
+    -   id: fix
+        name: fix
+        entry: uv run --no-sync just fix
+        language: system
+        types: [python]
+        pass_filenames: false
+    -   id: check-release
+        name: check-release
+        entry: uv run --no-sync just check-release
+        language: system
+        always_run: true
+        pass_filenames: false
+        stages: [pre-push]
 
   # Codespell: catches typos
   - repo: https://github.com/codespell-project/codespell

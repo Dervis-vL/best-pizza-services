@@ -10,24 +10,17 @@ ENV UV_COMPILE_BYTECODE=1 \
 
 # Copy workspace first; this layer is cached unless deps change
 COPY pyproject.toml uv.lock ./
-COPY apps/pizza_api/pyproject.toml apps/pizza_api/pyproject.toml
-COPY apps/pizza_api/README.md apps/pizza_api/README.md
-COPY apps/pizza_app/pyproject.toml apps/pizza_app/pyproject.toml
-COPY apps/pizza_app/README.md apps/pizza_app/README.md
-COPY apps/pizza_worker/pyproject.toml apps/pizza_worker/pyproject.toml
-COPY apps/pizza_worker/README.md apps/pizza_worker/README.md
-COPY packages/pizza_platform_shared/pyproject.toml packages/pizza_platform_shared/pyproject.toml
-COPY packages/pizza_platform_shared/README.md packages/pizza_platform_shared/README.md
-COPY services/pizza_data_collector/pyproject.toml services/pizza_data_collector/pyproject.toml
-COPY services/pizza_data_collector/README.md services/pizza_data_collector/README.md
-COPY services/pizza_data_storage/pyproject.toml services/pizza_data_storage/pyproject.toml
-COPY services/pizza_data_storage/README.md services/pizza_data_storage/README.md
-COPY services/geolocation/pyproject.toml services/geolocation/pyproject.toml
-COPY services/geolocation/README.md services/geolocation/README.md
+COPY apps/pizza_api/pyproject.toml apps/pizza_api/README.md apps/pizza_api/
+COPY apps/pizza_app/pyproject.toml apps/pizza_app/README.md apps/pizza_app/
+COPY apps/pizza_worker/pyproject.toml apps/pizza_worker/README.md apps/pizza_worker/
+COPY packages/pizza_platform_shared/pyproject.toml packages/pizza_platform_shared/README.md packages/pizza_platform_shared/
+COPY services/pizza_data_collector/pyproject.toml services/pizza_data_collector/README.md services/pizza_data_collector/
+COPY services/pizza_data_storage/pyproject.toml services/pizza_data_storage/README.md services/pizza_data_storage/
+COPY services/geolocation/pyproject.toml services/geolocation/README.md services/geolocation/
 
 # Install external dependencies without the workspace packages themselves
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --package pizza_api --no-dev --frozen --no-install-workspace
+    uv sync --package pizza_api --no-dev --locked --no-install-workspace
 
 # Copy only the source trees needed by pizza_api and its workspace deps
 COPY apps/pizza_api/src apps/pizza_api/src
@@ -45,16 +38,16 @@ WORKDIR /app
 
 COPY --from=builder /app/.venv /app/.venv
 
-# No installer needed at runtime
-RUN rm -rf /usr/local/lib/python3.14/site-packages/pip \
-    /usr/local/lib/python3.14/site-packages/pip-*.dist-info \
-    /usr/local/bin/pip /usr/local/bin/pip3*
-
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1
 
-RUN groupadd --system appgroup && \
-    useradd --system --gid appgroup --no-create-home appuser
+# No installer at runtime: the app runs from /app/.venv, which uv built without pip.
+RUN rm -rf /usr/local/lib/python3*/site-packages/pip \
+           /usr/local/lib/python3*/site-packages/pip-*.dist-info \
+           /usr/local/lib/python3*/ensurepip \
+           /usr/local/bin/pip /usr/local/bin/pip3* && \
+    groupadd --system appgroup && \
+    useradd --system --gid appgroup --create-home --home-dir /home/appuser appuser
 
 USER appuser
 

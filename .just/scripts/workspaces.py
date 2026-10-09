@@ -14,13 +14,11 @@ kind = sys.argv[2]
 
 # read the root level project toml
 try:
-    ws = tomllib.loads((project_path).read_text())["tool"]["uv"]["workspace"]
+    ws = tomllib.loads(project_path.read_text())["tool"]["uv"]["workspace"]
 except tomllib.TOMLDecodeError as exc:
-    msg = f"{project_path} is not valid TOML: {exc}"
-    raise SystemExit(msg) from exc
+    sys.exit(f"{project_path} is not valid TOML: {exc}")
 except KeyError as exc:
-    msg = f"{project_path} has no [tool.uv.workspace] table (missing {exc})"
-    raise SystemExit(msg) from exc
+    sys.exit(f"{project_path} has no [tool.uv.workspace] table (missing {exc})")
 
 excluded = set(ws.get("exclude", []))
 
@@ -28,7 +26,7 @@ members = sorted(
     p
     for pattern in ws["members"]
     for p in root.glob(pattern)
-    if p.is_dir() and str(p.relative_to(root)) not in excluded
+    if p.is_dir() and (p / "pyproject.toml").exists() and str(p.relative_to(root)) not in excluded
 )
 
 # Match environment type argument for the return

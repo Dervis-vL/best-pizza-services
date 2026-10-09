@@ -1,6 +1,10 @@
 # --- SETTINGS -------------------------------------------
-set shell := ["bash", "-euo", "pipefail", "-c"]
+set shell              := ["bash", "-euo", "pipefail", "-c"]
+set windows-shell      := ["bash", "-euo", "pipefail", "-c"]
+set script-interpreter := ["bash", "-euo", "pipefail"]
+
 set minimum-version := '1.58.0'
+set positional-arguments
 set default-list
 set lazy
 
@@ -14,18 +18,6 @@ import '.just/security.just'
 import '.just/setup.just'
 import '.just/test.just'
 import '.just/version.just'
-
-# --- VARIABLES ------------------------------------------
-_uv := require('uv')
-_workspaces := quote(_uv) + ' run --script ' +  quote(justfile_directory() / '.just/scripts/workspaces.py') \
-    + ' ' + quote(justfile_directory())
-_members     := shell(_workspaces + ' members')
-_modules     := shell(_workspaces + ' modules')
-_deployables := shell(_workspaces + ' deployables')
-run  := quote(_uv) + ' run'
-green := style('bold') + style('green')
-yellow := style('yellow')
-nc   := NORMAL
 
 # --- TARGETS -------------------------------------
 # Read a field out of a member's pyproject.toml
@@ -51,87 +43,7 @@ show:
     done
 
 
-[doc("Fix all auto-fixable issues")]
-[group("Local")]
-fix: fmt lint-fix
-    @echo "{{yellow}}✓ All fixing done.{{nc}}"
-
-
-[doc("Run all quality checks")]
-[group("Quality Checks")]
-check: check-lock check-type check-lint check-deps check-spelling test check-version
-    @echo "{{yellow}}✓ All checks passed.{{nc}}"
-
-
-[doc("Full security gate")]
-[group("Security")]
-audit: audit-uv audit-secrets audit-deployables audit-image
-    #!/usr/bin/env bash
-    set -euo pipefail
-    echo "{{yellow}}✓ Security gate passed.{{nc}}"
-
-
-# CI entry point: detect changed projects, validate changelogs, bump versions
-[doc("Run versioning flow for changed projects.")]
-[group("Versioning")]
-version:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    changed=$(just affected-projects)
-    if [[ -z "$changed" ]]; then
-        echo "No project changes detected; nothing to bump"
-        exit 0
-    fi
-    echo "Affected projects (changed + dependents):"
-    echo "$changed"
-    # Validate all changelogs before touching anything
-    while IFS= read -r project; do
-        just check-version "$project"
-    done <<< "$changed"
-    # Bump all projects (each makes its own clean commit + tag)
-    while IFS= read -r project; do
-        just bump-project "$project"
-    done <<< "$changed"
-
-    uv lock
-    git add uv.lock
-    git commit --no-verify -m "chore: reset release scopes and refresh lockfile"
-
-    @echo "{{yellow}}✓ Versioning flow completed.{{nc}}"
-
-
 [doc("Build and push all images to registry, also tagging latest")]
 [group("Build & Deploy")]
 publish: build push-to-registry
     @echo "{{yellow}}✓ All images built and pushed to registry.{{nc}}"
-
-
-[doc("Full local gate: fixes, quality checks, security audit and image builds.")]
-[group("Local")]
-preflight:
-    #!/usr/bin/env bash
-    # No -e on purpose: tox-style, every stage runs and failures are reported together.
-    set -uo pipefail
-
-    stages=(fix check audit)
-
-    failed=() summary=() started=$SECONDS
-    for stage in "${stages[@]}"; do
-        echo; echo "{{yellow}}━━━ just $stage ━━━{{nc}}"
-        elapsed=$SECONDS
-        if just "$stage"; then
-            summary+=("{{green}}  ✓ $stage{{nc}} ($((SECONDS - elapsed))s)")
-        else
-            summary+=("{{style('error')}}  ✗ $stage{{nc}} ($((SECONDS - elapsed))s)")
-            failed+=("$stage")
-        fi
-    done
-
-    echo; echo "{{yellow}}━━━ preflight summary ($((SECONDS - started))s) ━━━{{nc}}"
-    printf '%s\n' "${summary[@]}"
-
-    if (( ${#failed[@]} )); then
-        echo "{{style('error')}}✗ preflight failed: ${failed[*]}{{nc}}" >&2
-        exit 1
-    fi
-    echo "{{green}}✓ preflight passed.{{nc}}"
