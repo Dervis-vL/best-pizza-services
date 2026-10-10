@@ -1,3 +1,4 @@
+# --- uv ---------------------------------------------------------------------
 [tool.uv]
 package = false
 exclude-newer = "1 week"
@@ -22,7 +23,6 @@ ignore-until-fixed = []
 # Permanent suppressions. Every entry needs a comment: why it can't reach us.
 ignore = []
 
-
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
@@ -41,32 +41,28 @@ dev = [
     "types-requests>=2.33.0.20260518",
 ]
 
+# --- pytest -----------------------------------------------------------------
 [tool.pytest]
-# Discover tests across the whole monorepo
-testpaths = [
-    "apps",
-    "services",
-    "packages",
+python_files = ["test_*.py"]
+python_classes   = ["Test*"]
+python_functions = ["test_*"]
+testpaths = ["apps", "packages", "services"]
+addopts = [
+    "--import-mode=importlib",
+    "--strict-markers",
+    "-ra",
 ]
+filterwarnings = ["error"]
 
-# Naming conventions
-python_files     = ["test_*.py"]
-python_classes   = "Test*"
-python_functions = "test_*"
-asyncio_mode     = "auto"
-
-# Coverage
-addopts = """
-    --import-mode=importlib
-    -n auto
-"""
+# --- codespell --------------------------------------------------------------
 
 [tool.codespell]
 skip = "**/alembic/**"
 
+# --- coverage ---------------------------------------------------------------
 [tool.coverage.run]
 branch   = true
-parallel = true
+parallel = false
 
 [tool.coverage.report]
 fail_under    = 35
@@ -85,12 +81,14 @@ exclude_lines = [
 [tool.coverage.xml]
 output = "coverage.xml"
 
+# --- ruff -------------------------------------------------------------------
 [tool.ruff]
 src = ["apps/*/src", "packages/*/src", "services/*/src"]
 line-length    = 100
 indent-width   = 4
 target-version = "py314"
 exclude        = ["**/alembic/**"]
+extend-exclude = ["templates"]
 
 [tool.ruff.lint]
 select  = ["ALL"]

@@ -1,0 +1,33 @@
+# Gitleaks configuration.
+#
+# Gitleaks is a Go binary and does not read pyproject.toml. This file is its
+# only home. It is picked up automatically when it sits in the scan root;
+# CI can point elsewhere with GITLEAKS_CONFIG or `-c`.
+title = "best-pizza-services"
+
+[extend]
+# Keep every upstream rule (~170 providers) and add ours on top. Without this,
+# the rules below would be the *only* rules.
+useDefault = true
+
+# --- Allowlists ---------------------------------------------------------------
+# Every entry needs a comment: why this is not a live secret.
+# Same rule as [tool.uv.audit] ignore in pyproject.toml.
+
+[[allowlists]]
+description = """
+Google API key committed in the initial import of an older hobby version of this
+project, under scrape-pizza-data/old/. The key was rotated, so the string left in
+history is dead. Not scrubbed from history because the commit is the root of a
+pushed, forked-from branch set.
+"""
+commits = ["f0bde1fa172b6f1464ab8d61a3c7fd2cdc720aff"]
+
+# --- Custom rules -------------------------------------------------------------
+# Add a rule when the platform grows a credential format of its own, e.g.:
+#
+# [[rules]]
+# id          = "pizza-platform-api-key"
+# description = "Pizza platform API key"
+# regex       = '''pizza_live_[0-9a-zA-Z]{32}'''
+# keywords    = ["pizza_live_"]
