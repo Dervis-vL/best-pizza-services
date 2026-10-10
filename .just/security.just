@@ -14,10 +14,35 @@ audit-uv:
     echo "{{green}}✓ Dependency audit passed.{{nc}}"
 
 
-[doc("Scan committed tree for secrets [WIP].")]
+[doc("Scan the full git history for committed secrets.")]
 [group("Security")]
-audit-secrets:
-    @exit 0
+[script]
+audit-secrets *args:
+    #!/usr/bin/env bash
+
+    # History, not the working tree. The prek hook already blocks secrets at
+    # commit time (gitleaks --staged); this proves none ever landed, including
+    # from before the hook existed or from a --no-verify commit. Untracked files
+    # (.env, dev/) are gitignored and are meant to hold local secrets, so
+    # scanning the working tree would be all noise and no signal.
+    echo "{{green}}🔒 Scanning git history for secrets...{{nc}}"
+
+    # Prefer a system gitleaks (CI installs one); otherwise reuse the binary prek
+    # already built for the hook, so a contributor needs no second install.
+    if command -v gitleaks >/dev/null 2>&1; then
+        gitleaks=(gitleaks)
+    else
+        gitleaks=({{run}} --no-sync prek exec gitleaks -- gitleaks)
+    fi
+
+    if ! "${gitleaks[@]}" git . {{_gitleaks_flags}} {{args}}; then
+        echo "{{red}}✗ Secrets found in git history.{{nc}}" >&2
+        echo "  Rotate the credential first. Scrubbing history does not un-leak it," >&2
+        echo "  and anyone who cloned or forked already has it." >&2
+        echo "  Then allowlist the commit in .gitleaks.toml, with a comment saying why." >&2
+        exit 1
+    fi
+    echo "{{green}}✓ No secrets in git history.{{nc}}"
 
 
 # Pre-flight scan that skips the image build entirely.

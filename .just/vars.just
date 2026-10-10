@@ -19,6 +19,7 @@ _registry_owner  := `git remote get-url origin | sed 's/.*github\.com[:/]\([^/]*
 _registry := "ghcr.io/" + _registry_owner
 _trivy_flags := "--severity HIGH,CRITICAL --ignore-unfixed --scanners vuln --skip-version-check --exit-code 1"
 _uv_audit := "uv audit --locked --preview-features audit"
+_gitleaks_flags := "--redact --no-banner"
 # Where per-member coverage data lands before it is combined
 _cov_data := justfile_directory() / ".coverage-data"
 # Define the name of the release scope env variable
