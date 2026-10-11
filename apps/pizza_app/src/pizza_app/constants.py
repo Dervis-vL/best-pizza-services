@@ -27,6 +27,7 @@ class AppContext:
         non-commercial project and is not affiliated with, endorsed by, or officially
         connected to 50 Top Pizza or any of its associated organisations.
         """
+    TILES: Final[str] = "OpenStreetMap"
 
 
 class Filters:

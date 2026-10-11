@@ -6,7 +6,7 @@ from folium import plugins as fo_plugins
 from pandera import typing as pa_typing
 from streamlit_folium import st_folium
 
-from pizza_app import schemas
+from pizza_app import constants, schemas
 
 
 def render_map(
@@ -23,7 +23,7 @@ def render_map(
     m = folium.Map(
         location=[avg_lat, avg_lng],
         zoom_start=5,
-        tiles="CartoDB Positron",  # Clean, light, free, no API key needed
+        tiles=constants.AppContext.TILES,
     )
 
     # Cluster plugin keeps the map readable with many markers
