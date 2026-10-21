@@ -47,7 +47,7 @@ dev = [
 python_files = ["test_*.py"]
 python_classes   = ["Test*"]
 python_functions = ["test_*"]
-testpaths = ["apps", "packages", "services"]
+testpaths = ["apps", "libs", "services"]
 addopts = [
     "--import-mode=importlib",
     "--strict-markers",
@@ -84,7 +84,7 @@ output = "coverage.xml"
 
 # --- ruff -------------------------------------------------------------------
 [tool.ruff]
-src = ["apps/*/src", "packages/*/src", "services/*/src"]
+src = ["apps/*/src", "libs/*/src", "services/*/src"]
 line-length    = 100
 indent-width   = 4
 target-version = "py314"
