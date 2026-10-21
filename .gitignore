@@ -19,6 +19,11 @@ wheels/
 .mypy_cache
 .devcontainer
 .hypothesis
+.coverage
+.coverage-data/
+coverage.xml
+test-report.xml
+htmlcov/
 __pypackages__
 
 # local
