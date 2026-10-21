@@ -1,9 +1,8 @@
 """Engine factory for the pizza worker."""
 
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
-
 from pizza_platform_shared import settings as shared_settings
+from sqlalchemy.engine import Engine
 
 
 def create_worker_engine() -> Engine:

@@ -1,9 +1,9 @@
 """Edition parser implementation for pizza data collector service."""
 
 from bs4 import BeautifulSoup
+from pizza_platform_shared import schemas
 
 from pizza_data_collector import models, utils
-from pizza_platform_shared import schemas
 
 
 class EditionParser:  # pylint: disable=too-few-public-methods

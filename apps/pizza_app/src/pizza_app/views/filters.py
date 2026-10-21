@@ -2,9 +2,9 @@
 
 import streamlit as st
 from pandera import typing as pa_typing
+from pizza_platform_shared import enums as shared_enums
 
 from pizza_app import constants, enums, schemas, utils
-from pizza_platform_shared import enums as shared_enums
 
 
 def render_filters(

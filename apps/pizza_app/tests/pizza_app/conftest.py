@@ -4,10 +4,10 @@ from collections.abc import Generator
 from unittest.mock import MagicMock
 
 import pytest
+from pizza_platform_shared import schemas as shared_schemas
 
 from pizza_app import repositories
 from pizza_app.infrastructure import PizzaDataAdapter
-from pizza_platform_shared import schemas as shared_schemas
 
 
 @pytest.fixture(name="sample_pizzerias_fixture")

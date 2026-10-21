@@ -8,12 +8,12 @@ Repository for the following models/schemas:
 import logging
 
 import sqlalchemy as sa
+from pizza_platform_shared import schemas as shared_schemas
+from pizza_platform_shared.repositories.base_database import BaseDatabase
 from sqlalchemy import orm as sa_orm
 from sqlalchemy import select
 
 from pizza_data_storage import models
-from pizza_platform_shared import schemas as shared_schemas
-from pizza_platform_shared.repositories.base_database import BaseDatabase
 
 logger = logging.getLogger(__name__)
 

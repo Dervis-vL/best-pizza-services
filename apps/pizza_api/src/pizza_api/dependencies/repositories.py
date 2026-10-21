@@ -3,10 +3,10 @@
 from typing import Annotated
 
 from fastapi import Depends
+from pizza_platform_shared import settings as shared_settings
 
 from pizza_api.dependencies.engine import EngineDep
 from pizza_data_storage import repositories as storage_repos
-from pizza_platform_shared import settings as shared_settings
 
 
 def get_category_payload_repo(engine: EngineDep) -> storage_repos.CategoryPayloadRepository:

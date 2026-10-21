@@ -5,7 +5,6 @@ you must retype the schema name to confirm. Destructive; never run against data 
 """
 
 import sqlalchemy as sa
-
 from pizza_platform_shared import settings
 
 if __name__ == "__main__":

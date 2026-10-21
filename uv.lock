@@ -708,7 +708,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
+    { name = "pizza-platform-shared", editable = "libs/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "yarl", specifier = ">=1.22.0" },
 ]
@@ -1477,7 +1477,7 @@ dependencies = [
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.136.1" },
     { name = "pizza-data-storage", editable = "services/pizza_data_storage" },
-    { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
+    { name = "pizza-platform-shared", editable = "libs/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "scaleway", specifier = ">=2.11.0" },
@@ -1506,7 +1506,7 @@ requires-dist = [
     { name = "folium", specifier = ">=0.20.0" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "pandera", specifier = ">=0.29.0" },
-    { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
+    { name = "pizza-platform-shared", editable = "libs/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "requests", specifier = ">=2.32.5" },
@@ -1530,7 +1530,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
-    { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
+    { name = "pizza-platform-shared", editable = "libs/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.13.1" },
     { name = "tenacity", specifier = ">=9.1.4" },
@@ -1555,7 +1555,7 @@ dependencies = [
 requires-dist = [
     { name = "alembic", specifier = ">=1.18.4" },
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
-    { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
+    { name = "pizza-platform-shared", editable = "libs/pizza_platform_shared" },
     { name = "psycopg2-binary", specifier = ">=2.9.11" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
@@ -1566,7 +1566,7 @@ requires-dist = [
 [[package]]
 name = "pizza-platform-shared"
 version = "0.2.1"
-source = { editable = "packages/pizza_platform_shared" }
+source = { editable = "libs/pizza_platform_shared" }
 dependencies = [
     { name = "boto3" },
     { name = "pandas" },
@@ -1618,7 +1618,7 @@ requires-dist = [
     { name = "geolocation", editable = "services/geolocation" },
     { name = "pizza-data-collector", editable = "services/pizza_data_collector" },
     { name = "pizza-data-storage", editable = "services/pizza_data_storage" },
-    { name = "pizza-platform-shared", editable = "packages/pizza_platform_shared" },
+    { name = "pizza-platform-shared", editable = "libs/pizza_platform_shared" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "sqlalchemy", specifier = ">=2.0.47" },

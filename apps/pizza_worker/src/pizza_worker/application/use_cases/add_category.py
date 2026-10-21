@@ -2,8 +2,9 @@
 
 from typing import TYPE_CHECKING
 
-from pizza_data_storage.application import use_cases as storage_use_cases
 from pizza_platform_shared import schemas as shared_schemas
+
+from pizza_data_storage.application import use_cases as storage_use_cases
 from pizza_worker.application import results
 
 if TYPE_CHECKING:

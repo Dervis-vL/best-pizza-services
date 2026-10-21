@@ -4,12 +4,12 @@ import datetime
 from typing import Any
 
 import sqlalchemy as sa
+from pizza_platform_shared import enums as shared_enums
 from sqlalchemy import orm
 from sqlalchemy.dialects import postgresql
 
 from pizza_data_storage import settings
 from pizza_data_storage.models import base
-from pizza_platform_shared import enums as shared_enums
 
 
 class CategoryPayloadStaging(base.BaseModel):

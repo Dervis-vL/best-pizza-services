@@ -1,5 +1,6 @@
 """Process pending for maintenance jobs factory."""
 
+from pizza_platform_shared import settings as shared_settings
 from sqlalchemy.engine import Engine
 
 from geolocation import GeolocationService
@@ -9,7 +10,6 @@ from pizza_data_collector import parsers, scrapers
 from pizza_data_collector.application import use_cases as collector_use_cases
 from pizza_data_storage import repositories as storage_repos
 from pizza_data_storage.application import use_cases as storage_use_cases
-from pizza_platform_shared import settings as shared_settings
 from pizza_worker.application import use_cases
 
 

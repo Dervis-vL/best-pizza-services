@@ -4,10 +4,10 @@ from typing import Annotated, cast
 
 import sqlalchemy as sa
 from fastapi import Depends, Request
+from pizza_platform_shared import settings as shared_settings
 from sqlalchemy.engine import Engine
 
 from pizza_api import settings
-from pizza_platform_shared import settings as shared_settings
 
 
 def create_engine() -> Engine:

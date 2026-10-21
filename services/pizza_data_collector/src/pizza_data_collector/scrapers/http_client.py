@@ -5,6 +5,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import urlopen
 
+from pizza_platform_shared import constants as shared_consts
 from tenacity import (
     RetryError,
     Retrying,
@@ -16,7 +17,6 @@ from tenacity import (
 
 from pizza_data_collector import settings
 from pizza_data_collector.exceptions import TransientFetchError
-from pizza_platform_shared import constants as shared_consts
 
 logger = logging.getLogger(__name__)
 

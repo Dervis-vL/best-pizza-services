@@ -9,12 +9,12 @@ import datetime
 import logging
 
 import pydantic
-from sqlalchemy import select
-
-from pizza_data_storage import models
 from pizza_platform_shared import enums as shared_enums
 from pizza_platform_shared import schemas as shared_schemas
 from pizza_platform_shared.repositories.base_database import BaseDatabase
+from sqlalchemy import select
+
+from pizza_data_storage import models
 
 logger = logging.getLogger(__name__)
 
