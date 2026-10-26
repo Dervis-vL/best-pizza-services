@@ -21,7 +21,7 @@
     - [1.3.4. `services/pizza_data_collector`](#134-servicespizza_data_collector)
     - [1.3.5. `services/pizza_data_storage`](#135-servicespizza_data_storage)
     - [1.3.6. `services/geolocation`](#136-servicesgeolocation)
-    - [1.3.7. `packages/pizza_platform_shared`](#137-packagespizza_platform_shared)
+    - [1.3.7. `libs/pizza_platform_shared`](#137-libspizza_platform_shared)
   - [1.4. Data model](#14-data-model)
   - [1.5. Architecture](#15-architecture)
     - [1.5.1. Hexagonal architecture (ports \& adapters)](#151-hexagonal-architecture-ports--adapters)
@@ -106,7 +106,7 @@ best-pizza-services/
 │   ├── pizza_data_collector/   # Web scraper + HTML parser (library)
 │   ├── pizza_data_storage/     # PostgreSQL + S3 storage layer (library)
 │   └── geolocation/            # Nominatim reverse geocoding (library)
-├── packages/
+├── libs/
 │   └── pizza_platform_shared/  # Shared Pydantic schemas, SQLAlchemy models, DB config
 ├── just/                       # Modular justfile recipes
 ├── dev/                        # ERDs and scratch files
@@ -145,7 +145,7 @@ Persistence layer. Manages writes and reads to PostgreSQL via SQLAlchemy and arc
 
 Reverse geocodes GPS coordinates to city and country via the [Nominatim](https://nominatim.openstreetmap.org/) API (OpenStreetMap). Enforces a 1 req/s rate limit to comply with Nominatim's usage policy. If you display map data, attribution to OpenStreetMap contributors is required.
 
-### 1.3.7. `packages/pizza_platform_shared`
+### 1.3.7. `libs/pizza_platform_shared`
 
 Shared library used across all services and apps:
 

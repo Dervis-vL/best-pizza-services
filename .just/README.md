@@ -26,7 +26,7 @@ member requires **no edits here**:
 
 | Variable | Contents | Derived from |
 | --- | --- | --- |
-| `_globs` | `apps/* packages/* services/*` | `[tool.uv.workspace] members` |
+| `_globs` | `apps/* libs/* services/*` | `[tool.uv.workspace] members` |
 | `_members` | member directories | expanding `_globs` |
 | `_modules` | member module names | basename of each member directory |
 
@@ -63,7 +63,7 @@ just alembic-upgrade .env.local
 ## Adding a workspace member
 
 Membership itself is automatic — `[tool.uv.workspace] members` uses globs, so a new
-directory under `apps/`, `packages/`, or `services/` with a `pyproject.toml` is picked
+directory under `apps/`, `libs/`, or `services/` with a `pyproject.toml` is picked
 up by uv and by every recipe here.
 
 What the member must contain for the recipes to work:

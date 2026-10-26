@@ -13,7 +13,7 @@ COPY pyproject.toml uv.lock ./
 COPY apps/pizza_api/pyproject.toml apps/pizza_api/README.md apps/pizza_api/
 COPY apps/pizza_app/pyproject.toml apps/pizza_app/README.md apps/pizza_app/
 COPY apps/pizza_worker/pyproject.toml apps/pizza_worker/README.md apps/pizza_worker/
-COPY packages/pizza_platform_shared/pyproject.toml packages/pizza_platform_shared/README.md packages/pizza_platform_shared/
+COPY libs/pizza_platform_shared/pyproject.toml libs/pizza_platform_shared/README.md libs/pizza_platform_shared/
 COPY services/pizza_data_collector/pyproject.toml services/pizza_data_collector/README.md services/pizza_data_collector/
 COPY services/pizza_data_storage/pyproject.toml services/pizza_data_storage/README.md services/pizza_data_storage/
 COPY services/geolocation/pyproject.toml services/geolocation/README.md services/geolocation/
@@ -24,7 +24,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Copy only the source trees needed by pizza_app and its workspace deps
 COPY apps/pizza_app/src apps/pizza_app/src
-COPY packages/pizza_platform_shared/src packages/pizza_platform_shared/src
+COPY libs/pizza_platform_shared/src libs/pizza_platform_shared/src
 
 # Install workspace packages as non-editable wheels so only .venv is needed at runtime
 RUN --mount=type=cache,target=/root/.cache/uv \

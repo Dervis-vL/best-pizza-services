@@ -2,7 +2,7 @@
 
 Standalone **developer / operational utilities**. These are run directly
 (`uv run python scripts/<name>.py`) or mounted into a container — they are *not* importable
-modules and are **never deployed** as part of `apps/`, `services/`, or `packages/`.
+modules and are **never deployed** as part of `apps/`, `services/`, or `libs/`.
 
 Because they live outside the packaged workspace, they have no `__init__.py`; `scripts/*.py`
 is exempt from ruff's `INP001` (implicit-namespace-package) rule via `per-file-ignores`.
