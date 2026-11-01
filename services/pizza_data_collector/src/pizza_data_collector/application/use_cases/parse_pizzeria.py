@@ -1,9 +1,9 @@
 """Scrape pizzeria url use case."""
 
 from bs4 import BeautifulSoup
-from pizza_platform_shared import schemas as shared_schemas
 
 from pizza_data_collector.application import ports
+from pizza_platform_shared import schemas as shared_schemas
 
 
 class ParsePizzeriaUseCase:  # pylint: disable=too-few-public-methods

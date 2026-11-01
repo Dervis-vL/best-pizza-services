@@ -1,6 +1,5 @@
 """Process pending for maintenance jobs factory."""
 
-from pizza_platform_shared import settings as shared_settings
 from sqlalchemy.engine import Engine
 
 from geolocation import GeolocationService
@@ -8,15 +7,17 @@ from geolocation.application import use_cases as geo_use_cases
 from pizza_data_collector import models as collector_models
 from pizza_data_collector import parsers, scrapers
 from pizza_data_collector.application import use_cases as collector_use_cases
-from pizza_data_storage import repositories as storage_repos
+from pizza_data_storage.adapters import storage as storage_repos
+from pizza_data_storage.adapters.db import repos as db_repos
 from pizza_data_storage.application import use_cases as storage_use_cases
+from pizza_platform_shared import settings as shared_settings
 from pizza_worker.application import use_cases
 
 
 def build_process_pending_uc(engine: Engine) -> use_cases.ProcessPendingUseCase:
     """Build and wire the ProcessPendingUseCase from worker engine."""
-    ranking_repo = storage_repos.RankingsRepository.from_engine(engine=engine)
-    pizzeria_repo = storage_repos.PizzeriaRepository.from_engine(engine=engine)
+    ranking_repo = db_repos.RankingsRepository.from_engine(engine=engine)
+    pizzeria_repo = db_repos.PizzeriaRepository.from_engine(engine=engine)
     html_repo = storage_repos.HtmlStorageRepository.from_settings(
         storage_settings=shared_settings.pizza_strg,
     )

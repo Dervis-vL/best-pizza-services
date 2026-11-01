@@ -4,7 +4,7 @@ import logging
 
 import typer
 
-from pizza_data_storage import repositories as storage_repos
+from pizza_data_storage.adapters.db import repos as storage_repos
 from pizza_data_storage.application import use_cases as storage_ucs
 from pizza_worker import factories
 

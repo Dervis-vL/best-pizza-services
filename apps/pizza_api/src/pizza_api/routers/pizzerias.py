@@ -1,9 +1,9 @@
 """Router for getting pizzeria data endpoints."""
 
 from fastapi import APIRouter, status
-from pizza_platform_shared import schemas as shared_schemas
 
 from pizza_api import dependencies
+from pizza_platform_shared import schemas as shared_schemas
 
 router = APIRouter(prefix="/pizzerias", tags=["Data read"])
 

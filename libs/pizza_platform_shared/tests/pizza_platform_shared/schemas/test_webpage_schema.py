@@ -4,6 +4,7 @@ import pydantic as pyd
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
+
 from pizza_platform_shared.schemas.webpage import WebpageReadSchema, WebpageSchema
 
 _URL_MAX = 500

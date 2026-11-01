@@ -1,8 +1,7 @@
 """Stage a category-ingestion payload use case."""
 
-from pizza_platform_shared import schemas as shared_schemas
-
 from pizza_data_storage.application import ports
+from pizza_platform_shared import schemas as shared_schemas
 
 
 class StageCategoryPayloadUseCase:  # pylint: disable=too-few-public-methods

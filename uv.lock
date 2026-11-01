@@ -1548,7 +1548,6 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "sqlalchemy" },
-    { name = "yarl" },
 ]
 
 [package.metadata]
@@ -1560,7 +1559,6 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "sqlalchemy", specifier = ">=2.0.46" },
-    { name = "yarl", specifier = ">=1.22.0" },
 ]
 
 [[package]]
@@ -1573,7 +1571,6 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "sqlalchemy" },
-    { name = "yarl" },
 ]
 
 [package.dev-dependencies]
@@ -1589,7 +1586,6 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "sqlalchemy", specifier = ">=2.0.46" },
-    { name = "yarl", specifier = ">=1.22.0" },
 ]
 
 [package.metadata.requires-dev]

@@ -1,8 +1,7 @@
 """Get reverse geolocation data for locations with lat/lon but missing city/country."""
 
-from pizza_platform_shared import schemas as shared_schemas
-
 from geolocation.application import ports
+from pizza_platform_shared import schemas as shared_schemas
 
 
 class EnrichGeolocationUseCase:  # pylint: disable=too-few-public-methods

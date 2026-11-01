@@ -3,8 +3,6 @@
 import logging
 
 import requests
-from pizza_platform_shared import constants as shared_consts
-from pizza_platform_shared import schemas as shared_schemas
 from tenacity import (
     before_sleep_log,
     retry,
@@ -15,6 +13,8 @@ from tenacity import (
 
 from pizza_app import constants, exceptions, settings
 from pizza_app.settings.pizza_api import PizzaAPISettings
+from pizza_platform_shared import constants as shared_consts
+from pizza_platform_shared import schemas as shared_schemas
 
 logger = logging.getLogger(__name__)
 

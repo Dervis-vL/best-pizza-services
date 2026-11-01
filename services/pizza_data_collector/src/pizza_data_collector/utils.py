@@ -1,8 +1,7 @@
 """Utility functions for the scraper."""
 
-from pizza_platform_shared import enums as shared_enums
-
 from pizza_data_collector import constants
+from pizza_platform_shared import enums as shared_enums
 
 
 def standardize_award_name(raw_award_name: str) -> str:

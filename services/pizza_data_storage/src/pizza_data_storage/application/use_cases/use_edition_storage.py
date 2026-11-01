@@ -3,9 +3,9 @@
 import logging
 
 import bs4
-from pizza_platform_shared import enums as shared_enums
 
 from pizza_data_storage.application import ports
+from pizza_platform_shared import enums as shared_enums
 
 logger = logging.getLogger(__name__)
 

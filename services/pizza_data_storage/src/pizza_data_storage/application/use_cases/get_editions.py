@@ -1,8 +1,7 @@
 """Get all, unscraped and/or unparsed editions use case."""
 
-from pizza_platform_shared import schemas as shared_schemas
-
 from pizza_data_storage.application import ports
+from pizza_platform_shared import schemas as shared_schemas
 
 
 class GetEditionsUseCase:  # pylint: disable=too-few-public-methods

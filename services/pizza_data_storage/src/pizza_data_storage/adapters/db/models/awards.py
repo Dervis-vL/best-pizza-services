@@ -1,28 +1,28 @@
-"""Model for ranking entries and their associated data."""
+"""Model for awards entries and their associated data."""
 
 from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_data_storage import settings
-from pizza_data_storage.models import base
+from pizza_data_storage.adapters import settings
+from pizza_data_storage.adapters.db.models import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.editions import Editions
-    from pizza_data_storage.models.pizzerias import Pizzerias
+    from pizza_data_storage.adapters.db.models.editions import Editions
+    from pizza_data_storage.adapters.db.models.pizzerias import Pizzerias
 
 
-class Rankings(base.BaseModel):  # pylint: disable=too-few-public-methods
-    """Model for storing ranking entry information."""
+class Awards(base.BaseModel):  # pylint: disable=too-few-public-methods
+    """Model for storing award entry information."""
 
     # table configuration
-    __tablename__ = settings.pizza_db.tables.rankings
+    __tablename__ = settings.pizza_db.tables.awards
     __table_args__ = (
         sa.UniqueConstraint(
             "edition_id",
             "pizzeria_id",
-            name="uq_ranking_entry_edition_pizzeria",
+            name="uq_award_edition_pizzeria",
         ),
         {"schema": settings.pizza_db.schema_name},
     )
@@ -54,12 +54,17 @@ class Rankings(base.BaseModel):  # pylint: disable=too-few-public-methods
     )
 
     # columns
-    position: orm.Mapped[int] = orm.mapped_column(
-        sa.Integer,
+    award: orm.Mapped[str] = orm.mapped_column(
+        sa.String(255),
         nullable=False,
-        comment="Position of the pizza in the ranking",
+        comment="The award received by the pizzeria",
+    )
+    sponsor: orm.Mapped[str] = orm.mapped_column(
+        sa.String(200),
+        nullable=False,
+        comment="Sponsor of the award",
     )
 
     # relationships
-    pizzeria: orm.Mapped[Pizzerias] = orm.relationship(back_populates="rankings")
-    edition: orm.Mapped[Editions] = orm.relationship(back_populates="rankings")
+    pizzeria: orm.Mapped[Pizzerias] = orm.relationship(back_populates="awards")
+    edition: orm.Mapped[Editions] = orm.relationship(back_populates="awards")

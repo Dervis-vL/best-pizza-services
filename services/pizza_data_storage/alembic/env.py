@@ -14,7 +14,7 @@ from alembic import context
 from sqlalchemy import Connection, create_engine, engine_from_config, pool, text
 from sqlalchemy import exc as sa_exc
 
-from pizza_data_storage import models
+from pizza_data_storage.adapters.db import models
 from pizza_platform_shared import settings
 
 logger = logging.getLogger(__name__)

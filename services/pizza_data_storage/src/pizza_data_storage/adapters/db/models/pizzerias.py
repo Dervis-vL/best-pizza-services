@@ -5,14 +5,14 @@ from typing import TYPE_CHECKING
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from pizza_data_storage import settings
-from pizza_data_storage.models import base
+from pizza_data_storage.adapters import settings
+from pizza_data_storage.adapters.db.models import base
 
 if TYPE_CHECKING:
-    from pizza_data_storage.models.awards import Awards
-    from pizza_data_storage.models.locations import Locations
-    from pizza_data_storage.models.rankings import Rankings
-    from pizza_data_storage.models.webpages import Webpages
+    from pizza_data_storage.adapters.db.models.awards import Awards
+    from pizza_data_storage.adapters.db.models.locations import Locations
+    from pizza_data_storage.adapters.db.models.rankings import Rankings
+    from pizza_data_storage.adapters.db.models.webpages import Webpages
 
 
 class Pizzerias(base.BaseModel):  # pylint: disable=too-few-public-methods
