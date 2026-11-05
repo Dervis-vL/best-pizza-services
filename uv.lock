@@ -20,6 +20,7 @@ members = [
     "pizza-api",
     "pizza-app",
     "pizza-data-collector",
+    "pizza-data-stats",
     "pizza-data-storage",
     "pizza-platform-shared",
     "pizza-worker",
@@ -1535,6 +1536,17 @@ requires-dist = [
     { name = "pydantic-settings", specifier = ">=2.13.1" },
     { name = "tenacity", specifier = ">=9.1.4" },
 ]
+
+[[package]]
+name = "pizza-data-stats"
+version = "0.1.0"
+source = { editable = "services/pizza_data_stats" }
+dependencies = [
+    { name = "pizza-platform-shared" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pizza-platform-shared", editable = "libs/pizza_platform_shared" }]
 
 [[package]]
 name = "pizza-data-storage"
