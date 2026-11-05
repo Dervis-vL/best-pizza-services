@@ -9,15 +9,15 @@ set default-list
 set lazy
 
 # --- IMPORTS --------------------------------------------
-import 'just/vars.just'
-import 'just/build.just'
-import 'just/check.just'
-import 'just/database.just'
-import 'just/git.just'
-import 'just/security.just'
-import 'just/setup.just'
-import 'just/test.just'
-import 'just/version.just'
+import '.just/vars.just'
+import '.just/build.just'
+import '.just/check.just'
+import '.just/database.just'
+import '.just/git.just'
+import '.just/security.just'
+import '.just/setup.just'
+import '.just/test.just'
+import '.just/version.just'
 
 # --- TARGETS -------------------------------------
 # Read a field out of a member's pyproject.toml
