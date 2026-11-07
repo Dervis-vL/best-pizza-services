@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Map tile, due to the need of an API key
+- Update to latest uv for builds
 
 ## [0.1.3] - 2026-08-03
 

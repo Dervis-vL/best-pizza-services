@@ -1,6 +1,7 @@
 [tool.uv]
 package = false
 exclude-newer = "1 week"
+required-version = ">=0.13.5"
 # pins for security reasons
 constraint-dependencies = [
     "soupsieve>=2.8.4",
