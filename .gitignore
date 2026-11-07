@@ -27,5 +27,6 @@ htmlcov/
 __pypackages__
 
 # local
-dev/
+dev
+.dev
 *.code-workspace
