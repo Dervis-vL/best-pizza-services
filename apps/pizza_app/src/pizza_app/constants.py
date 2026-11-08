@@ -55,5 +55,5 @@ class QueryParam:
 class PizzaAPI:
     """Constants for the pizza platform API."""
 
-    PIZZERIAS_ENDPOINT: Final[str] = "/pizzerias/all"
+    PIZZERIAS_ENDPOINT: Final[str] = "pizzerias/all"
     TIMEOUT: Final[int] = 10
