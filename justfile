@@ -1,5 +1,11 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
-# set minimum-version := '1.57.0'
+set windows-shell      := ["bash", "-euo", "pipefail", "-c"]
+set script-interpreter := ["bash", "-euo", "pipefail"]
+
+set minimum-version := '1.58.0'
+set positional-arguments
+set default-list
+set lazy
 
 # --- IMPORTS --------------------------------------------
 import 'just/vars.just'
@@ -13,20 +19,9 @@ import 'just/git.just'
 import 'just/database.just'
 
 # --- VARIABLES ------------------------------------------
-run  := "uv run"
 bold := `tput bold 2>/dev/null || true`
-nc   := `tput sgr0 2>/dev/null || true`
-green := `tput setaf 2 2>/dev/null || true`
-
-# Read from [tool.uv.workspace] members in the root pyproject.toml
-_workspaces := 'python3 ' + quote(justfile_directory() / 'just/scripts/workspaces.py') \
-    + ' ' + quote(justfile_directory())
-_members     := shell(_workspaces + ' members')
-_modules     := shell(_workspaces + ' modules')
-_deployables := shell(_workspaces + ' deployables')
 
 # --- TARGETS -------------------------------------
-
 [doc("Default target: list all available targets.")]
 [private]
 default:
