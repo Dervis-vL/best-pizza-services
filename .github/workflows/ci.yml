@@ -18,8 +18,12 @@ jobs:
           # Full history + tags so check-version can diff each project
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - name: Run checks
+
+      - name: Quality checks
         run: just check
+
+      - name: Security audit
+        run: just audit
 
   build-dev:
     if: github.ref == 'refs/heads/development'
@@ -47,54 +51,54 @@ jobs:
       - name: Build and push dev images
         run: just push-to-registry-dev ${{ steps.sha.outputs.sha }}
 
-  scan:
-    if: github.ref == 'refs/heads/development'
-    needs: build-dev
-    runs-on: ubuntu-latest
-    permissions:
-      packages: read
-    steps:
-      - name: Log in to GHCR
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  # scan:
+  #   if: github.ref == 'refs/heads/development'
+  #   needs: build-dev
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     packages: read
+  #   steps:
+  #     - name: Log in to GHCR
+  #       uses: docker/login-action@v4
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set lowercase owner
-        id: owner
-        run: echo "value=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+  #     - name: Set lowercase owner
+  #       id: owner
+  #       run: echo "value=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
-      - name: Scan pizza-api
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-api:${{ needs.build-dev.outputs.sha }}
-          format: table
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: CRITICAL,HIGH
+  #     - name: Scan pizza-api
+  #       uses: aquasecurity/trivy-action@v0.36.0
+  #       with:
+  #         image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-api:${{ needs.build-dev.outputs.sha }}
+  #         format: table
+  #         exit-code: '1'
+  #         ignore-unfixed: true
+  #         severity: CRITICAL,HIGH
 
-      - name: Scan pizza-app
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-app:${{ needs.build-dev.outputs.sha }}
-          format: table
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: CRITICAL,HIGH
+  #     - name: Scan pizza-app
+  #       uses: aquasecurity/trivy-action@v0.36.0
+  #       with:
+  #         image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-app:${{ needs.build-dev.outputs.sha }}
+  #         format: table
+  #         exit-code: '1'
+  #         ignore-unfixed: true
+  #         severity: CRITICAL,HIGH
 
-      - name: Scan pizza-worker
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-worker:${{ needs.build-dev.outputs.sha }}
-          format: table
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: CRITICAL,HIGH
+  #     - name: Scan pizza-worker
+  #       uses: aquasecurity/trivy-action@v0.36.0
+  #       with:
+  #         image-ref: ghcr.io/${{ steps.owner.outputs.value }}/pizza-worker:${{ needs.build-dev.outputs.sha }}
+  #         format: table
+  #         exit-code: '1'
+  #         ignore-unfixed: true
+  #         severity: CRITICAL,HIGH
 
   deploy-staging:
     if: github.ref == 'refs/heads/development'
-    needs: [scan, build-dev]
+    needs: [build-dev]  # scan
     runs-on: ubuntu-latest
     environment: staging
     steps:
